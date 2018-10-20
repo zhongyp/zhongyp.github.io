@@ -1,0 +1,365 @@
+
+<!DOCTYPE html>
+<html lang="">
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  
+    <meta name="keywords" content="数据存储," />
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客" />
+  
+  
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  <title>数据存储-Spring事务 [ DO IT ]</title>
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <li class="pure-menu-item toc-menu">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li>
+    
+  </ul>  
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">DO IT</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      数据存储-Spring事务
+    </h1>
+    
+    <time class="time" datetime="2018-03-16T16:00:00.000Z">
+      2018-03-17
+    </time>
+    
+    <hr>
+  </header>
+  <div class="post-content">
+    <h2 id="事务传播特性"><a href="#事务传播特性" class="headerlink" title="事务传播特性"></a>事务传播特性</h2><p><a href="https://github.com/zhongyp/Demo" target="_blank" rel="noopener">源码实例</a></p>
+<h2 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h2><h2 id="Spring-事务（转载）"><a href="#Spring-事务（转载）" class="headerlink" title="Spring 事务（转载）"></a>Spring 事务（转载）</h2><p><a href="https://www.cnblogs.com/qjjazry/p/6366204.html" target="_blank" rel="noopener">参考博文：https://www.cnblogs.com/qjjazry/p/6366204.html</a></p>
+<p>事务原本是数据库中的概念，在 Dao 层。但一般情况下，需要将事务提升到业务层，即 Service 层。这样做是为了能够使用事务的特性来管理具体的业务。  </p>
+<p>在 Spring 中通常可以通过以下三种方式来实现对事务的管理： </p>
+<ol>
+<li><p>使用 Spring 的事务代理工厂管理事务 </p>
+</li>
+<li><p>使用 Spring 的事务注解管理事务 </p>
+</li>
+<li><p>使用 AspectJ 的 AOP 配置管理事务 </p>
+</li>
+</ol>
+<p>Spring 的事务管理，主要用到两个事务相关的接口。</p>
+<p> <img src="https://github.com/zhongyp/jekyll.github.io/blob/master/styles/images/article/transaction.jpg?raw=true" alt="Spring事务接口"></p>
+<h2 id="事务管理器接口"><a href="#事务管理器接口" class="headerlink" title="事务管理器接口"></a>事务管理器接口</h2><p>事务管理器是 PlatformTransactionManager 接口对象。其主要用于完成事务的提交、回滚，及获取事务的状态信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Public interface PlatformTransactionManager()...&#123;  </span><br><span class="line">// 由TransactionDefinition得到TransactionStatus对象</span><br><span class="line">TransactionStatus getTransaction(TransactionDefinition definition) throws TransactionException; </span><br><span class="line">// 提交</span><br><span class="line">Void commit(TransactionStatus status) throws TransactionException;  </span><br><span class="line">// 回滚</span><br><span class="line">Void rollback(TransactionStatus status) throws TransactionException;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>A) 常用的两个实现类，PlatformTransactionManager 接口有两个常用的实现类：  
+　　　　　　　　　　</p>
+<ul>
+<li>DataSourceTransactionManager：使用 JDBC 或 iBatis  进行持久化数据时使用。  </li>
+</ul>
+<p>如果应用程序中直接使用JDBC来进行持久化，DataSourceTransactionManager会为你处理事务边界。为了使用DataSourceTransactionManager，你需要使用如下的XML将其装配到应用程序的上下文定义中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>实际上，DataSourceTransactionManager是通过调用java.sql.Connection来管理事务，而后者是通过DataSource获取到的。通过调用连接的commit()方法来提交事务，同样，事务失败则通过调用rollback()方法进行回滚。</p>
+<p>　　</p>
+<ul>
+<li>HibernateTransactionManager：使用 Hibernate 进行持久化数据时使用。 </li>
+</ul>
+<p>如果应用程序的持久化是通过Hibernate实现的，那么你需要使用HibernateTransactionManager。对于Hibernate3，需要在Spring上下文定义中添加如下的<bean>声明：</bean></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.orm.hibernate3.HibernateTransactionManager&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;sessionFactory&quot; ref=&quot;sessionFactory&quot; /&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>sessionFactory属性需要装配一个Hibernate的session工厂，HibernateTransactionManager的实现细节是它将事务管理的职责委托给org.hibernate.Transaction对象，而后者是从Hibernate Session中获取到的。当事务成功完成时，HibernateTransactionManager将会调用Transaction对象的commit()方法，反之，将会调用rollback()方法。</p>
+<p>B) PlatformTransactionManager其他实现类</p>
+<p>Spring事务管理的一个优点就是为不同的事务API提供一致的编程模型，如JTA(事务)、JPA(持久化)。下面分别介绍各个平台框架实现事务管理的机制。</p>
+<ul>
+<li>Java持久化API事务（JPA）</li>
+</ul>
+<p>Hibernate多年来一直是事实上的Java持久化标准，但是现在Java持久化API作为真正的Java持久化标准进入大家的视野。如果你计划使用JPA的话，那你需要使用Spring的JpaTransactionManager来处理事务。你需要在Spring中这样配置JpaTransactionManager：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.orm.jpa.JpaTransactionManager&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;sessionFactory&quot; ref=&quot;sessionFactory&quot; /&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>JpaTransactionManager只需要装配一个JPA实体管理工厂（javax.persistence.EntityManagerFactory接口的任意实现）。JpaTransactionManager将与由工厂所产生的JPA EntityManager合作来构建事务。</p>
+<ul>
+<li>Java原生API事务(JTA)</li>
+</ul>
+<p>如果你没有使用以上所述的事务管理，或者是跨越了多个事务管理源（比如两个或者是多个不同的数据源），你就需要使用JtaTransactionManager：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.transaction.jta.JtaTransactionManager&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;transactionManagerName&quot; value=&quot;java:/TransactionManager&quot; /&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>JtaTransactionManager将事务管理的责任委托给javax.transaction.UserTransaction和javax.transaction.TransactionManager对象，其中事务成功完成通过UserTransaction.commit()方法提交，事务失败通过UserTransaction.rollback()方法回滚。</p>
+<p>C) Spring 的回滚方式 
+　　</p>
+<ul>
+<li>Spring 事务的默认回滚方式是：发生运行时异常时回滚，发生受查异常时提交。不过，对于受查异常，程序员也可以手工设置其回滚方式。</li>
+</ul>
+<h2 id="事务定义接口"><a href="#事务定义接口" class="headerlink" title="事务定义接口"></a>事务定义接口</h2><p>事务定义接口 TransactionDefinition 中定义了事务描述相关的三类常量：事务隔离级别、事务传播行为、事务默认超时时限，及对它们的操作。</p>
+<p>A) 定义了五个事务隔离级别常量,这些常量均是以 ISOLATION_开头。即形如 ISOLATION_XXX： 
+　　　　　　　　 </p>
+<ul>
+<li>DEFAULT：采用DB默认的事务隔离级别。MySql的默认为REPEATABLE_READ；  Oracle默认为 READ_COMMITTED。 
+　　</li>
+<li>READ_UNCOMMITTED：读未提交。未解决任何并发问题。 
+　　</li>
+<li>READ_COMMITTED：读已提交。解决脏读，存在不可重复读与幻读。  
+　　</li>
+<li>REPEATABLE_READ：可重复读。解决脏读、不可重复读，存在幻读  
+　　</li>
+<li>SERIALIZABLE：串行化。不存在并发问题。</li>
+</ul>
+<p>B) 定义了七个事务传播行为常量，所谓事务传播行为是指，处于不同事务中的方法在相互调用时，执行期间事务的维护情况。如，A 事务中的方法 doSome()调用 B 事务中的方法 doOther()，在调用执行期间事务的维护情况，就称为事务传播行为。事务传播行为是加在方法上的。事务传播行为常量都是以 PROPAGATION_  开头，形如 PROPAGATION_XXX。  
+　　</p>
+<ul>
+<li>REQUIRED：指定的方法必须在事务内执行。若当前存在事务，就加入到当前事务中；若当前没有事务，则创建一个新事务。这种传播行为是最常见的选择，也是Spring 默认的事务传播行为。如该传播行为加在 doOther()方法上。若 doSome()方法在执行时就是在事务内的，则 doOther()方法的执行也加入到该事务内执行。若 doSome()方法没有在事务内执行，则 doOther()方法会创建一个事务，并在其中执行。
+　　</li>
+<li><p>SUPPORTS：指定的方法支持当前事务，但若当前没有事务，也可以以非事务方式执行。 </p>
+</li>
+<li><p>MANDATORY：指定的方法必须在当前事务内执行，若当前没有事务，则直接抛出异常。</p>
+</li>
+<li><p>REQUIRES_NEW：总是新建一个事务，若当前存在事务，就将当前事务挂起，直到新事务执行完毕。</p>
+</li>
+<li><p>NOT_SUPPORTED：指定的方法不能在事务环境中执行，若当前存在事务，就将当前事务挂起。</p>
+</li>
+<li><p>NEVER：指定的方法不能在事务环境下执行，若当前存在事务，就直接抛出异常。</p>
+</li>
+<li><p>NESTED：指定的方法必须在事务内执行。若当前存在事务，则在嵌套事务内执行；若当前没有事务，则创建一个新事务。嵌套事务在外部事务提交后，才真正的提交。</p>
+</li>
+</ul>
+<p>C) 定义了默认事务超时时限 </p>
+<ul>
+<li><p>常量 TIMEOUT_DEFAULT 定义了事务底层默认的超时时限，及不支持事务超时时限设置的 none 值。 </p>
+</li>
+<li><p>注意，事务的超时时限起作用的条件比较多，且超时的时间计算点较复杂。所以，该值一般就使用默认值即可。</p>
+</li>
+</ul>
+<h2 id="Spring-的事务代理工厂管理事务"><a href="#Spring-的事务代理工厂管理事务" class="headerlink" title="Spring 的事务代理工厂管理事务"></a>Spring 的事务代理工厂管理事务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">    xmlns:context=&quot;http://www.springframework.org/schema/context&quot; xsi:schemaLocation=&quot;</span><br><span class="line">        http://www.springframework.org/schema/beans </span><br><span class="line">        http://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">        http://www.springframework.org/schema/context </span><br><span class="line">        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- 注册数据源：C3P0数据源 --&gt;</span><br><span class="line">    &lt;bean id=&quot;myDataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;driverClass&quot; value=&quot;$&#123;jdbc.driverClass&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;jdbcUrl&quot; value=&quot;$&#123;jdbc.url&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;user&quot; value=&quot;$&#123;jdbc.user&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;password&quot; value=&quot;$&#123;jdbc.password&#125;&quot; /&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- 注册JDBC属性文件 --&gt;</span><br><span class="line">    &lt;context:property-placeholder location=&quot;classpath:jdbc.properties&quot;/&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- 注册Dao --&gt;</span><br><span class="line">    &lt;bean id=&quot;accountDao&quot; class=&quot;com.tongji.dao.AccountDaoImpl&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;myDataSource&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;bean id=&quot;stockDao&quot; class=&quot;com.tongji.dao.StockDaoImpl&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;myDataSource&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!-- 注册Service --&gt;</span><br><span class="line">    &lt;bean id=&quot;stockService&quot; class=&quot;com.tongji.service.StockProcessServiceImpl&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;accountDao&quot; ref=&quot;accountDao&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;stockDao&quot; ref=&quot;stockDao&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;    </span><br><span class="line">    </span><br><span class="line">    &lt;!-- 事务 --&gt;</span><br><span class="line">    &lt;!-- 注册事务管理器 --&gt;</span><br><span class="line">    &lt;bean id=&quot;myTxManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;myDataSource&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!-- 生成事务代理 --&gt;</span><br><span class="line">    &lt;bean id=&quot;stockServiceProxy&quot; class=&quot;org.springframework.transaction.interceptor.TransactionProxyFactoryBean&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;transactionManager&quot; ref=&quot;myTxManager&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;target&quot; ref=&quot;stockService&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;transactionAttributes&quot;&gt;</span><br><span class="line">            &lt;props&gt;</span><br><span class="line">                &lt;prop key=&quot;open*&quot;&gt;ISOLATION_DEFAULT,PROPAGATION_REQUIRED&lt;/prop&gt;</span><br><span class="line">                &lt;prop key=&quot;buyStock&quot;&gt;ISOLATION_DEFAULT,PROPAGATION_REQUIRED,-StockException&lt;/prop&gt;</span><br><span class="line">            &lt;/props&gt;</span><br><span class="line">        &lt;/property&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Spring-的事务注解管理事务"><a href="#Spring-的事务注解管理事务" class="headerlink" title="Spring 的事务注解管理事务"></a>Spring 的事务注解管理事务</h2><p>注：需要注意的是，@Transactional 若用在方法上，只能用于 public 方法上。对于其他非public 方法，如果加上了注解@Transactional，虽然 Spring 不会报错，但不会将指定事务织入到该方法中。因为 Spring 会忽略掉所有非 public 方法上的@Transaction 注解。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">        xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">        xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;</span><br><span class="line">        xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot; </span><br><span class="line">        xsi:schemaLocation=&quot;</span><br><span class="line">        http://www.springframework.org/schema/beans </span><br><span class="line">        http://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">        http://www.springframework.org/schema/context </span><br><span class="line">        http://www.springframework.org/schema/context/spring-context.xsd</span><br><span class="line">        http://www.springframework.org/schema/tx </span><br><span class="line">        http://www.springframework.org/schema/tx/spring-tx.xsd</span><br><span class="line">        http://www.springframework.org/schema/aop </span><br><span class="line">        http://www.springframework.org/schema/aop/spring-aop.xsd&quot;&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- 注册数据源：C3P0数据源 --&gt;</span><br><span class="line">    &lt;bean id=&quot;myDataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;driverClass&quot; value=&quot;$&#123;jdbc.driverClass&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;jdbcUrl&quot; value=&quot;$&#123;jdbc.url&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;user&quot; value=&quot;$&#123;jdbc.user&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;password&quot; value=&quot;$&#123;jdbc.password&#125;&quot; /&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- 注册JDBC属性文件 --&gt;</span><br><span class="line">    &lt;context:property-placeholder location=&quot;classpath:jdbc.properties&quot;/&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- 注册Dao --&gt;</span><br><span class="line">    &lt;bean id=&quot;accountDao&quot; class=&quot;com.tongji.dao.AccountDaoImpl&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;myDataSource&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;bean id=&quot;stockDao&quot; class=&quot;com.tongji.dao.StockDaoImpl&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;myDataSource&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!-- 注册Service --&gt;</span><br><span class="line">    &lt;bean id=&quot;stockService&quot; class=&quot;com.tongji.service.StockProcessServiceImpl&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;accountDao&quot; ref=&quot;accountDao&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;stockDao&quot; ref=&quot;stockDao&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;    </span><br><span class="line">    </span><br><span class="line">    &lt;!-- 事务 --&gt;</span><br><span class="line">    &lt;!-- 注册事务管理器 --&gt;</span><br><span class="line">    &lt;bean id=&quot;myTxManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;myDataSource&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!-- 开启注解驱动 --&gt;</span><br><span class="line">    &lt;tx:annotation-driven transaction-manager=&quot;myTxManager&quot;/&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@Override</span><br><span class="line">@Transactional(isolation=Isolation.DEFAULT, propagation=Propagation.REQUIRED)</span><br><span class="line">public void openAccount(String aname, double money) &#123;</span><br><span class="line">    accountDao.insertAccount(aname, money);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">@Transactional(isolation=Isolation.DEFAULT, propagation=Propagation.REQUIRED)</span><br><span class="line">public void openStock(String sname, int amount) &#123;</span><br><span class="line">    stockDao.insertStock(sname, amount);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">@Transactional(isolation=Isolation.DEFAULT, propagation=Propagation.REQUIRED, rollbackFor=StockException.class)</span><br><span class="line">public void buyStock(String aname, double money, String sname, int amount) throws StockException &#123;</span><br><span class="line">    boolean isBuy = true;</span><br><span class="line">    accountDao.updateAccount(aname, money, isBuy);</span><br><span class="line">    if (true) &#123;</span><br><span class="line">        throw new StockException(&quot;购买股票异常&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    stockDao.updateStock(sname, amount, isBuy);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Spring-使用AspectJ的AOP配置管理事务"><a href="#Spring-使用AspectJ的AOP配置管理事务" class="headerlink" title="Spring 使用AspectJ的AOP配置管理事务"></a>Spring 使用AspectJ的AOP配置管理事务</h2><p><img src="https://github.com/zhongyp/jekyll.github.io/blob/master/styles/images/article/aop-3.jpg?raw=true" alt="aop3"></p>
+<p>AOP术语：</p>
+<ul>
+<li><p>连接点（joinpoint）你可以切入的方法（注意是可以）。</p>
+</li>
+<li><p>切点（pointcut）是你切入的方法。</p>
+</li>
+<li><p>增强（advice）往切点里面增加其他特殊的东西，比如事务传播。</p>
+</li>
+<li><p>目标对象（target）引入中所提到的目标类，也就是要被通知的对象，也就是真正的业务逻辑，他可以在毫不知情的情况下，被咱们织入切面。而自己专注于业务本身的逻辑。</p>
+</li>
+<li><p>引介（introduction）允许我们向现有的类添加新方法属性。</p>
+</li>
+<li><p>织入（weaving） 把切面应用到目标对象来创建新的代理对象的过程。有3种方式，spring采用的是运行时，为什么是运行时，后面解释。</p>
+</li>
+<li><p>代理（proxy）实现整套aop机制的，都是通过代理。</p>
+</li>
+<li><p>切面（aspect）切面是通知和切入点的结合,就是定义了通知的类。现在发现了吧，没连接点什么事情，连接点就是为了让你好理解切点，搞出来的，明白这个概念就行了。通知说明了干什么和什么时候干（什么时候通过方法名中的before,after，around等就能知道），而切入点说明了在哪干（指定到底是哪个方法），这就是一个完整的切面定义。</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">        xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">        xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;</span><br><span class="line">        xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot; </span><br><span class="line">        xsi:schemaLocation=&quot;</span><br><span class="line">        http://www.springframework.org/schema/beans </span><br><span class="line">        http://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">        http://www.springframework.org/schema/context </span><br><span class="line">        http://www.springframework.org/schema/context/spring-context.xsd</span><br><span class="line">        http://www.springframework.org/schema/tx </span><br><span class="line">        http://www.springframework.org/schema/tx/spring-tx.xsd</span><br><span class="line">        http://www.springframework.org/schema/aop </span><br><span class="line">        http://www.springframework.org/schema/aop/spring-aop.xsd&quot;&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- 注册数据源：C3P0数据源 --&gt;</span><br><span class="line">    &lt;bean id=&quot;myDataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;driverClass&quot; value=&quot;$&#123;jdbc.driverClass&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;jdbcUrl&quot; value=&quot;$&#123;jdbc.url&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;user&quot; value=&quot;$&#123;jdbc.user&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;password&quot; value=&quot;$&#123;jdbc.password&#125;&quot; /&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- 注册JDBC属性文件 --&gt;</span><br><span class="line">    &lt;context:property-placeholder location=&quot;classpath:jdbc.properties&quot;/&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- 注册Dao --&gt;</span><br><span class="line">    &lt;bean id=&quot;accountDao&quot; class=&quot;com.tongji.dao.AccountDaoImpl&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;myDataSource&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;bean id=&quot;stockDao&quot; class=&quot;com.tongji.dao.StockDaoImpl&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;myDataSource&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!-- 注册Service --&gt;</span><br><span class="line">    &lt;bean id=&quot;stockService&quot; class=&quot;com.tongji.service.StockProcessServiceImpl&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;accountDao&quot; ref=&quot;accountDao&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;stockDao&quot; ref=&quot;stockDao&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;    </span><br><span class="line">    </span><br><span class="line">    &lt;!-- 事务 --&gt;</span><br><span class="line">    &lt;!-- 注册事务管理器 --&gt;</span><br><span class="line">    &lt;bean id=&quot;myTxManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;myDataSource&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!-- 注册事务通知 --&gt;</span><br><span class="line">    &lt;tx:advice id=&quot;txAdvice&quot; transaction-manager=&quot;myTxManager&quot;&gt;</span><br><span class="line">        &lt;tx:attributes&gt;</span><br><span class="line">            &lt;!-- 指定在切入点方法上应用的事务属性 --&gt;</span><br><span class="line">            &lt;tx:method name=&quot;open*&quot; isolation=&quot;DEFAULT&quot; propagation=&quot;REQUIRED&quot;/&gt;</span><br><span class="line">            &lt;tx:method name=&quot;buyStock&quot; isolation=&quot;DEFAULT&quot; propagation=&quot;REQUIRED&quot; rollback-for=&quot;StockException&quot;/&gt;</span><br><span class="line">        &lt;/tx:attributes&gt;</span><br><span class="line">    &lt;/tx:advice&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- AOP配置 --&gt;</span><br><span class="line">    &lt;aop:config proxy-target-class=&quot;true&quot;&gt;//表示使用CGLib动态代理技术织入增强。设置为false时，表示使用jdk动态代理织入增强，如果目标类没有声明接口，则spring将自动使用CGLib动态代理。</span><br><span class="line">        &lt;!-- 指定切入点 --&gt;</span><br><span class="line">        &lt;aop:pointcut expression=&quot;execution(* *..service.*.*(..))&quot; id=&quot;stockPointCut&quot;/&gt;//这里设置切入点，expression设置切面植入的切入点的方法地址</span><br><span class="line">        &lt;aop:advisor advice-ref=&quot;txAdvice&quot; pointcut-ref=&quot;stockPointCut&quot;/&gt;// 加入事务传播特性</span><br><span class="line">        &lt;aop:aspect ref=&quot;stockService&quot;&gt;//定义一个切面</span><br><span class="line">         </span><br><span class="line">        </span><br><span class="line">        --&gt;</span><br><span class="line">    &lt;/aop:config&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据存储/">数据存储</a></li></ul>
+  </div>
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/2018/03/16/concurrent/2018-03-16-ThreadLocal/" rel="next" title="ThreadLocal">
+          ThreadLocal
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+          <a href="/2018/03/18/java/2018-03-18-JavaReflection/" rel="prev" title="Java反射和动态代理">
+            Java反射和动态代理
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#事务传播特性"><span class="toc-text">事务传播特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式事务"><span class="toc-text">分布式事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-事务（转载）"><span class="toc-text">Spring 事务（转载）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事务管理器接口"><span class="toc-text">事务管理器接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事务定义接口"><span class="toc-text">事务定义接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-的事务代理工厂管理事务"><span class="toc-text">Spring 的事务代理工厂管理事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-的事务注解管理事务"><span class="toc-text">Spring 的事务注解管理事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-使用AspectJ的AOP配置管理事务"><span class="toc-text">Spring 使用AspectJ的AOP配置管理事务</span></a></li></ol>
+  </div>
+
+
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+      
+      <a href="http://programer.group" target="_blank">主站</a> |
+      <a href="https://zhongyp.me" target="_blank">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Theme microb</a>
+    </div>
+  </footer>
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     * 
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+      
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      var menu = document.getElementById('menu-main-post');
+      if (menu) {
+        var toc = document.getElementById('toc');
+        if (toc) {
+          menu.onclick = function() {
+            if (toc) {
+              if (toc.style.display == 'block') {
+                toc.style.display = 'none';
+              } else {
+                toc.style.display = 'block';
+              }
+            }
+          };
+        } else {
+          menu.style.display = 'none';
+        }
+      }
+    }
+
+  })(window, document);
+</script>
+
+  
+
+
+
+</body>
+</html>

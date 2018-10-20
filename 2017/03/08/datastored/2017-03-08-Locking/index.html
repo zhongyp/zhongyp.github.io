@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<html lang="">
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  
+    <meta name="keywords" content="数据存储," />
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客" />
+  
+  
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  <title>乐观锁，悲观锁 [ DO IT ]</title>
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <li class="pure-menu-item toc-menu">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li>
+    
+  </ul>  
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">DO IT</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      乐观锁，悲观锁
+    </h1>
+    
+    <time class="time" datetime="2017-03-07T16:00:00.000Z">
+      2017-03-08
+    </time>
+    
+    <hr>
+  </header>
+  <div class="post-content">
+    <p><a href="https://www.cnblogs.com/coderMark/p/5599508.html" target="_blank" rel="noopener">原文地址</a></p>
+<h2 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h2><p> 相对悲观锁而言，乐观锁机制采取了更加宽松的加锁机制。悲观锁大多数情况下依靠数据库的锁机制实现，以保证操作最大程度的独占性。但随之而来的就是数据库 性能的大量开销，特别是对长事务而言，这样的开销往往无法承受。 而乐观锁机制在一定程度上解决了这个问题。乐观锁，大多是基于数据版本（ Version ）记录机制实现。何谓数据版本？即为数据增加一个版本标识，在基于数据库表的版本解决方案中，一般是通过为数据库表增加一个 “version” 字段来实现。读取出数据时，将此版本号一同读出，之后更新时，对此版本号加一。此时，将提交数据的版本数据与数据库表对应记录的当前版本信息进行比对，如 果提交的数据版本号大于数据库表当前版本号，则予以更新，否则认为是过期数据。</p>
+<p>实现方式：大多数基于数据版本记录机制实现，即为数据增加一个版本标识，在基于数据库表的版本解决方案中，一般是通过为数据库表增加一个“version”字段来实现。读取出数据时，将此版本号一同读出，之后更新时，对此版本号加一。此时，将提交数据的版本数据与数据库表对应记录的当前版本信息进行比对，如果提交的数据版本号大于数据库表当前版本号，则予以更新，否则认为是过期数据。  </p>
+<p>实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;hibernate-mapping &gt;  </span><br><span class="line"> &lt;class name=&quot;org.hibernate.sample.TUser&quot; table=&quot;t_user&quot; dynamic-update=&quot;true&quot; dynamic-insert=&quot;true&quot; optimistic-lock=&quot;version&quot;&gt;  </span><br><span class="line"> &lt;/class&gt;  </span><br><span class="line">&lt;/hibernate-mapping &gt;</span><br></pre></td></tr></table></figure>
+<h2 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h2><p>它指的是对数据被外界（包括本系统当前的其他事务，以及来自外部系统的事务处理）修改持保守态度，因此，在整个数据处理过程中，将数据处于锁定状态。悲观锁的实现，往往依靠数据库提供的锁机制（也只有数据库层提供的锁机制才能真正保证数据访问的排他性，否则，即使在本系统中实现了加锁机制，也无法保证外部系 统不会修改数据）。</p>
+<p>数据库锁机制:</p>
+<ul>
+<li><p>未提交读（read uncommitted）</p>
+</li>
+<li><p>提交读（read committed）</p>
+</li>
+<li><p>重复读（repeatable read）</p>
+</li>
+<li><p>序列化（serializable）</p>
+</li>
+</ul>
+<p>锁机制：</p>
+<p>   共享锁：其他事务可以读，但不能修改。</p>
+<p>   排他锁：其他事务不能读取。</p>
+<p>锁粒度：一般分为：行锁、表锁、库锁</p>
+<p>解释：</p>
+<ul>
+<li><p>未提交读（read uncommitted）</p>
+<pre><code>一个更新数据库的事务A在未commit的情况下，另一个事务B正在读取事务A更新的记录，会产生脏读现象，这是因为A事务在开启 DB Transaction后，做一些DML操作时，记录会保存在内存中，这时B事务读取了A事务提交在内存中的数据，产生了脏读。
+</code></pre></li>
+<li><p>提交读（read committed）</p>
+<pre><code>数据的修改只有在commit之后，才会被读取。和1 相反。
+</code></pre></li>
+<li><p>重复读（repeatable read）</p>
+<pre><code>当数据库隔离级别设置成 repeatable read后，事务A中的select的过程中事务B可以修改A读取部分的数据，当A第2次执行同样的sql时，返回和上次相同的数据 ，消除不可重复读。
+</code></pre><p>  注：个人认为只是应为A事务采用这种隔离级别后，读取的是数据库在事务开始时间点的映象，在这个时间点后的所有操作都不会对A事务中的查询产生影响，依据是本文后续的实验，如果有疑问，请指出。</p>
+</li>
+<li><p>序列化（serializable）</p>
+<pre><code>当数据库隔离级别设置成Serializeable后，事务A中的select 会以共享锁锁定相关的数据（在select 返回的数据结果集），这些数据不可以被修改（可以被读取），若事务B对这些数据做UPDATE操作，会处于等待状态，消除幻读。
+</code></pre><p>   注：事务B可以UPDATE 事务A中为锁定的数据，后面的实验可以证明。</p>
+</li>
+</ul>
+<p>实现方式：</p>
+<p>悲观锁的实现，往往依靠数据库提供的锁机制（也只有数据库层提供的锁机制才能真正保证数据访问的排他性，否则，即使在本系统中实现了加锁机制，也无法保证外部系统不会修改数据）。 </p>
+<p>Hibernate的加锁模式有：<br>Ø LockMode.NONE ： 无锁机制。<br>Ø LockMode.WRITE ：Hibernate在Insert和Update记录的时候会自动<br>获取。<br>Ø LockMode.READ ： Hibernate在读取记录的时候会自动获取。<br>以上这三种锁机制一般由Hibernate内部使用，如Hibernate为了保证Update<br>过程中对象不会被外界修改，会在save方法实现中自动为目标对象加上WRITE锁。<br>Ø LockMode.UPGRADE ：利用数据库的for update子句加锁。<br>Ø LockMode. UPGRADE_NOWAIT ：Oracle的特定实现，利用Oracle的for update nowait子句实现加锁。</p>
+<p>实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> String hqlStr  =   &quot; from TUser as user where user.name=’Erica’ &quot; ; </span><br><span class="line"> Query query  =  session.createQuery(hqlStr); </span><br><span class="line"> query.setLockMode( &quot; user &quot; ,LockMode.UPGRADE);  // 加锁  </span><br><span class="line"> List userList  =  query.list(); // 执行查询，</span><br><span class="line"></span><br><span class="line">```	 </span><br><span class="line">获取数据 query.setLockMode 对查询语句中特定别名所对应的记录进行加锁（我们为 TUser类指定了一个别名“user”），这里也就是对返回的所有user记录进行加锁。 观察运行期Hibernate生成的SQL语句：</span><br></pre></td></tr></table></figure>
+<p>select tuser0_.id as id, tuser0_.name as name, tuser0_.group_id as group_id, tuser0_.user_type as user_type, tuser0_.sex as sex from t_user tuser0_ where (tuser0_.name = ’Erica’ )  for  update<br><code>`</code><br>这里Hibernate通过使用数据库的for update子句实现了悲观锁机制。 </p>
+<p>上面这两种锁机制是我们在应用层较为常用的，加锁一般通过以下方法实现：<br>Criteria.setLockMode<br>Query.setLockMode<br>Session.lock<br>注意，只有在查询开始之前（也就是Hiberate 生成SQL 之前）设定加锁，才会 真正通过数据库的锁机制进行加锁处理，否则，数据已经通过不包含for update 子句的Select SQL加载进来，所谓数据库加锁也就无从谈起。</p>
+<p>三种并发容易遇到的问题。</p>
+<ul>
+<li><p>脏读：一个事务读取到了另外一个事务没有提交的数据。</p>
+</li>
+<li><p>不可重复度：在同一事务中，两次读取同一数据，得到内容不同。举例：事务A查询一条数据，事务B更新事务A查询的这条数据，事务A再次查询这条数据，数据却不一样，出现了不可重复读错误。</p>
+</li>
+<li><p>幻读：同一事务中，用同样的操作读取两次，得到的记录数不相同。举例：事务A查询第一次查询出一条记录，事务B插入一条数据，事务A再次查询，查询出两条记录，出现了幻读。</p>
+</li>
+</ul>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据存储/">数据存储</a></li></ul>
+  </div>
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/2017/03/04/datastored/2018-03-04-Distributed-Transaction/" rel="next" title="分布式事务（转载）">
+          分布式事务（转载）
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+          <a href="/2017/07/02/redis/2017-07-02-Redis/" rel="prev" title="Redis(转载)">
+            Redis(转载)
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#乐观锁"><span class="toc-text">乐观锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#悲观锁"><span class="toc-text">悲观锁</span></a></li></ol>
+  </div>
+
+
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+      
+      <a href="http://programer.group" target="_blank">主站</a> |
+      <a href="https://zhongyp.me" target="_blank">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Theme microb</a>
+    </div>
+  </footer>
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     * 
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+      
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      var menu = document.getElementById('menu-main-post');
+      if (menu) {
+        var toc = document.getElementById('toc');
+        if (toc) {
+          menu.onclick = function() {
+            if (toc) {
+              if (toc.style.display == 'block') {
+                toc.style.display = 'none';
+              } else {
+                toc.style.display = 'block';
+              }
+            }
+          };
+        } else {
+          menu.style.display = 'none';
+        }
+      }
+    }
+
+  })(window, document);
+</script>
+
+  
+
+
+
+</body>
+</html>

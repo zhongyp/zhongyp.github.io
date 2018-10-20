@@ -1,0 +1,271 @@
+
+<!DOCTYPE html>
+<html lang="">
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  
+    <meta name="keywords" content="JavaScript," />
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客" />
+  
+  
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  <title>JS模块化之路RequireJS [ DO IT ]</title>
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <li class="pure-menu-item toc-menu">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li>
+    
+  </ul>  
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">DO IT</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      JS模块化之路RequireJS
+    </h1>
+    
+    <time class="time" datetime="2016-12-14T16:00:00.000Z">
+      2016-12-15
+    </time>
+    
+    <hr>
+  </header>
+  <div class="post-content">
+    <h2 id="1-1-RequireJS是什么？"><a href="#1-1-RequireJS是什么？" class="headerlink" title="1.1 RequireJS是什么？"></a>1.1 RequireJS是什么？</h2><p>RequireJS的目标是鼓励代码的模块化，它使用了不同于传统<code>&lt;script&gt;</code>标签的脚本加载步骤。可以用它来加速、优化代码，但其主要目的还是为了代码的模块化。它鼓励在使用脚本时以module ID替代URL地址。</p>
+<h2 id="1-2-使用RequireJS"><a href="#1-2-使用RequireJS" class="headerlink" title="1.2 使用RequireJS"></a>1.2 使用RequireJS</h2><h3 id="1-2-1-加载JavaScript文件"><a href="#1-2-1-加载JavaScript文件" class="headerlink" title="1.2.1 加载JavaScript文件"></a>1.2.1 加载JavaScript文件</h3><p>RequireJS以一个相对于baseUrl的地址加载所有的js代码，baseUrl设置有两种方式：</p>
+<h4 id="1-2-1-1-data-main属性"><a href="#1-2-1-1-data-main属性" class="headerlink" title="1.2.1.1 data-main属性"></a>1.2.1.1 data-main属性</h4><p>一个是用<code>&lt;scirpt&gt;</code>标签的data-main属性，例如：<br><code>&lt;script data-main=&quot;script/main.js&quot; src=&quot;script/require.js&quot;&gt;&lt;/script&gt;</code><br>页面在加载require.js后会自动加载main.js里的内容。此时的baseUrl的地址为<code>script/</code>。注：data-main是异步加载的，所以如果你在其他页面配置了其他的JS加载，则不能保证他们所依赖的JS已经加载成功。<br>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;script data-main=&quot;scripts/main&quot; src=&quot;scripts/require.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;scripts/other.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// contents of main.js:</span><br><span class="line">require.config(&#123;</span><br><span class="line">    paths: &#123;</span><br><span class="line">        foo: &apos;libs/foo-1.1.3&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// contents of other.js:</span><br><span class="line"></span><br><span class="line">// This code might be called before the require.config() in main.js</span><br><span class="line">// has executed. When that happens, require.js will attempt to</span><br><span class="line">// load &apos;scripts/foo.js&apos; instead of &apos;scripts/libs/foo-1.1.3.js&apos;</span><br><span class="line">require( [&apos;foo&apos;], function( foo ) &#123;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-1-2-配置函数"><a href="#1-2-1-2-配置函数" class="headerlink" title="1.2.1.2 配置函数"></a>1.2.1.2 配置函数</h4><p>baseUrl亦可通过配置函数手动配置。如果没有显式指定config及data-main，则默认的baseUrl为包含RequireJS的那个HTML页面的所属目录。如果你需要修改RequireJS的默认配置来使用自己的配置，可以使用require.config函数，require.config函数需要传入一个可选的参数对象，如下是可以使用的配置参数选项。</p>
+<ul>
+<li>baseUrl–用于加载模块的根路径</li>
+<li>paths–用于映射不存在于根路径下的模块路径</li>
+<li>shims–配置在脚本/模块外面并没有使用RequireJS的函数依赖并且初始化函数。假设underscore并没有使用  RequireJS定义，但是你还是想通过RequireJS来使用它，那么你就需要在配置中把它定义为一个shim。</li>
+<li>deps–加载依赖关系数组</li>
+<li>exports–exports值（输出的变量名），表明这个模块外部调用时的名称</li>
+</ul>
+<p>一般来说，最好还是使用baseUrl及”paths” config去设置module ID。它会给你带来额外的灵活性，如便于脚本的重命名、重定位等。 同时，为了避免凌乱的配置，最好不要使用多级嵌套的目录层次来组织代码，而是要么将所有的脚本都放置到baseUrl中，要么分置为项目库/第三方库的一个扁平结构，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- www/</span><br><span class="line">  - index.html</span><br><span class="line">  - js/</span><br><span class="line">    - app/</span><br><span class="line">	  -sub.js </span><br><span class="line">    - lib/</span><br><span class="line">	  -jquery.js</span><br><span class="line">	  -cancas.js</span><br><span class="line">  -app.js</span><br></pre></td></tr></table></figure></p>
+<p>index.html</p>
+<p><code>&lt;script data-main=&quot;js/app.js&quot; src=&quot;js/require.js&quot;&gt;&lt;/script&gt;</code></p>
+<p>app.js<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">requirejs.config(&#123;</span><br><span class="line">    //By default load any module IDs from js/lib</span><br><span class="line">    baseUrl: &apos;js/lib&apos;,</span><br><span class="line">    //except, if the module ID starts with &quot;app&quot;,</span><br><span class="line">    //load it from the js/app directory. paths</span><br><span class="line">    //config is relative to the baseUrl, and</span><br><span class="line">    //never includes a &quot;.js&quot; extension since</span><br><span class="line">    //the paths config could be for a directory.</span><br><span class="line">    paths: &#123;</span><br><span class="line">        app: &apos;../app&apos;</span><br><span class="line">    &#125;</span><br><span class="line">	shim: &#123;</span><br><span class="line">        &apos;backbone&apos;: &#123;</span><br><span class="line">            //The underscore script dependency should be loaded before loading backbone.js</span><br><span class="line">            deps: [&apos;underscore&apos;],</span><br><span class="line">            // use the global &apos;Backbone&apos; as the module name.</span><br><span class="line">            exports: &apos;Backbone&apos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// Start the main app logic.</span><br><span class="line">requirejs([&apos;jquery&apos;, &apos;canvas&apos;, &apos;app/sub&apos;],</span><br><span class="line">function   ($, canvas, sub) &#123;</span><br><span class="line">    //jQuery, canvas and the app/sub module are all</span><br><span class="line">    //loaded and can be used here now.</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h3 id="1-2-2-用RequireJS定义模块"><a href="#1-2-2-用RequireJS定义模块" class="headerlink" title="1.2.2 用RequireJS定义模块"></a>1.2.2 用RequireJS定义模块</h3><p>模块是进行了内部实现封装、暴露接口和合理限制范围的对象。ReuqireJS提供了define函数用于定义模块。按章惯例每个Javascript文件只应该定义一个模块。define函数接受一个依赖数组和一个包含模块定义的函数。通常模块定义函数会把前面的数组中的依赖模块按顺序做为参数接收。例如，下面是一个简单的模块定义:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">define([&quot;logger&quot;], function(logger) &#123;        </span><br><span class="line">        return &#123;</span><br><span class="line">             firstName: “John&quot;,</span><br><span class="line">             lastName: “Black“,</span><br><span class="line">             sayHello: function () &#123;</span><br><span class="line">                logger.log(‘hello’);</span><br><span class="line">             &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>我们看，一个包含了logger的模块依赖数组被传给了define函数,该模块后面会被调用。同样我们看所定义的模块中有一个名为logger的参数，它会被设置为logger模块。每一个模块都应该返回它的API.这个示例中我们有两个属性(firstName和lastName)和一个函数(sayHello)。然后，只要你后面定义的模块通过ID来引用这个模块，你就可以使用其暴露的API。</p>
+<h3 id="1-2-3-使用require函数"><a href="#1-2-3-使用require函数" class="headerlink" title="1.2.3 使用require函数"></a>1.2.3 使用require函数</h3><p>在RequireJS中另外一个非常有用的函数是require函数。require函数用于加载模块依赖但并不会创建一个模块。例如：下面就是使用require定义了能够使用jQuery的一个函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">require([&apos;jquery&apos;], function ($) &#123;</span><br><span class="line">    //jQuery was loaded and can be used now</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+  </div>
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/2015/08/04/algorithm/2015-08-04-BubbleSort/" rel="next" title="冒泡排序">
+          冒泡排序
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+          <a href="/2016/12/16/javascript/2016-12-16-Knockout/" rel="prev" title="Knockout.js笔记">
+            Knockout.js笔记
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-RequireJS是什么？"><span class="toc-text">1.1 RequireJS是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-使用RequireJS"><span class="toc-text">1.2 使用RequireJS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-1-加载JavaScript文件"><span class="toc-text">1.2.1 加载JavaScript文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-1-1-data-main属性"><span class="toc-text">1.2.1.1 data-main属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-1-2-配置函数"><span class="toc-text">1.2.1.2 配置函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-2-用RequireJS定义模块"><span class="toc-text">1.2.2 用RequireJS定义模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-3-使用require函数"><span class="toc-text">1.2.3 使用require函数</span></a></li></ol></li></ol>
+  </div>
+
+
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+      
+      <a href="http://programer.group" target="_blank">主站</a> |
+      <a href="https://zhongyp.me" target="_blank">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Theme microb</a>
+    </div>
+  </footer>
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     * 
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+      
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      var menu = document.getElementById('menu-main-post');
+      if (menu) {
+        var toc = document.getElementById('toc');
+        if (toc) {
+          menu.onclick = function() {
+            if (toc) {
+              if (toc.style.display == 'block') {
+                toc.style.display = 'none';
+              } else {
+                toc.style.display = 'block';
+              }
+            }
+          };
+        } else {
+          menu.style.display = 'none';
+        }
+      }
+    }
+
+  })(window, document);
+</script>
+
+  
+
+
+
+</body>
+</html>
