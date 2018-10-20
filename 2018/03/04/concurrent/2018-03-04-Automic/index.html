@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  
+    <meta name="keywords" content="并发," />
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客" />
+  
+  
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  <title>原子读语义（转载） [ DO IT ]</title>
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <li class="pure-menu-item toc-menu">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li>
+    
+  </ul>  
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">DO IT</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      原子读语义（转载）
+    </h1>
+    
+    <time class="time" datetime="2018-03-03T16:00:00.000Z">
+      2018-03-04
+    </time>
+    
+    <hr>
+  </header>
+  <div class="post-content">
+    <p><a href="https://www.cnblogs.com/chengxiao/p/6789109.html" target="_blank" rel="noopener">原文地址：https://www.cnblogs.com/chengxiao/p/6789109.html</a></p>
+<p>在谈谈java中的volatile一文中，我们提到过并发包中的原子类可以解决类似num++这样的复合类操作的原子性问题，相比锁机制，使用原子类更精巧轻量，性能开销更小，本章就一起来分析下原子类的实现机理。</p>
+<h2 id="悲观的解决方案（阻塞同步）"><a href="#悲观的解决方案（阻塞同步）" class="headerlink" title="悲观的解决方案（阻塞同步）"></a>悲观的解决方案（阻塞同步）</h2><p>　　<br>    我们知道，num++看似简单的一个操作，实际上是由1.读取 2.加一 3.写入 三步组成的，这是个复合类的操作（所以我们之前提到过的volatile是无法解决num++的原子性问题的），在并发环境下，如果不做任何同步处理，就会有线程安全问题。最直接的处理方式就是加锁。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">synchronized(this)&#123;</span><br><span class="line">    num++;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>　　使用独占锁机制来解决，是一种悲观的并发策略，抱着一副“总有刁民想害朕”的态势，每次操作数据的时候都认为别的线程会参与竞争修改，所以直接加锁。同一刻只能有一个线程持有锁，那其他线程就会阻塞。线程的挂起恢复会带来很大的性能开销，尽管jvm对于非竞争性的锁的获取和释放做了很多优化，但是一旦有多个线程竞争锁，频繁的阻塞唤醒，还是会有很大的性能开销的。所以，使用synchronized或其他重量级锁来处理显然不够合理。</p>
+<h2 id="乐观的解决方案（非阻塞同步）"><a href="#乐观的解决方案（非阻塞同步）" class="headerlink" title="乐观的解决方案（非阻塞同步）"></a>乐观的解决方案（非阻塞同步）</h2><p>　　乐观的解决方案，顾名思义，就是很大度乐观，每次操作数据的时候，都认为别的线程不会参与竞争修改，也不加锁。如果操作成功了那最好；如果失败了，比如中途确有别的线程进入并修改了数据（依赖于冲突检测），也不会阻塞，可以采取一些补偿机制，一般的策略就是反复重试。很显然，这种思想相比简单粗暴利用锁来保证同步要合理的多。</p>
+<p>　　鉴于并发包中的原子类其实现机理都差不太多，本章我们就通过AtomicInteger这个原子类来进行分析。我们先来看看对于num++这样的操作AtomicInteger是如何保证其原子性的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line">     * Atomically increments by one the current value.</span><br><span class="line">     *</span><br><span class="line">     * @return the updated value</span><br><span class="line">     */</span><br><span class="line">    public final int incrementAndGet() &#123;</span><br><span class="line">        for (;;) &#123;</span><br><span class="line">            int current = get();</span><br><span class="line">            int next = current + 1;</span><br><span class="line">            if (compareAndSet(current, next))</span><br><span class="line">                return next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>　　我们来分析下incrementAndGet的逻辑：1.先获取当前的value值，2.对value加一，3.第三步是关键步骤，调用compareAndSet方法来来进行原子更新操作，这个方法的语义是：</p>
+<p>先检查当前value是否等于current，如果相等，则意味着value没被其他线程修改过，更新并返回true。如果不相等，compareAndSet则会返回false，然后循环继续尝试更新。compareAndSet调用了Unsafe类的compareAndSwapInt方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * Atomically sets the value to the given updated value</span><br><span class="line">     * if the current value &#123;@code ==&#125; the expected value.</span><br><span class="line">     *</span><br><span class="line">     * @param expect the expected value</span><br><span class="line">     * @param update the new value</span><br><span class="line">     * @return true if successful. False return indicates that</span><br><span class="line">     * the actual value was not equal to the expected value.</span><br><span class="line">     */</span><br><span class="line">    public final boolean compareAndSet(int expect, int update) &#123;</span><br><span class="line">        return unsafe.compareAndSwapInt(this, valueOffset, expect, update);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>Unsafe的compareAndSwapInt是个native方法，也就是平台相关的。它是基于CPU的CAS指令来完成的。</p>
+<p><code>public final native boolean compareAndSwapInt(Object var1, long var2, int var4, int var5);</code></p>
+<h3 id="CAS-Compare-and-Swap"><a href="#CAS-Compare-and-Swap" class="headerlink" title="CAS(Compare-and-Swap)　"></a>CAS(Compare-and-Swap)　</h3><p>　<br>　　CAS算法是由硬件直接支持来保证原子性的，有三个操作数：内存位置V、旧的预期值A和新值B，当且仅当V符合预期值A时，CAS用新值B原子化地更新V的值，否则，它什么都不做。</p>
+<pre><code>CAS的ABA问题
+</code></pre><p>　　当然CAS也并不完美，它存在”ABA”问题，假若一个变量初次读取是A，在compare阶段依然是A，但其实可能在此过程中，它先被改为B，再被改回A，而CAS是无法意识到这个问题的。CAS只关注了比较前后的值是否改变，而无法清楚在此过程中变量的变更明细，这就是所谓的ABA漏洞。 </p>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
+  </div>
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/2018/03/02/interfaceview/2018-03-02-Classic/" rel="next" title="经典面试题整理">
+          经典面试题整理
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+          <a href="/2018/03/07/dubbo/2018-03-07-DubboPrinciple/" rel="prev" title="Dubbo工作原理">
+            Dubbo工作原理
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#悲观的解决方案（阻塞同步）"><span class="toc-text">悲观的解决方案（阻塞同步）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#乐观的解决方案（非阻塞同步）"><span class="toc-text">乐观的解决方案（非阻塞同步）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CAS-Compare-and-Swap"><span class="toc-text">CAS(Compare-and-Swap)　</span></a></li></ol></li></ol>
+  </div>
+
+
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+      
+      <a href="http://programer.group" target="_blank">主站</a> |
+      <a href="https://zhongyp.me" target="_blank">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Theme microb</a>
+    </div>
+  </footer>
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     * 
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+      
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      var menu = document.getElementById('menu-main-post');
+      if (menu) {
+        var toc = document.getElementById('toc');
+        if (toc) {
+          menu.onclick = function() {
+            if (toc) {
+              if (toc.style.display == 'block') {
+                toc.style.display = 'none';
+              } else {
+                toc.style.display = 'block';
+              }
+            }
+          };
+        } else {
+          menu.style.display = 'none';
+        }
+      }
+    }
+
+  })(window, document);
+</script>
+
+  
+
+
+
+</body>
+</html>
