@@ -33,13 +33,37 @@
   <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
   <ul class="pure-menu-list float-r clearfix">
     
-      <li class="pure-menu-item toc-menu">
+      <!-- <li class="pure-menu-item toc-menu pure-menu-has-children pure-menu-allow-hover">
         <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
           <img class="menu-icon" src="/logo.png" alt="MENU">
         </a>
+      </li> -->
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+        <ul class="pure-menu-children">
+        
+          
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+          
+          
+      </ul>
       </li>
     
-  </ul>  
+  </ul>
   <a class="pure-menu-heading" href="/">
       <h1 class="title">DO IT</h1>
       <!-- <span>钟宇鹏的博客</span> -->
@@ -48,6 +72,7 @@
   <img class="logo" id="logo" src="/logo.png" alt="logo">
    -->
 </nav>
+
 
   <div class="container" id="content-outer">
     <div class="inner" id="content-inner">
@@ -115,14 +140,16 @@
 
   <footer class="footer text-center">
     <div id="bottom-inner">
-      
+
       <a href="http://programer.group" target="_blank">主站</a> |
-      <a href="https://zhongyp.me" target="_blank">DO IT</a> |
+      <a href="http://zhongyp.me" target="_blank">DO IT</a> |
       <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
       <a href="http://hexo.io" target="_blank">Hexo</a> |
-      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Theme microb</a>
+      <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a>
     </div>
   </footer>
+
   
 
 <script>
@@ -180,7 +207,7 @@
 
     /**
      * 给logo设置点击事件
-     * 
+     *
      * - 回到顶部
      * - 出现爱心
      */
@@ -194,7 +221,7 @@
           createHeart(event);
         }
       }
-      
+
     }
 
     function createHeart(event) {
@@ -228,27 +255,28 @@
     }
 
     function addMenuEvent() {
-      var menu = document.getElementById('menu-main-post');
-      if (menu) {
-        var toc = document.getElementById('toc');
-        if (toc) {
-          menu.onclick = function() {
-            if (toc) {
-              if (toc.style.display == 'block') {
-                toc.style.display = 'none';
-              } else {
-                toc.style.display = 'block';
-              }
-            }
-          };
-        } else {
-          menu.style.display = 'none';
-        }
-      }
+      // var menu = document.getElementById('menu-main-post');
+      // if (menu) {
+      //   var toc = document.getElementById('toc');
+      //   if (toc) {
+      //     menu.onclick = function() {
+      //       if (toc) {
+      //         if (toc.style.display == 'block') {
+      //           toc.style.display = 'none';
+      //         } else {
+      //           toc.style.display = 'block';
+      //         }
+      //       }
+      //     };
+      //   } else {
+      //     menu.style.display = 'none';
+      //   }
+      // }
     }
 
   })(window, document);
 </script>
+
 
   
 

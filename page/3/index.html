@@ -41,30 +41,31 @@
         
           
             <li class="pure-menu-item actived"><a href="/" class="pure-menu-link">首页</a></li>
-            
+          
           
           
             <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
-            
+          
           
           
             <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
-            
+          
           
           
             <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
-            
+          
           
       </ul>
       </li>
     
-  </ul>  
+  </ul>
   <a class="pure-menu-heading" href="/">
       <h1 class="title">DO IT</h1>
       <!-- <span>钟宇鹏的博客</span> -->
   </a>
   <!--  -->
 </nav>
+
 
   <div class="container" id="content-outer">
     <div class="inner" id="content-inner">
@@ -92,6 +93,23 @@
     
       <article class="recent-post-item">
         <a class="title" href="/2018/01/15/spring/2018-01-15-Spring/"><h2>对Spring 的IOC的认识</h2></a>
+        
+        
+        <div class="post-footer">
+          
+            <ul class="index-tag-list"><li class="index-tag-list-item"><a class="index-tag-list-link" href="/tags/Spring/">Spring</a></li></ul>
+          
+
+          
+            <time class="time pr" datetime="2018-01-14T16:00:00.000Z">
+              2018-01-15
+            </time>
+          
+        </div>
+      </article>
+    
+      <article class="recent-post-item">
+        <a class="title" href="/2018/01/15/spring/2018-01-15-SpringInit/"><h2>Spring Bean容器加载Bean源码解析（转载）</h2></a>
         
         
         <div class="post-footer">
@@ -142,23 +160,6 @@
       </article>
     
       <article class="recent-post-item">
-        <a class="title" href="/2018/01/15/spring/2018-01-15-SpringInit/"><h2>Spring Bean容器加载Bean源码解析（转载）</h2></a>
-        
-        
-        <div class="post-footer">
-          
-            <ul class="index-tag-list"><li class="index-tag-list-item"><a class="index-tag-list-link" href="/tags/Spring/">Spring</a></li></ul>
-          
-
-          
-            <time class="time pr" datetime="2018-01-14T16:00:00.000Z">
-              2018-01-15
-            </time>
-          
-        </div>
-      </article>
-    
-      <article class="recent-post-item">
         <a class="title" href="/2018/01/14/dubbo/2018-02-14-Dubbo-Consumer/"><h2>Dubbo客户端消费（转载）</h2></a>
         
         
@@ -176,24 +177,7 @@
       </article>
     
       <article class="recent-post-item">
-        <a class="title" href="/2018/01/12/java/2018-01-12-LinkedList/"><h2>LinkedList源码解析</h2></a>
-        
-        
-        <div class="post-footer">
-          
-            <ul class="index-tag-list"><li class="index-tag-list-item"><a class="index-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-          
-
-          
-            <time class="time pr" datetime="2018-01-11T16:00:00.000Z">
-              2018-01-12
-            </time>
-          
-        </div>
-      </article>
-    
-      <article class="recent-post-item">
-        <a class="title" href="/2018/01/12/java/2018-01-12-Clone/"><h2>Java 深拷贝和浅拷贝</h2></a>
+        <a class="title" href="/2018/01/12/java/2018-01-12-listirerator/"><h2>ListIterator和Iterator的区别</h2></a>
         
         
         <div class="post-footer">
@@ -227,7 +211,24 @@
       </article>
     
       <article class="recent-post-item">
-        <a class="title" href="/2018/01/12/java/2018-01-12-listirerator/"><h2>ListIterator和Iterator的区别</h2></a>
+        <a class="title" href="/2018/01/12/java/2018-01-12-Clone/"><h2>Java 深拷贝和浅拷贝</h2></a>
+        
+        
+        <div class="post-footer">
+          
+            <ul class="index-tag-list"><li class="index-tag-list-item"><a class="index-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+          
+
+          
+            <time class="time pr" datetime="2018-01-11T16:00:00.000Z">
+              2018-01-12
+            </time>
+          
+        </div>
+      </article>
+    
+      <article class="recent-post-item">
+        <a class="title" href="/2018/01/12/java/2018-01-12-LinkedList/"><h2>LinkedList源码解析</h2></a>
         
         
         <div class="post-footer">
@@ -259,14 +260,16 @@
 
   <footer class="footer text-center">
     <div id="bottom-inner">
-      
+
       <a href="http://programer.group" target="_blank">主站</a> |
-      <a href="https://zhongyp.me" target="_blank">DO IT</a> |
+      <a href="http://zhongyp.me" target="_blank">DO IT</a> |
       <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
       <a href="http://hexo.io" target="_blank">Hexo</a> |
-      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Theme microb</a>
+      <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a>
     </div>
   </footer>
+
   
 
 <script>
@@ -324,7 +327,7 @@
 
     /**
      * 给logo设置点击事件
-     * 
+     *
      * - 回到顶部
      * - 出现爱心
      */
@@ -338,7 +341,7 @@
           createHeart(event);
         }
       }
-      
+
     }
 
     function createHeart(event) {
@@ -372,27 +375,28 @@
     }
 
     function addMenuEvent() {
-      var menu = document.getElementById('menu-main-post');
-      if (menu) {
-        var toc = document.getElementById('toc');
-        if (toc) {
-          menu.onclick = function() {
-            if (toc) {
-              if (toc.style.display == 'block') {
-                toc.style.display = 'none';
-              } else {
-                toc.style.display = 'block';
-              }
-            }
-          };
-        } else {
-          menu.style.display = 'none';
-        }
-      }
+      // var menu = document.getElementById('menu-main-post');
+      // if (menu) {
+      //   var toc = document.getElementById('toc');
+      //   if (toc) {
+      //     menu.onclick = function() {
+      //       if (toc) {
+      //         if (toc.style.display == 'block') {
+      //           toc.style.display = 'none';
+      //         } else {
+      //           toc.style.display = 'block';
+      //         }
+      //       }
+      //     };
+      //   } else {
+      //     menu.style.display = 'none';
+      //   }
+      // }
     }
 
   })(window, document);
 </script>
+
 
   
 
