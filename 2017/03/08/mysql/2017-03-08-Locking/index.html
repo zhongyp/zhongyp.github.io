@@ -128,11 +128,11 @@
 </li>
 </ul>
 <p>实现方式：</p>
-<p>悲观锁的实现，往往依靠数据库提供的锁机制（也只有数据库层提供的锁机制才能真正保证数据访问的排他性，否则，即使在本系统中实现了加锁机制，也无法保证外部系统不会修改数据）。 </p>
+<p>悲观锁的实现，往往依靠数据库提供的锁机制（也只有数据库层提供的锁机制才能真正保证数据访问的排他性，否则，即使在本系统中实现了加锁机制，也无法保证外部系统不会修改数据）。</p>
 <p>Hibernate的加锁模式有：<br>Ø LockMode.NONE ： 无锁机制。<br>Ø LockMode.WRITE ：Hibernate在Insert和Update记录的时候会自动<br>获取。<br>Ø LockMode.READ ： Hibernate在读取记录的时候会自动获取。<br>以上这三种锁机制一般由Hibernate内部使用，如Hibernate为了保证Update<br>过程中对象不会被外界修改，会在save方法实现中自动为目标对象加上WRITE锁。<br>Ø LockMode.UPGRADE ：利用数据库的for update子句加锁。<br>Ø LockMode. UPGRADE_NOWAIT ：Oracle的特定实现，利用Oracle的for update nowait子句实现加锁。</p>
 <p>实例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> String hqlStr  =   &quot; from TUser as user where user.name=’Erica’ &quot; ; </span><br><span class="line"> Query query  =  session.createQuery(hqlStr); </span><br><span class="line"> query.setLockMode( &quot; user &quot; ,LockMode.UPGRADE);  // 加锁  </span><br><span class="line"> List userList  =  query.list(); // 执行查询，</span><br><span class="line"></span><br><span class="line">```	 </span><br><span class="line">获取数据 query.setLockMode 对查询语句中特定别名所对应的记录进行加锁（我们为 TUser类指定了一个别名“user”），这里也就是对返回的所有user记录进行加锁。 观察运行期Hibernate生成的SQL语句：</span><br></pre></td></tr></table></figure>
-<p>select tuser0_.id as id, tuser0_.name as name, tuser0_.group_id as group_id, tuser0_.user_type as user_type, tuser0_.sex as sex from t_user tuser0_ where (tuser0_.name = ’Erica’ )  for  update<br><code>`</code><br>这里Hibernate通过使用数据库的for update子句实现了悲观锁机制。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> String hqlStr  =   &quot; from TUser as user where user.name=’Erica’ &quot; ;</span><br><span class="line"> Query query  =  session.createQuery(hqlStr);</span><br><span class="line"> query.setLockMode( &quot; user &quot; ,LockMode.UPGRADE);  // 加锁  </span><br><span class="line"> List userList  =  query.list(); // 执行查询，</span><br><span class="line"></span><br><span class="line">```	 </span><br><span class="line">获取数据 query.setLockMode 对查询语句中特定别名所对应的记录进行加锁（我们为 TUser类指定了一个别名“user”），这里也就是对返回的所有user记录进行加锁。 观察运行期Hibernate生成的SQL语句：</span><br></pre></td></tr></table></figure>
+<p>select tuser0_.id as id, tuser0_.name as name, tuser0_.group_id as group_id, tuser0_.user_type as user_type, tuser0_.sex as sex from t_user tuser0_ where (tuser0_.name = ’Erica’ )  for  update<br><code>`</code><br>这里Hibernate通过使用数据库的for update子句实现了悲观锁机制。</p>
 <p>上面这两种锁机制是我们在应用层较为常用的，加锁一般通过以下方法实现：<br>Criteria.setLockMode<br>Query.setLockMode<br>Session.lock<br>注意，只有在查询开始之前（也就是Hiberate 生成SQL 之前）设定加锁，才会 真正通过数据库的锁机制进行加锁处理，否则，数据已经通过不包含for update 子句的Select SQL加载进来，所谓数据库加锁也就无从谈起。</p>
 <p>三种并发容易遇到的问题。</p>
 <ul>
@@ -154,7 +154,7 @@
       <div class="post-nav-item post-nav-next">
         
           <span>〈 </span>
-          <a href="/2017/03/04/datastored/2018-03-04-Distributed-Transaction/" rel="next" title="分布式事务（转载）">
+          <a href="/2017/03/04/spring/2018-03-04-Distributed-Transaction/" rel="next" title="分布式事务（转载）">
           分布式事务（转载）
           </a>
         
