@@ -18,7 +18,7 @@
   
   
   <link rel="icon" type="image/x-icon" href="/logo.png">
-  <title>AOP with Spring [ DO IT ]</title>
+  <title>Spring AOP [ DO IT ]</title>
   
     <!-- stylesheets list from config.yml -->
     
@@ -79,7 +79,7 @@
       <article class="post" id="post">
   <header class="post-header text-center">
     <h1 class="title">
-      AOP with Spring
+      Spring AOP
     </h1>
     
     <time class="time" datetime="2018-10-02T16:00:00.000Z">
@@ -89,8 +89,15 @@
     <hr>
   </header>
   <div class="post-content">
-    <h2 id="Spring-AOP"><a href="#Spring-AOP" class="headerlink" title="Spring AOP"></a>Spring AOP</h2><h3 id="AOP-Terminologies（AOP-术语）"><a href="#AOP-Terminologies（AOP-术语）" class="headerlink" title="AOP Terminologies（AOP 术语）"></a>AOP Terminologies（AOP 术语）</h3><p><a href="https://www.tutorialspoint.com/spring/aop_with_spring.htm" target="_blank" rel="noopener">引用博文</a></p>
-<h4 id="Aspect（切面）"><a href="#Aspect（切面）" class="headerlink" title="Aspect（切面）"></a>Aspect（切面）</h4><p>This is a module which has a set of APIs providing cross-cutting requirements. For example, a logging module would be called AOP aspect for logging. An application can have any number of aspects depending on the requirement.</p>
+    <h2 id="Spring-AOP"><a href="#Spring-AOP" class="headerlink" title="Spring AOP"></a>Spring AOP</h2><p>本篇文章翻译自<a href="https://www.tutorialspoint.com/spring/aop_with_spring.htm" target="_blank" rel="noopener">AOP with Spring</a></p>
+<h3 id="Brief-introduction-（简介）"><a href="#Brief-introduction-（简介）" class="headerlink" title="Brief introduction （简介）"></a>Brief introduction （简介）</h3><p>One of the key components of Spring Framework is the Aspect oriented programming (AOP) framework. Aspect-Oriented Programming entails breaking down program logic into distinct parts called so-called concerns. The functions that span multiple points of an application are called cross-cutting concerns and these cross-cutting concerns are conceptually separate from the application’s business logic. There are various common good examples of aspects like logging, auditing, declarative transactions, security, caching, etc.</p>
+<p>The key unit of modularity in OOP is the class, whereas in AOP the unit of modularity is the aspect. Dependency Injection helps you decouple your application objects from each other and AOP helps you decouple cross-cutting concerns from the objects that they affect. AOP is like triggers in programming languages such as Perl, .NET, Java, and others.</p>
+<p>Spring AOP module provides interceptors to intercept an application. For example, when a method is executed, you can add extra functionality before or after the method execution.</p>
+<p>翻译：</p>
+<p>AOP面向切面编程是Spring框架中的最关键的部分之一。面向切面编程需要拆分编码逻辑到称为关注点的不同部分。一个在应用程序内跨越多个点的方法被称为横切关注点，这些横切关注点和应用的业务逻辑在概念上是分开的。目前已经有很多应用切面的例子，比如日志，审计，声明式事务，安全，缓存等。</p>
+<p>在面向对象编程中，模块化的关键单元是类，但是在面向切面编程中，模块化单元是切面。依赖注入帮助你将应用中的对象相互解耦，AOP帮助你将横切关注点从它们作用的对象中解耦。AOP就像是Perl,.NET,Java或者其他编程语言中的触发器。</p>
+<p>Spring AOP模块提供拦截应用的拦截器。举个🌰，你可以在你运行的方法之前或者之后添加额外的功能或者方法。</p>
+<h3 id="AOP-Terminologies（AOP-术语）"><a href="#AOP-Terminologies（AOP-术语）" class="headerlink" title="AOP Terminologies（AOP 术语）"></a>AOP Terminologies（AOP 术语）</h3><h4 id="Aspect（切面）"><a href="#Aspect（切面）" class="headerlink" title="Aspect（切面）"></a>Aspect（切面）</h4><p>This is a module which has a set of APIs providing cross-cutting requirements. For example, a logging module would be called AOP aspect for logging. An application can have any number of aspects depending on the requirement.</p>
 <p>翻译： Aspect一个提供横切（cross-cutting）APIs的模块。举个例子，日志模块被称为AOP 日志切面。一个应用可以根据需求拥有任何数量的切面。</p>
 <h4 id="Join-point（连接点）"><a href="#Join-point（连接点）" class="headerlink" title="Join point（连接点）"></a>Join point（连接点）</h4><p>This represents a point in your application where you can plug-in the AOP aspect. You can also say, it is the actual place in the application where an action will be taken using Spring AOP framework.</p>
 <p>翻译： 在应用中可以插入AOP切面的地方可被抽象为一个点。你也可以说，这是一个在应用中存在的地方，这个地方将被Spring AOP 框架执行一些动作。</p>
@@ -105,6 +112,24 @@
 <p>翻译：这个对象被一个或者多个切面通知。这个对象一般是代理对象，作为被通知对象引用。</p>
 <h4 id="Weaving（织入）"><a href="#Weaving（织入）" class="headerlink" title="Weaving（织入）"></a>Weaving（织入）</h4><p>Weaving is the process of linking aspects with other application types or objects to create an advised object. This can be done at compile time, load time, or at runtime.</p>
 <p>翻译：织入是链接切面和其他应用类型或者对象来创建通知对象的过程。这个过程可以在编译、加载或者执行期间进行。</p>
+<h3 id="Types-of-Advice"><a href="#Types-of-Advice" class="headerlink" title="Types of Advice"></a>Types of Advice</h3><p>Spring aspects can work with five kinds of advice mentioned as follows.<br>翻译：Spring 切面可以使用如下提到的五种advice</p>
+<ul>
+<li><p>before: Run advice before a method execution.</p>
+</li>
+<li><p>after: Run advice after a method execution.</p>
+</li>
+<li><p>after-returning: Run advice after the a method execution only if method completes successfully.</p>
+</li>
+<li><p>after-throwing: Run advice after the method execution only if method exits by throwing an exception.</p>
+</li>
+<li><p>around: Run advice before and after the advised method is invoked.</p>
+</li>
+</ul>
+<h3 id="Custom-Aspects-Implementation-自定义接口实现"><a href="#Custom-Aspects-Implementation-自定义接口实现" class="headerlink" title="Custom Aspects Implementation(自定义接口实现)"></a>Custom Aspects Implementation(自定义接口实现)</h3><p>XML Schema based（基于XML模式）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;</span><br><span class="line">       xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</span><br><span class="line">        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd</span><br><span class="line">        http://www.springframework.org/schema/aop</span><br><span class="line">        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd&quot;&gt;</span><br><span class="line">    &lt;!-- 业务逻辑类--AOP连接点 --&gt;</span><br><span class="line">    &lt;bean id=&quot;aopTest&quot; class=&quot;com.zhongyp.zen.service.aop.AOPTestService&quot; /&gt;</span><br><span class="line">    &lt;!-- 切面（横切）关注点--AOP切面 --&gt;</span><br><span class="line">    &lt;bean id=&quot;timeHandler&quot; class=&quot;com.zhongyp.zen.service.handler.TimeHandler&quot; /&gt;</span><br><span class="line">    &lt;!-- 切面（横切）关注点--AOP切面  --&gt;</span><br><span class="line">    &lt;bean id=&quot;printHandler&quot; class=&quot;com.zhongyp.zen.service.handler.PrintHandler&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">    &lt;aop:aspectj-autoproxy /&gt;</span><br><span class="line">    &lt;aop:config&gt;</span><br><span class="line">        &lt;!-- pointcut切入点（AOP连接点的集合）--&gt;</span><br><span class="line">        &lt;aop:pointcut id=&quot;pointcut&quot; expression=&quot;execution(* com.zhongyp.zen.service.*.*.*(..))&quot; /&gt;</span><br><span class="line">        &lt;!-- 切面 --&gt;</span><br><span class="line">        &lt;aop:aspect id=&quot;time&quot; ref=&quot;timeHandler&quot;&gt;</span><br><span class="line">            &lt;!-- AOP Advice --&gt;</span><br><span class="line">            &lt;aop:before method=&quot;printStartTime&quot; pointcut-ref=&quot;pointcut&quot; /&gt;</span><br><span class="line">            &lt;aop:after method=&quot;printEndTime&quot; pointcut-ref=&quot;pointcut&quot; /&gt;</span><br><span class="line">        &lt;/aop:aspect&gt;</span><br><span class="line">        &lt;aop:aspect id=&quot;print&quot; ref=&quot;printHandler&quot;&gt;</span><br><span class="line">            &lt;aop:after-returning method=&quot;printString&quot; pointcut-ref=&quot;pointcut&quot;&gt;&lt;/aop:after-returning&gt;</span><br><span class="line">        &lt;/aop:aspect&gt;</span><br><span class="line">    &lt;/aop:config&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+<p>@AspectJ based（基于切面注解）</p>
+<p>注解方式可以将上述xml配置以注解的形式配置一下，我这里只是给出一个样例，其他的还需读者自己实践。AOP主要还是对于切面编程的概念的理解。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@Aspect</span><br><span class="line">@Component(&quot;logHandler&quot;)</span><br><span class="line">public class LogHandler &#123;</span><br><span class="line">    @Pointcut(&quot;execution(* com.zhongyp.zen.service.*.*.*(..))&quot;)</span><br><span class="line">    private void hehe()&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    @Before(&quot;hehe()&quot;)</span><br><span class="line">    public void doBefore()&#123;</span><br><span class="line">        System.out.println(&quot;为毛国庆要加班！！！！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
   </div>
   <div class="post-tags">
@@ -136,7 +161,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-AOP"><span class="toc-text">Spring AOP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AOP-Terminologies（AOP-术语）"><span class="toc-text">AOP Terminologies（AOP 术语）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Aspect（切面）"><span class="toc-text">Aspect（切面）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Join-point（连接点）"><span class="toc-text">Join point（连接点）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pointcut（切入点）"><span class="toc-text">Pointcut（切入点）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Introduction（引入）"><span class="toc-text">Introduction（引入）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Target-object"><span class="toc-text">Target object</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Weaving（织入）"><span class="toc-text">Weaving（织入）</span></a></li></ol></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-AOP"><span class="toc-text">Spring AOP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Brief-introduction-（简介）"><span class="toc-text">Brief introduction （简介）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOP-Terminologies（AOP-术语）"><span class="toc-text">AOP Terminologies（AOP 术语）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Aspect（切面）"><span class="toc-text">Aspect（切面）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Join-point（连接点）"><span class="toc-text">Join point（连接点）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pointcut（切入点）"><span class="toc-text">Pointcut（切入点）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Introduction（引入）"><span class="toc-text">Introduction（引入）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Target-object"><span class="toc-text">Target object</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Weaving（织入）"><span class="toc-text">Weaving（织入）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Types-of-Advice"><span class="toc-text">Types of Advice</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Custom-Aspects-Implementation-自定义接口实现"><span class="toc-text">Custom Aspects Implementation(自定义接口实现)</span></a></li></ol></li></ol>
   </div>
 
 
@@ -151,7 +176,7 @@
     <div id="bottom-inner">
 
       <a href="http://programer.group" target="_blank">主站</a> |
-      <a href="http://zhongyp.me" target="_blank">DO IT</a> |
+      <a href="http://zhongyp.me">DO IT</a> |
       <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
       <a href="http://hexo.io" target="_blank">Hexo</a> |
       <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
