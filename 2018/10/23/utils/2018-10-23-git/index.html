@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  
+    <meta name="keywords" content="Utils," />
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客" />
+  
+  
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  <title>Git常用命令总结 [ DO IT ]</title>
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <!-- <li class="pure-menu-item toc-menu pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li> -->
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+        <ul class="pure-menu-children">
+        
+          
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+          
+          
+      </ul>
+      </li>
+    
+  </ul>
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">DO IT</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      Git常用命令总结
+    </h1>
+    
+    <time class="time" datetime="2018-10-22T16:00:00.000Z">
+      2018-10-23
+    </time>
+    
+    <hr>
+  </header>
+  <div class="post-content">
+    <h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><p>系统系统性的学习Git，请移步<a href="https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-%E5%85%B3%E4%BA%8E%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6" target="_blank" rel="noopener">Git中文学习文档</a>，这篇文章只是分类记录一下git的常用命令。</p>
+<p><img src="/media/15403035072735.jpg" alt="Git版本控制系统VCS基本操作流程图"></p>
+<h2 id="常用命令总结"><a href="#常用命令总结" class="headerlink" title="常用命令总结"></a>常用命令总结</h2><h3 id="Git初始化"><a href="#Git初始化" class="headerlink" title="Git初始化"></a>Git初始化</h3><p><code>git init</code> 将当前目录变为可管理的仓库<br><code>git clone</code> 克隆一个仓库到本地</p>
+<h3 id="设置与配置"><a href="#设置与配置" class="headerlink" title="设置与配置"></a>设置与配置</h3><p><code>git config -global user.name/email &quot;参数&quot;</code> git是分布式版本控制，所以添加用户名和邮箱作为一个标识<br><code>ssh -keygen -t rsa -C &quot;email&quot;</code> 生成本地ssh key</p>
+<h3 id="将文件提交到版本库"><a href="#将文件提交到版本库" class="headerlink" title="将文件提交到版本库"></a>将文件提交到版本库</h3><p><code>git add &quot;filename.*&quot;</code> 添加到暂存区<br><code>git commit -m &quot;filename.*&quot;</code> 提交到仓库<br><code>git commit --amend</code> 尝试重新提交,这个操作需要组合操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git add file1 // 将file1 添加至缓存区</span><br><span class="line">git commmit -m &quot;update files&quot; //提交file1到本地仓库,提交完发现忘记file2没有提交，则你可以使用如下命令，提交file2并覆盖之前的提交信息。</span><br><span class="line">git add file2 // 添加file2</span><br><span class="line">git commit -amend // 尝试重新提交commit信息，并覆盖掉之前的提交信息</span><br></pre></td></tr></table></figure>
+<p><code>git status</code> 查看文件状态<br><code>git diff filename.*</code> 查看修改了什么<br><code>git log</code> 看看每次修改的日志<br><code>git log --pretty=oneline</code> 日志显示为缩略版<br>注：<code>git reset</code> 不加<code>--hard</code>参数对当前工作区文件不会有任何修改，只是对缓存区进行操作。一旦加了参数，操作一定要慎重，否则你当前工作区中的修改将会全部被清除。<br><code>git reset HEAD file</code> 将file退回到当前版本（仅仅是对缓存区进行操作）<br><code>git reset --hard HEAD^</code> 退回到上一版本<br><code>git reset --hard HEAD^^</code> 退回到前二的版本<br><code>git reset --hard HEAD~100</code> 退回到前100版本<br><code>git reset --hard 版本号</code> 退回到一个特定的版本<br><code>git reflog</code> 查看版本号和上一个命令一块用效果比较好<br><code>git rm --cached file</code> 删除缓存区file<br><code>git checkout -- file</code> 恢复工作区file（取消工作区文件的修改）</p>
+<h3 id="git远程库"><a href="#git远程库" class="headerlink" title="git远程库"></a>git远程库</h3><p><code>git remote add origin 远程git地址</code> 连接<br><code>git push -u origin master</code> 把本地库分支master内容推送到远程库（-u 命令在第一次关联本地库和远程库时使用）<br><code>git clone url</code> 克隆远程(url)库</p>
+<h3 id="git分支"><a href="#git分支" class="headerlink" title="git分支"></a>git分支</h3><p>首先master主分支应该是非常稳定的，也就是用来发布新版本，一般情况下不允许在上面干活，干活一般情况下在新建的dev分支上干活，干完后，比如上要发布，或者说dev分支代码稳定后可以合并到主分支master上来。</p>
+<p><code>git branch</code> 查看分支<br><code>git checkout</code> 切换分支<br><code>git checkout -b</code>  创建并切换分支<br><code>git merge</code> 合并到当前分支<br><code>git branch -d</code>删除某分支<br><code>git merge --no-ff -m &quot;注释&quot;</code>分支合并分支禁用fast forward<br><code>git stash</code> 将当前分支的工作现场保留下来<br><code>git stash list</code> 查看工作现场<br><code>git stash apply</code> 恢复内容但是你需要git stash drop删除stash<br><code>git stash pop</code> 恢复的同时把stash内容也删除</p>
+<p>注：如果顺着一个分支走下去能够到达另一个分支，那么Git在合并两者的时候，只会简单的将指针向前推进（指针右移），因为这种情况下的合并操作没有需要解决的分歧——这就叫做 “快进（fast-forward）”。</p>
+<h3 id="多人协作"><a href="#多人协作" class="headerlink" title="多人协作"></a>多人协作</h3><p><code>git remote</code> 查看远程库的信息<br><code>git remote -v</code> 查看远程库的详细信息<br><code>git push origin master</code> master为本地的分支名推送分支<br><code>git checkout -b dev origin/dev</code> dev为分支名，做完开发后<br><code>git push origin dev</code> 推送到远程库<br><code>git pull</code> 抓取最新的提交,并尝试自动合并到本地当前所在的分支<br><code>git fetch</code> 抓取最新的提交，不会自动合并，必须手动。<br><code>git branch --set-upstream dev origin/dev</code> 指定本地dev分支（已经创建的）与远程origin/dev分支的连接<br><code>git branch -u origin/dev</code> 指定当前所在连接远程origin/dev分支的连接<br><code>git checkout --track origin/dev</code> 创建新的dev分支，制定远程连接origin/dev</p>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Utils/">Utils</a></li></ul>
+  </div>
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/2018/10/03/spring/2018-09-28-AOP/" rel="next" title="AOP with Spring">
+          AOP with Spring
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+      </div>
+    </div>
+  
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Git"><span class="toc-text">Git</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用命令总结"><span class="toc-text">常用命令总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Git初始化"><span class="toc-text">Git初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置与配置"><span class="toc-text">设置与配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将文件提交到版本库"><span class="toc-text">将文件提交到版本库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#git远程库"><span class="toc-text">git远程库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#git分支"><span class="toc-text">git分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多人协作"><span class="toc-text">多人协作</span></a></li></ol></li></ol>
+  </div>
+
+
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+
+      <a href="http://programer.group" target="_blank">主站</a> |
+      <a href="http://zhongyp.me" target="_blank">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a>
+    </div>
+  </footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     *
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      // var menu = document.getElementById('menu-main-post');
+      // if (menu) {
+      //   var toc = document.getElementById('toc');
+      //   if (toc) {
+      //     menu.onclick = function() {
+      //       if (toc) {
+      //         if (toc.style.display == 'block') {
+      //           toc.style.display = 'none';
+      //         } else {
+      //           toc.style.display = 'block';
+      //         }
+      //       }
+      //     };
+      //   } else {
+      //     menu.style.display = 'none';
+      //   }
+      // }
+    }
+
+  })(window, document);
+</script>
+
+
+  
+
+
+
+</body>
+</html>
