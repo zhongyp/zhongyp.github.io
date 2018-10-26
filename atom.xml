@@ -109,29 +109,6 @@
   </entry>
   
   <entry>
-    <title>Callable、Future、FutureTask</title>
-    <link href="http://zhongyp.me/2018/03/29/concurrent/2018-03-29-Callable/"/>
-    <id>http://zhongyp.me/2018/03/29/concurrent/2018-03-29-Callable/</id>
-    <published>2018-03-28T16:00:00.000Z</published>
-    <updated>2018-10-02T01:27:53.323Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Callable"><a href="#Callable" class="headerlink" title="Callable"></a>Callable</h2><p>Callable接口类似于Runnable，两者都是为那些其实例可能被另一个线程执行的类设计的，方法可以有返回值，并且可以抛出异常。但是Runnable不行。</p><p>Callable需要依赖FutureTask，用于接收运算结果。一个产生结果，一个拿到结果。FutureTask是Future接口的实现类，也可以用作闭锁（）。</p><p><img src="https://github.com/zhongyp/jekyll.github.io/blob/master/files/Callable.png?raw=true" alt="类图"></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;Callable&quot;&gt;&lt;a href=&quot;#Callable&quot; class=&quot;headerlink&quot; title=&quot;Callable&quot;&gt;&lt;/a&gt;Callable&lt;/h2&gt;&lt;p&gt;Callable接口类似于Runnable，两者都是为那些其实例可能被另一个线程执行的类设计
-      
-    
-    </summary>
-    
-    
-      <category term="并发" scheme="http://zhongyp.me/tags/%E5%B9%B6%E5%8F%91/"/>
-    
-  </entry>
-  
-  <entry>
     <title>闭锁和栅栏</title>
     <link href="http://zhongyp.me/2018/03/29/concurrent/2018-03-29-Latch-CyclicBarrier/"/>
     <id>http://zhongyp.me/2018/03/29/concurrent/2018-03-29-Latch-CyclicBarrier/</id>
@@ -145,6 +122,29 @@
       
       
         &lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/yujin753/article/details/46125283&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;参考原文：https://blog.csdn.net/yujin753/arti
+      
+    
+    </summary>
+    
+    
+      <category term="并发" scheme="http://zhongyp.me/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Callable、Future、FutureTask</title>
+    <link href="http://zhongyp.me/2018/03/29/concurrent/2018-03-29-Callable/"/>
+    <id>http://zhongyp.me/2018/03/29/concurrent/2018-03-29-Callable/</id>
+    <published>2018-03-28T16:00:00.000Z</published>
+    <updated>2018-10-02T01:27:53.323Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Callable"><a href="#Callable" class="headerlink" title="Callable"></a>Callable</h2><p>Callable接口类似于Runnable，两者都是为那些其实例可能被另一个线程执行的类设计的，方法可以有返回值，并且可以抛出异常。但是Runnable不行。</p><p>Callable需要依赖FutureTask，用于接收运算结果。一个产生结果，一个拿到结果。FutureTask是Future接口的实现类，也可以用作闭锁（）。</p><p><img src="https://github.com/zhongyp/jekyll.github.io/blob/master/files/Callable.png?raw=true" alt="类图"></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;Callable&quot;&gt;&lt;a href=&quot;#Callable&quot; class=&quot;headerlink&quot; title=&quot;Callable&quot;&gt;&lt;/a&gt;Callable&lt;/h2&gt;&lt;p&gt;Callable接口类似于Runnable，两者都是为那些其实例可能被另一个线程执行的类设计
       
     
     </summary>
@@ -346,7 +346,7 @@
     <link href="http://zhongyp.me/2018/03/07/algorithm/2018-03-07-RedBlackTree/"/>
     <id>http://zhongyp.me/2018/03/07/algorithm/2018-03-07-RedBlackTree/</id>
     <published>2018-03-06T16:00:00.000Z</published>
-    <updated>2018-10-22T10:33:47.918Z</updated>
+    <updated>2018-10-26T08:44:22.105Z</updated>
     
     <content type="html"><![CDATA[<h2 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h2><p><a href="https://www.cnblogs.com/sandy2013/p/3270999.html" target="_blank" rel="noopener">博文转载：https://www.cnblogs.com/sandy2013/p/3270999.html</a></p><h2 id="红黑树和平衡二叉树的区别"><a href="#红黑树和平衡二叉树的区别" class="headerlink" title="红黑树和平衡二叉树的区别"></a>红黑树和平衡二叉树的区别</h2><ul><li><p>红黑树放弃了追求完全平衡，追求大致平衡，在与平衡二叉树的时间复杂度相差不大的情况下，保证每次插入最多只需要三次旋转就能达到平衡，实现起来也更为简单。</p></li><li><p>平衡二叉树追求绝对平衡，条件比较苛刻，实现起来比较麻烦，每次插入新节点之后需要旋转的次数不能预知。<br>平衡二叉树又被称为AVL树（有别于AVL算法），且具有以下性质：它是一 棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。构造与调整方法 平衡二叉树的常用算法有红黑树、AVL、Treap等。 最小二叉平衡树的节点的公式如下 F(n)=F(n-1)+F(n-2)+1 这个类似于一个递归的数列，可以参考Fibonacci数列，1是根节点，F(n-1)是左子树的节点数量，F(n-2)是右子树的节点数量。</p></li></ul>]]></content>
     
