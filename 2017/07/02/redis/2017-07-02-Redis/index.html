@@ -3,20 +3,20 @@
 <html lang="zh-Hans">
 
 
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="theme-color" content="#202020"/>
+  <meta name="theme-color" content="#202020">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
+
   
-  
-    <meta name="keywords" content="Redis," />
+    <meta name="keywords" content="Redis,">
   
 
   
-    <meta name="description" content="钟宇鹏的博客" />
+    <meta name="description" content="钟宇鹏的博客">
   
-  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
   <link rel="icon" type="image/x-icon" href="/logo.png">
   <title>Redis(转载) [ DO IT ]</title>
   
@@ -28,6 +28,7 @@
     
   
 </head>
+
 
 <body>
   <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
@@ -85,7 +86,9 @@
     <time class="time" datetime="2017-07-01T16:00:00.000Z">
       2017-07-02
     </time>
-    
+     |
+    <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+</span>
     <hr>
   </header>
   <div class="post-content">
@@ -220,8 +223,8 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#redis是什么"><span class="toc-text">redis是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#学会安装redis"><span class="toc-text">学会安装redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#学会启动redis"><span class="toc-text">学会启动redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据结构-–-简介"><span class="toc-text">redis数据结构 – 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据结构-–-strings"><span class="toc-text">redis数据结构 – strings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据结构-–-lists"><span class="toc-text">redis数据结构 – lists</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据结构-–-集合（set）"><span class="toc-text">redis数据结构 – 集合（set）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据结构-–-有序集合-sort-set"><span class="toc-text">redis数据结构 – 有序集合(sort-set)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据结构-–-哈希"><span class="toc-text">redis数据结构 – 哈希</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊redis持久化-–-两种方式"><span class="toc-text">聊聊redis持久化 – 两种方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊redis持久化-–-RDB"><span class="toc-text">聊聊redis持久化 – RDB</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊redis持久化-–-AOF"><span class="toc-text">聊聊redis持久化 – AOF</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊redis持久化-–-AOF重写"><span class="toc-text">聊聊redis持久化 – AOF重写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊redis持久化-–-如何选择RDB和AOF"><span class="toc-text">聊聊redis持久化 – 如何选择RDB和AOF</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊主从-–-用法"><span class="toc-text">聊聊主从 – 用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊主从-–-同步原理"><span class="toc-text">聊聊主从 – 同步原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊redis的事务处理"><span class="toc-text">聊聊redis的事务处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-简介"><span class="toc-text">教你看懂redis配置 – 简介</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1k-gt-1000-bytes"><span class="toc-text">1k =&gt; 1000 bytes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1kb-gt-1024-bytes"><span class="toc-text">1kb =&gt; 1024 bytes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1m-gt-1000000-bytes"><span class="toc-text">1m =&gt; 1000000 bytes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1mb-gt-1024-1024-bytes"><span class="toc-text">1mb =&gt; 1024*1024 bytes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1g-gt-1000000000-bytes"><span class="toc-text">1g =&gt; 1000000000 bytes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1gb-gt-102410241024-bytes"><span class="toc-text">1gb =&gt; 102410241024 bytes</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-通用"><span class="toc-text">教你看懂redis配置 -通用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-快照"><span class="toc-text">教你看懂redis配置 – 快照</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-复制"><span class="toc-text">教你看懂redis配置 – 复制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-安全"><span class="toc-text">教你看懂redis配置 – 安全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-限制"><span class="toc-text">教你看懂redis配置 -限制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-追加模式"><span class="toc-text">教你看懂redis配置 – 追加模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-LUA脚本"><span class="toc-text">教你看懂redis配置 – LUA脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-慢日志"><span class="toc-text">教你看懂redis配置 – 慢日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-事件通知"><span class="toc-text">教你看懂redis配置 – 事件通知</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-高级配置"><span class="toc-text">教你看懂redis配置 – 高级配置</span></a></li></ol>
-  </div>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#redis是什么"><span class="toc-text">redis是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#学会安装redis"><span class="toc-text">学会安装redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#学会启动redis"><span class="toc-text">学会启动redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据结构-–-简介"><span class="toc-text">redis数据结构 – 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据结构-–-strings"><span class="toc-text">redis数据结构 – strings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据结构-–-lists"><span class="toc-text">redis数据结构 – lists</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据结构-–-集合（set）"><span class="toc-text">redis数据结构 – 集合（set）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据结构-–-有序集合-sort-set"><span class="toc-text">redis数据结构 – 有序集合(sort-set)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据结构-–-哈希"><span class="toc-text">redis数据结构 – 哈希</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊redis持久化-–-两种方式"><span class="toc-text">聊聊redis持久化 – 两种方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊redis持久化-–-RDB"><span class="toc-text">聊聊redis持久化 – RDB</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊redis持久化-–-AOF"><span class="toc-text">聊聊redis持久化 – AOF</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊redis持久化-–-AOF重写"><span class="toc-text">聊聊redis持久化 – AOF重写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊redis持久化-–-如何选择RDB和AOF"><span class="toc-text">聊聊redis持久化 – 如何选择RDB和AOF</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊主从-–-用法"><span class="toc-text">聊聊主从 – 用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊主从-–-同步原理"><span class="toc-text">聊聊主从 – 同步原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聊聊redis的事务处理"><span class="toc-text">聊聊redis的事务处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-简介"><span class="toc-text">教你看懂redis配置 – 简介</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#1k-gt-1000-bytes"><span class="toc-text">1k =&gt; 1000 bytes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1kb-gt-1024-bytes"><span class="toc-text">1kb =&gt; 1024 bytes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1m-gt-1000000-bytes"><span class="toc-text">1m =&gt; 1000000 bytes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1mb-gt-1024-1024-bytes"><span class="toc-text">1mb =&gt; 1024*1024 bytes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1g-gt-1000000000-bytes"><span class="toc-text">1g =&gt; 1000000000 bytes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1gb-gt-102410241024-bytes"><span class="toc-text">1gb =&gt; 102410241024 bytes</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-通用"><span class="toc-text">教你看懂redis配置 -通用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-快照"><span class="toc-text">教你看懂redis配置 – 快照</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-复制"><span class="toc-text">教你看懂redis配置 – 复制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-安全"><span class="toc-text">教你看懂redis配置 – 安全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-限制"><span class="toc-text">教你看懂redis配置 -限制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-追加模式"><span class="toc-text">教你看懂redis配置 – 追加模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-LUA脚本"><span class="toc-text">教你看懂redis配置 – LUA脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-慢日志"><span class="toc-text">教你看懂redis配置 – 慢日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-事件通知"><span class="toc-text">教你看懂redis配置 – 事件通知</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#教你看懂redis配置-–-高级配置"><span class="toc-text">教你看懂redis配置 – 高级配置</span></a></li></ol>
+  </li></div>
 
 
 
@@ -239,7 +242,8 @@
       <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
       <a href="http://hexo.io" target="_blank">Hexo</a> |
       <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
-      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a>
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a> |
+      <a><span id="busuanzi_container_site_uv">本站总访问量<span id="busuanzi_value_site_uv"></span>次</span></a>
     </div>
   </footer>
 
@@ -369,6 +373,9 @@
 
   })(window, document);
 </script>
+
+
+
 
 
   
