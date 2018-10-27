@@ -92,8 +92,7 @@
     <hr>
   </header>
   <div class="post-content">
-    <p><a href="https://blog.csdn.net/yujin753/article/details/46125283" target="_blank" rel="noopener">参考原文：https://blog.csdn.net/yujin753/article/details/46125283</a></p>
-<h2 id="闭锁"><a href="#闭锁" class="headerlink" title="闭锁"></a>闭锁</h2><p>闭锁（Latch）：一种同步方法，可以延迟线程的进度直到线程到达某个终点状态。通俗的讲就是，一个闭锁相当于一扇大门，在大门打开之前所有线程都被阻断，一旦大门打开所有线程都将通过，但是一旦大门打开，所有线程都通过了，那么这个闭锁的状态就失效了，门的状态也就不能变了，只能是打开状态。也就是说闭锁的状态是一次性的，它确保在闭锁打开之前所有特定的活动都需要在闭锁打开之后才能完成。</p>
+    <h2 id="闭锁"><a href="#闭锁" class="headerlink" title="闭锁"></a>闭锁</h2><p>闭锁（Latch）：一种同步方法，可以延迟线程的进度直到线程到达某个终点状态。通俗的讲就是，一个闭锁相当于一扇大门，在大门打开之前所有线程都被阻断，一旦大门打开所有线程都将通过，但是一旦大门打开，所有线程都通过了，那么这个闭锁的状态就失效了，门的状态也就不能变了，只能是打开状态。也就是说闭锁的状态是一次性的，它确保在闭锁打开之前所有特定的活动都需要在闭锁打开之后才能完成。</p>
 <p>应用场景：</p>
 <ul>
 <li><p>确保某个计算在其需要的所有资源都被初始化之后才继续执行。二元闭锁（包括两个状态）可以用来表示“资源R已经被初始化”，而所有需要R的操作都必须先在这个闭锁上等待。</p>
@@ -106,6 +105,7 @@
 <p>CountDownLatch是JDK 5+里面闭锁的一个实现，允许一个或者多个线程等待某个事件的发生。CountDownLatch有一个正数计数器，countDown方法对计数器做减操作，await方法等待计数器达到0。所有await的线程都会阻塞直到计数器为0或者等待线程中断或者超时。</p>
 <p><a href="https://github.com/zhongyp/Demo/tree/master/src/main/java/com/zhongyp/thread/latchcyclicbarrier" target="_blank" rel="noopener">看源码实例点我！</a></p>
 <h2 id="栅栏"><a href="#栅栏" class="headerlink" title="栅栏"></a>栅栏</h2><p>栅栏类似于闭锁，它能阻塞一组线程直到某个事件发生。 栅栏与闭锁的关键区别在于，所有的线程必须同时到达栅栏位置，才能继续执行。闭锁用于等待事件，而栅栏用于等待其他线程。<br>场景： 应用一些协议，比如几个家庭成员决定在某个地方集合，所有人在6：00在某地集合，到了以后要等待其他人，之后才能讨论去哪里吃饭。 并行迭代，将一个问题分成很多子问题，当一系列的子问题都解决之后（所有子问题线程都已经await（）），此时将栅栏打开，所有子问题线程被释放，而栅栏位置可以留着下次使用。</p>
+<h2 id="参考博文"><a href="#参考博文" class="headerlink" title="参考博文"></a>参考博文</h2><p><a href="https://blog.csdn.net/yujin753/article/details/46125283" target="_blank" rel="noopener">参考原文</a></p>
 
   </div>
   <div class="post-tags">
@@ -117,16 +117,16 @@
       <div class="post-nav-item post-nav-next">
         
           <span>〈 </span>
-          <a href="/2018/03/29/concurrent/2018-03-29-Callable/" rel="next" title="Callable、Future、FutureTask">
-          Callable、Future、FutureTask
+          <a href="/2018/03/28/jvm/2018-03-28-Classloader/" rel="next" title="Java类加载和双亲委派机制">
+          Java类加载和双亲委派机制
           </a>
         
       </div>
   
       <div class="post-nav-item post-nav-prev">
         
-          <a href="/2018/04/02/mysql/2018-04-02-SQL/" rel="prev" title="SQL优化">
-            SQL优化
+          <a href="/2018/03/29/concurrent/2018-03-29-Callable/" rel="prev" title="Callable、Future、FutureTask">
+            Callable、Future、FutureTask
           </a>
           <span>〉</span>
         
@@ -137,7 +137,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#闭锁"><span class="toc-text">闭锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#栅栏"><span class="toc-text">栅栏</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#闭锁"><span class="toc-text">闭锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#栅栏"><span class="toc-text">栅栏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考博文"><span class="toc-text">参考博文</span></a></li></ol>
   </div>
 
 

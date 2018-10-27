@@ -92,8 +92,7 @@
     <hr>
   </header>
   <div class="post-content">
-    <p><a href="https://www.cnblogs.com/coderMark/p/5599508.html" target="_blank" rel="noopener">原文地址</a></p>
-<h2 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h2><p> 相对悲观锁而言，乐观锁机制采取了更加宽松的加锁机制。悲观锁大多数情况下依靠数据库的锁机制实现，以保证操作最大程度的独占性。但随之而来的就是数据库 性能的大量开销，特别是对长事务而言，这样的开销往往无法承受。 而乐观锁机制在一定程度上解决了这个问题。乐观锁，大多是基于数据版本（ Version ）记录机制实现。何谓数据版本？即为数据增加一个版本标识，在基于数据库表的版本解决方案中，一般是通过为数据库表增加一个 “version” 字段来实现。读取出数据时，将此版本号一同读出，之后更新时，对此版本号加一。此时，将提交数据的版本数据与数据库表对应记录的当前版本信息进行比对，如 果提交的数据版本号大于数据库表当前版本号，则予以更新，否则认为是过期数据。</p>
+    <h2 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h2><p> 相对悲观锁而言，乐观锁机制采取了更加宽松的加锁机制。悲观锁大多数情况下依靠数据库的锁机制实现，以保证操作最大程度的独占性。但随之而来的就是数据库 性能的大量开销，特别是对长事务而言，这样的开销往往无法承受。 而乐观锁机制在一定程度上解决了这个问题。乐观锁，大多是基于数据版本（ Version ）记录机制实现。何谓数据版本？即为数据增加一个版本标识，在基于数据库表的版本解决方案中，一般是通过为数据库表增加一个 “version” 字段来实现。读取出数据时，将此版本号一同读出，之后更新时，对此版本号加一。此时，将提交数据的版本数据与数据库表对应记录的当前版本信息进行比对，如 果提交的数据版本号大于数据库表当前版本号，则予以更新，否则认为是过期数据。</p>
 <p>实现方式：大多数基于数据版本记录机制实现，即为数据增加一个版本标识，在基于数据库表的版本解决方案中，一般是通过为数据库表增加一个“version”字段来实现。读取出数据时，将此版本号一同读出，之后更新时，对此版本号加一。此时，将提交数据的版本数据与数据库表对应记录的当前版本信息进行比对，如果提交的数据版本号大于数据库表当前版本号，则予以更新，否则认为是过期数据。  </p>
 <p>实例：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;hibernate-mapping &gt;  </span><br><span class="line"> &lt;class name=&quot;org.hibernate.sample.TUser&quot; table=&quot;t_user&quot; dynamic-update=&quot;true&quot; dynamic-insert=&quot;true&quot; optimistic-lock=&quot;version&quot;&gt;  </span><br><span class="line"> &lt;/class&gt;  </span><br><span class="line">&lt;/hibernate-mapping &gt;</span><br></pre></td></tr></table></figure>
@@ -146,6 +145,7 @@
 <li><p>幻读：同一事务中，用同样的操作读取两次，得到的记录数不相同。举例：事务A查询第一次查询出一条记录，事务B插入一条数据，事务A再次查询，查询出两条记录，出现了幻读。</p>
 </li>
 </ul>
+<h2 id="参考博文"><a href="#参考博文" class="headerlink" title="参考博文"></a>参考博文</h2><p><a href="https://www.cnblogs.com/coderMark/p/5599508.html" target="_blank" rel="noopener">参考博文</a></p>
 
   </div>
   <div class="post-tags">
@@ -177,7 +177,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#乐观锁"><span class="toc-text">乐观锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#悲观锁"><span class="toc-text">悲观锁</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#乐观锁"><span class="toc-text">乐观锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#悲观锁"><span class="toc-text">悲观锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考博文"><span class="toc-text">参考博文</span></a></li></ol>
   </div>
 
 

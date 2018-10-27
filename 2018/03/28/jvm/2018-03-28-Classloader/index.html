@@ -92,8 +92,7 @@
     <hr>
   </header>
   <div class="post-content">
-    <p><a href="https://www.cnblogs.com/ityouknow/p/5603287.html" target="_blank" rel="noopener">尊重原创:https://www.cnblogs.com/ityouknow/p/5603287.html</a></p>
-<h2 id="JVM类加载机制"><a href="#JVM类加载机制" class="headerlink" title="JVM类加载机制"></a>JVM类加载机制</h2><p>•全盘负责，当一个类加载器负责加载某个Class时，该Class所依赖的和引用的其他Class也将由该类加载器负责载入，除非显示使用另外一个类加载器来载入</p>
+    <h2 id="JVM类加载机制"><a href="#JVM类加载机制" class="headerlink" title="JVM类加载机制"></a>JVM类加载机制</h2><p>•全盘负责，当一个类加载器负责加载某个Class时，该Class所依赖的和引用的其他Class也将由该类加载器负责载入，除非显示使用另外一个类加载器来载入</p>
 <p>•父类委托，先让父类加载器试图加载该类，只有在父类加载器无法加载该类时才尝试从自己的类路径中加载该类</p>
 <p>•缓存机制，缓存机制将会保证所有加载过的Class都会被缓存，当程序中需要使用某个Class时，类加载器先从缓存区寻找该Class，只有缓存区不存在，系统才会读取该类对应的二进制数据，并将其转换成Class对象，存入缓存区。这就是为什么修改了Class后，必须重启JVM，程序的修改才会生效</p>
 <p>类的加载指的是将类的.class文件中的二进制数据读入到内存中，将其放在运行时数据区的方法区内，然后在堆区创建一个java.lang.Class对象，用来封装类在方法区内的数据结构。类的加载的最终产品是位于堆区中的Class对象，Class对象封装了类在方法区内的数据结构，并且向Java程序员提供了访问方法区内的数据结构的接口。</p>
@@ -179,6 +178,7 @@
 <p>3、通过ClassLoader.loadClass()方法动态加载</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ClassLoader loader = HelloWorld.class.getClassLoader();</span><br><span class="line">System.out.println(loader);</span><br><span class="line">//使用ClassLoader.loadClass()来加载类，不会执行初始化块</span><br><span class="line">loader.loadClass(&quot;Test2&quot;);</span><br><span class="line">//使用Class.forName()来加载类，默认会执行初始化块</span><br><span class="line">//                Class.forName(&quot;Test2&quot;);</span><br><span class="line">//使用Class.forName()来加载类，并指定ClassLoader，初始化时不执行静态块</span><br><span class="line">//                Class.forName(&quot;Test2&quot;, false, loader);</span><br><span class="line"></span><br><span class="line">public class Test2 &#123;</span><br><span class="line">        static &#123;</span><br><span class="line">                System.out.println(&quot;静态初始化块执行了！&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="自定义类加载器"><a href="#自定义类加载器" class="headerlink" title="自定义类加载器"></a>自定义类加载器</h2><p>通常情况下，我们都是直接使用系统类加载器。但是，有的时候，我们也需要自定义类加载器。比如应用是通过网络来传输 Java 类的字节码，为保证安全性，这些字节码经过了加密处理，这时系统类加载器就无法对其进行加载，这样则需要自定义类加载器来实现。自定义类加载器一般都是继承自 ClassLoader 类，从上面对 loadClass 方法来分析来看，我们只需要重写 findClass 方法即可。</p>
+<h2 id="参考博文"><a href="#参考博文" class="headerlink" title="参考博文"></a>参考博文</h2><p><a href="https://www.cnblogs.com/ityouknow/p/5603287.html" target="_blank" rel="noopener">尊重原创</a></p>
 
   </div>
   <div class="post-tags">
@@ -198,8 +198,8 @@
   
       <div class="post-nav-item post-nav-prev">
         
-          <a href="/2018/03/29/concurrent/2018-03-29-Callable/" rel="prev" title="Callable、Future、FutureTask">
-            Callable、Future、FutureTask
+          <a href="/2018/03/29/concurrent/2018-03-29-Latch-CyclicBarrier/" rel="prev" title="闭锁和栅栏">
+            闭锁和栅栏
           </a>
           <span>〉</span>
         
@@ -210,7 +210,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM类加载机制"><span class="toc-text">JVM类加载机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java对象创建过程"><span class="toc-text">Java对象创建过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#双亲委派机制"><span class="toc-text">双亲委派机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java类加载器"><span class="toc-text">Java类加载器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义类加载器"><span class="toc-text">自定义类加载器</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM类加载机制"><span class="toc-text">JVM类加载机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java对象创建过程"><span class="toc-text">Java对象创建过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#双亲委派机制"><span class="toc-text">双亲委派机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java类加载器"><span class="toc-text">Java类加载器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义类加载器"><span class="toc-text">自定义类加载器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考博文"><span class="toc-text">参考博文</span></a></li></ol>
   </div>
 
 

@@ -92,8 +92,7 @@
     <hr>
   </header>
   <div class="post-content">
-    <p><a href="https://www.cnblogs.com/chengxiao/p/6789109.html" target="_blank" rel="noopener">原文地址：https://www.cnblogs.com/chengxiao/p/6789109.html</a></p>
-<p>在谈谈java中的volatile一文中，我们提到过并发包中的原子类可以解决类似num++这样的复合类操作的原子性问题，相比锁机制，使用原子类更精巧轻量，性能开销更小，本章就一起来分析下原子类的实现机理。</p>
+    <p>在谈谈java中的volatile一文中，我们提到过并发包中的原子类可以解决类似num++这样的复合类操作的原子性问题，相比锁机制，使用原子类更精巧轻量，性能开销更小，本章就一起来分析下原子类的实现机理。</p>
 <h2 id="悲观的解决方案（阻塞同步）"><a href="#悲观的解决方案（阻塞同步）" class="headerlink" title="悲观的解决方案（阻塞同步）"></a>悲观的解决方案（阻塞同步）</h2><p>　　<br>    我们知道，num++看似简单的一个操作，实际上是由1.读取 2.加一 3.写入 三步组成的，这是个复合类的操作（所以我们之前提到过的volatile是无法解决num++的原子性问题的），在并发环境下，如果不做任何同步处理，就会有线程安全问题。最直接的处理方式就是加锁。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">synchronized(this)&#123;</span><br><span class="line">    num++;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
 <p>　　使用独占锁机制来解决，是一种悲观的并发策略，抱着一副“总有刁民想害朕”的态势，每次操作数据的时候都认为别的线程会参与竞争修改，所以直接加锁。同一刻只能有一个线程持有锁，那其他线程就会阻塞。线程的挂起恢复会带来很大的性能开销，尽管jvm对于非竞争性的锁的获取和释放做了很多优化，但是一旦有多个线程竞争锁，频繁的阻塞唤醒，还是会有很大的性能开销的。所以，使用synchronized或其他重量级锁来处理显然不够合理。</p>
@@ -108,6 +107,7 @@
 <h3 id="CAS-Compare-and-Swap"><a href="#CAS-Compare-and-Swap" class="headerlink" title="CAS(Compare-and-Swap)　"></a>CAS(Compare-and-Swap)　</h3><p>　<br>　　CAS算法是由硬件直接支持来保证原子性的，有三个操作数：内存位置V、旧的预期值A和新值B，当且仅当V符合预期值A时，CAS用新值B原子化地更新V的值，否则，它什么都不做。</p>
 <pre><code>CAS的ABA问题
 </code></pre><p>　　当然CAS也并不完美，它存在”ABA”问题，假若一个变量初次读取是A，在compare阶段依然是A，但其实可能在此过程中，它先被改为B，再被改回A，而CAS是无法意识到这个问题的。CAS只关注了比较前后的值是否改变，而无法清楚在此过程中变量的变更明细，这就是所谓的ABA漏洞。 </p>
+<h2 id="参考博文"><a href="#参考博文" class="headerlink" title="参考博文"></a>参考博文</h2><p><a href="https://www.cnblogs.com/chengxiao/p/6789109.html" target="_blank" rel="noopener">原文地址</a></p>
 
   </div>
   <div class="post-tags">
@@ -139,7 +139,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#悲观的解决方案（阻塞同步）"><span class="toc-text">悲观的解决方案（阻塞同步）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#乐观的解决方案（非阻塞同步）"><span class="toc-text">乐观的解决方案（非阻塞同步）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CAS-Compare-and-Swap"><span class="toc-text">CAS(Compare-and-Swap)　</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#悲观的解决方案（阻塞同步）"><span class="toc-text">悲观的解决方案（阻塞同步）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#乐观的解决方案（非阻塞同步）"><span class="toc-text">乐观的解决方案（非阻塞同步）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CAS-Compare-and-Swap"><span class="toc-text">CAS(Compare-and-Swap)　</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考博文"><span class="toc-text">参考博文</span></a></li></ol>
   </div>
 
 

@@ -92,8 +92,7 @@
     <hr>
   </header>
   <div class="post-content">
-    <p><a href="https://blog.csdn.net/qiangcai/article/details/77581201" target="_blank" rel="noopener">尊重原创：参考文档：https://blog.csdn.net/qiangcai/article/details/77581201</a></p>
-<p>开发一个简单的RPC框架，重点需要考虑的是两点，即编解码方式和底层通讯协议的选型，编解码方式指的是需要传输的数据在调用方将以什么组织形式拆解成字节流并在服务提供方以什么形式解析出来。编解码方式的设计需要考虑到后期的版本升级，所以很多RPC协议在设计时都会带上当前协议的版本信息。而底层通讯协议的选型都大同小异，一般都是TCP（当然也可以选择建立于TCP之上更高级的协议，比如Avro、Thrift和HTTP等），在Java语言中就是指套接字Socket，当然，在Netty出现后，很少RPC框架会直接以自己写Socket作为默认实现的通讯方式，但通常也会自己实现一个aio、nio或bio版本给那些“不方便”依赖Netty库的应用系统来使用。</p>
+    <p>开发一个简单的RPC框架，重点需要考虑的是两点，即编解码方式和底层通讯协议的选型，编解码方式指的是需要传输的数据在调用方将以什么组织形式拆解成字节流并在服务提供方以什么形式解析出来。编解码方式的设计需要考虑到后期的版本升级，所以很多RPC协议在设计时都会带上当前协议的版本信息。而底层通讯协议的选型都大同小异，一般都是TCP（当然也可以选择建立于TCP之上更高级的协议，比如Avro、Thrift和HTTP等），在Java语言中就是指套接字Socket，当然，在Netty出现后，很少RPC框架会直接以自己写Socket作为默认实现的通讯方式，但通常也会自己实现一个aio、nio或bio版本给那些“不方便”依赖Netty库的应用系统来使用。</p>
 <p> 在Dubbo的源码中，有一个单独模块dubbo-rpc，其中，最重要的应该是Protocol和Invoker两个接口，代表着协议（编解码方式）和调用过程（通讯方式）。Invoker接口继承于Node接口，Node接口规范了Dubbo体系中各组件之间通讯的基本要素： </p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public interface Node &#123;  </span><br><span class="line">    // 协议数据载体  </span><br><span class="line">    URL getUrl();  </span><br><span class="line">    // 状态监测，当前是否可用  </span><br><span class="line">    boolean isAvailable();  </span><br><span class="line">    // 销毁方法  </span><br><span class="line">    void destroy();  </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">public interface Invoker&lt;T&gt; extends Node &#123;  </span><br><span class="line">    // 获取调用的接口  </span><br><span class="line">    Class&lt;T&gt; getInterface();  </span><br><span class="line">    // 调用过程  </span><br><span class="line">    Result invoke(Invocation invocation) throws RpcException;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Spring在初始化IOC容器，通过DubboNamespaceHandler类来解析dubbo相关标签，在解析客户端标签dubbo:reference时，标签解析出来的相关属性都是存储到ReferenceBean类中，因为ReferenceBean类实现了InitializingBean接口，所以在设置标签所有属性后会调用afterPropertiesSet方法，关于标签bean载体类实现spring框架的InitializingBean接口相关知识可以自己百度了解下，有很多写的比较好的文章，这里就不在细说。具体看afterPropertiesSet方法如下：</p>
@@ -112,6 +111,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public abstract class AbstractProxyFactory implements ProxyFactory &#123;  </span><br><span class="line">  </span><br><span class="line">        public &lt;T&gt; T getProxy(Invoker&lt;T&gt; invoker) throws RpcException &#123;  </span><br><span class="line">            Class&lt;?&gt;[] interfaces = null;  </span><br><span class="line">            String config = invoker.getUrl().getParameter(&quot;interfaces&quot;);  </span><br><span class="line">            if (config != null &amp;&amp; config.length() &gt; 0) &#123;  </span><br><span class="line">                String[] types = Constants.COMMA_SPLIT_PATTERN.split(config);  </span><br><span class="line">                if (types != null &amp;&amp; types.length &gt; 0) &#123;  </span><br><span class="line">                    interfaces = new Class&lt;?&gt;[types.length + 2];  </span><br><span class="line">                    interfaces[0] = invoker.getInterface();  </span><br><span class="line">                    interfaces[1] = EchoService.class;  </span><br><span class="line">                    for (int i = 0; i &lt; types.length; i ++) &#123;  </span><br><span class="line">                        interfaces[i + 1] = ReflectUtils.forName(types[i]);  </span><br><span class="line">                    &#125;  </span><br><span class="line">                &#125;  </span><br><span class="line">            &#125;  </span><br><span class="line">            if (interfaces == null) &#123;  </span><br><span class="line">                interfaces = new Class&lt;?&gt;[] &#123;invoker.getInterface(), EchoService.class&#125;;  </span><br><span class="line">            &#125;  </span><br><span class="line">            return getProxy(invoker, interfaces);  </span><br><span class="line">        &#125;  </span><br><span class="line">          </span><br><span class="line">        public abstract &lt;T&gt; T getProxy(Invoker&lt;T&gt; invoker, Class&lt;?&gt;[] types);  </span><br><span class="line">  </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>我们回到代理的创建方法ReferenceConfig.createProxy中最后一行的代码return (T) proxyFactory.getProxy(invoker); 最后还是执行了抽象的getProxy方法。因为JavassistProxyFactory类继承了AbstractProxyFactory，并重写了getProxy方法所以最终还是执行了JavassistProxyFactory类中的getProxy方法。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@SuppressWarnings(&quot;unchecked&quot;)  </span><br><span class="line">    public &lt;T&gt; T getProxy(Invoker&lt;T&gt; invoker, Class&lt;?&gt;[] interfaces) &#123;  </span><br><span class="line">        return (T) Proxy.getProxy(interfaces).newInstance(new InvokerInvocationHandler(invoker));  </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="参考博文"><a href="#参考博文" class="headerlink" title="参考博文"></a>参考博文</h2><p><a href="https://blog.csdn.net/qiangcai/article/details/77581201" target="_blank" rel="noopener">参考文档</a></p>
 
   </div>
   <div class="post-tags">
@@ -123,16 +123,16 @@
       <div class="post-nav-item post-nav-next">
         
           <span>〈 </span>
-          <a href="/2018/01/12/java/2018-01-12-LinkedList/" rel="next" title="LinkedList源码解析">
-          LinkedList源码解析
+          <a href="/2018/01/12/java/2018-01-12-Clone/" rel="next" title="Java 深拷贝和浅拷贝">
+          Java 深拷贝和浅拷贝
           </a>
         
       </div>
   
       <div class="post-nav-item post-nav-prev">
         
-          <a href="/2018/01/15/spring/2018-01-15-Spring/" rel="prev" title="对Spring 的IOC的认识">
-            对Spring 的IOC的认识
+          <a href="/2018/01/15/spring/2018-01-15-SpringInit/" rel="prev" title="Spring Bean容器加载Bean源码解析（转载）">
+            Spring Bean容器加载Bean源码解析（转载）
           </a>
           <span>〉</span>
         
@@ -140,6 +140,11 @@
     </div>
   
 
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#参考博文"><span class="toc-text">参考博文</span></a></li></ol>
+  </div>
 
 
 

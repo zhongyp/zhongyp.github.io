@@ -92,8 +92,7 @@
     <hr>
   </header>
   <div class="post-content">
-    <p><a href="http://www.cnblogs.com/dennyzhangdd/p/7652075.html" target="_blank" rel="noopener">原文链接</a></p>
-<h2 id="Spring初始化"><a href="#Spring初始化" class="headerlink" title="Spring初始化"></a>Spring初始化</h2><p>Spring初始化类关系图</p>
+    <h2 id="Spring初始化"><a href="#Spring初始化" class="headerlink" title="Spring初始化"></a>Spring初始化</h2><p>Spring初始化类关系图</p>
 <p><img src="https://github.com/zhongyp/jekyll.github.io/blob/master/styles/images/article/springinit.png?raw=true" alt="Spring初始化类关系图"></p>
 <p><img src="https://github.com/zhongyp/jekyll.github.io/blob/master/styles/images/article/springinit1.png?raw=true" alt="Spring初始化类关系图"></p>
 <p>DefaultResourceLoader，该类设置classLoader，并且将配置文件 封装为Resource文件。</p>
@@ -135,6 +134,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public FileSystemXmlApplicationContext(String[] configLocations, boolean refresh, ApplicationContext parent) throws BeansException &#123;</span><br><span class="line">	super(parent);</span><br><span class="line">	this.setConfigLocations(configLocations);</span><br><span class="line">	if(refresh) &#123;</span><br><span class="line">		this.refresh();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="ClassPathXmlApplicationContext和FileSystemXmlApplicationContext的区别"><a href="#ClassPathXmlApplicationContext和FileSystemXmlApplicationContext的区别" class="headerlink" title="ClassPathXmlApplicationContext和FileSystemXmlApplicationContext的区别"></a>ClassPathXmlApplicationContext和FileSystemXmlApplicationContext的区别</h2><p>ClassPathXmlApplicationContext</p>
 <p>ClassPathXmlApplicationContext[只能读放在web-info/classes目录下的配置文件]，classpath:前缀是不需要的,默认就是指项目的classpath路径下面;如果要使用绝对路径,需要加上file:前缀表示这是绝对路径;<br>对于FileSystemXmlApplicationContext，默认表示的是两种，如果要使用classpath路径,需要前缀classpath: </p>
+<h2 id="参考博文"><a href="#参考博文" class="headerlink" title="参考博文"></a>参考博文</h2><p><a href="http://www.cnblogs.com/dennyzhangdd/p/7652075.html" target="_blank" rel="noopener">只会一点Java</a></p>
 
   </div>
   <div class="post-tags">
@@ -146,16 +146,16 @@
       <div class="post-nav-item post-nav-next">
         
           <span>〈 </span>
-          <a href="/2018/01/15/dubbo/2018-01-15-DubboDirector/" rel="next" title="Dubbo源码解析目录">
-          Dubbo源码解析目录
+          <a href="/2018/01/14/dubbo/2018-02-14-Dubbo-Consumer/" rel="next" title="Dubbo客户端消费（转载）">
+          Dubbo客户端消费（转载）
           </a>
         
       </div>
   
       <div class="post-nav-item post-nav-prev">
         
-          <a href="/2018/01/15/dubbo/2018-01-15-XSD/" rel="prev" title="XSD文件解析">
-            XSD文件解析
+          <a href="/2018/01/15/spring/2018-01-15-Spring/" rel="prev" title="对Spring 的IOC的认识">
+            对Spring 的IOC的认识
           </a>
           <span>〉</span>
         
@@ -166,7 +166,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring初始化"><span class="toc-text">Spring初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ClassPathXmlApplicationContext和FileSystemXmlApplicationContext的区别"><span class="toc-text">ClassPathXmlApplicationContext和FileSystemXmlApplicationContext的区别</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring初始化"><span class="toc-text">Spring初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ClassPathXmlApplicationContext和FileSystemXmlApplicationContext的区别"><span class="toc-text">ClassPathXmlApplicationContext和FileSystemXmlApplicationContext的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考博文"><span class="toc-text">参考博文</span></a></li></ol>
   </div>
 
 

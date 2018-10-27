@@ -92,8 +92,7 @@
     <hr>
   </header>
   <div class="post-content">
-    <p><a href="http://blog.csdn.net/qiangcai/article/details/73992080" target="_blank" rel="noopener">尊重原创：参考文档：http://blog.csdn.net/qiangcai/article/details/73992080</a></p>
-<p> dubbo自定义标签 里面说过启动服务时会首先加载XML文件中的标签，解析出来的标签数据会装配到对应的实体类中，dubbo框架里面也是这样的。我们首先看看com.alibaba.dubbo.config.spring.schema.DubboNamespaceHandler类的实现。</p>
+    <p> dubbo自定义标签 里面说过启动服务时会首先加载XML文件中的标签，解析出来的标签数据会装配到对应的实体类中，dubbo框架里面也是这样的。我们首先看看com.alibaba.dubbo.config.spring.schema.DubboNamespaceHandler类的实现。</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public class DubboNamespaceHandler extends NamespaceHandlerSupport &#123;  </span><br><span class="line">  </span><br><span class="line">    static &#123;  </span><br><span class="line">        Version.checkDuplicate(DubboNamespaceHandler.class);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    public void init() &#123;  </span><br><span class="line">        registerBeanDefinitionParser(&quot;application&quot;, new DubboBeanDefinitionParser(ApplicationConfig.class, true));  </span><br><span class="line">        registerBeanDefinitionParser(&quot;module&quot;, new DubboBeanDefinitionParser(ModuleConfig.class, true));  </span><br><span class="line">        registerBeanDefinitionParser(&quot;registry&quot;, new DubboBeanDefinitionParser(RegistryConfig.class, true));  </span><br><span class="line">        registerBeanDefinitionParser(&quot;monitor&quot;, new DubboBeanDefinitionParser(MonitorConfig.class, true));  </span><br><span class="line">        registerBeanDefinitionParser(&quot;provider&quot;, new DubboBeanDefinitionParser(ProviderConfig.class, true));  </span><br><span class="line">        registerBeanDefinitionParser(&quot;consumer&quot;, new DubboBeanDefinitionParser(ConsumerConfig.class, true));  </span><br><span class="line">        registerBeanDefinitionParser(&quot;protocol&quot;, new DubboBeanDefinitionParser(ProtocolConfig.class, true));  </span><br><span class="line">        registerBeanDefinitionParser(&quot;service&quot;, new DubboBeanDefinitionParser(ServiceBean.class, true));  // ServiceBean</span><br><span class="line">        registerBeanDefinitionParser(&quot;reference&quot;, new DubboBeanDefinitionParser(ReferenceBean.class, false));  </span><br><span class="line">        registerBeanDefinitionParser(&quot;annotation&quot;, new DubboBeanDefinitionParser(AnnotationBean.class, true));  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>ServiceBean实现了spring的ApplicationListener接口，所以也是一个监听器。在spring容器加载完成后触发contextrefreshedevent事件，这个事件会被实现了ApplicationListener接口的类监听到，执行对应的onApplicationEvent函数。我们看看ServiceBean类的代码:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public void onApplicationEvent(ApplicationEvent event) &#123;  </span><br><span class="line">    if (ContextRefreshedEvent.class.getName().equals(event.getClass().getName())) &#123;  </span><br><span class="line">        if (isDelay() &amp;&amp; ! isExported() &amp;&amp; ! isUnexported()) &#123;  </span><br><span class="line">            if (logger.isInfoEnabled()) &#123;  </span><br><span class="line">                logger.info(&quot;The service ready on spring started. service: &quot; + getInterface());  </span><br><span class="line">            &#125;  </span><br><span class="line">            export();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -110,6 +109,7 @@
 <p>2.通信协议未指明端口时，随机生成端口号</p>
 <p>3.通过proxyFactory对象生成接口实现类的代理对象invoker</p>
 <p>4.通过protocol对象将invoker封装成Exporter对象，同时开启了socket服务监听端口。这里socket通信使用的是netty框架，</p>
+<h2 id="参考博文"><a href="#参考博文" class="headerlink" title="参考博文"></a>参考博文</h2><p><a href="http://blog.csdn.net/qiangcai/article/details/73992080" target="_blank" rel="noopener">参考文档</a></p>
 
   </div>
   <div class="post-tags">
@@ -138,6 +138,11 @@
     </div>
   
 
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#参考博文"><span class="toc-text">参考博文</span></a></li></ol>
+  </div>
 
 
 
