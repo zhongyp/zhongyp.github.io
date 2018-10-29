@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://zhongyp.me/2018/10/23/utils/2018-10-23-git/</loc>
+    <lastmod>2018-10-29T09:45:59.937Z</lastmod>
+  </url>  <url>
     <loc>http://zhongyp.me/2018/03/16/concurrent/2017-03-16-Threads/</loc>
     <lastmod>2018-10-27T03:35:22.745Z</lastmod>
   </url>  <url>
@@ -76,9 +79,6 @@
     <loc>http://zhongyp.me/2018/10/03/spring/2018-09-28-AOP/</loc>
     <lastmod>2018-10-25T07:51:03.269Z</lastmod>
   </url>  <url>
-    <loc>http://zhongyp.me/2018/10/23/utils/2018-10-23-git/</loc>
-    <lastmod>2018-10-24T14:29:51.835Z</lastmod>
-  </url>  <url>
     <loc>http://zhongyp.me/2015/08/04/algorithm/2015-08-04-BubbleSort/</loc>
     <lastmod>2018-10-23T12:02:04.943Z</lastmod>
   </url>  <url>
@@ -88,16 +88,16 @@
     <loc>http://zhongyp.me/2018/01/25/mysql/2018-01-25-Procedures/</loc>
     <lastmod>2018-10-21T17:35:46.722Z</lastmod>
   </url>  <url>
-    <loc>http://zhongyp.me/2017/10/15/work/2017-10-15-Distribute-Lock/</loc>
-    <lastmod>2018-10-02T01:27:53.334Z</lastmod>
-  </url>  <url>
     <loc>http://zhongyp.me/2017/10/15/work/2017-10-15-SSO/</loc>
     <lastmod>2018-10-02T01:27:53.334Z</lastmod>
   </url>  <url>
-    <loc>http://zhongyp.me/2018/04/02/mysql/2018-04-02-SQL/</loc>
-    <lastmod>2018-10-02T01:27:53.332Z</lastmod>
+    <loc>http://zhongyp.me/2017/10/15/work/2017-10-15-Distribute-Lock/</loc>
+    <lastmod>2018-10-02T01:27:53.334Z</lastmod>
   </url>  <url>
     <loc>http://zhongyp.me/2018/04/02/mysql/2018-04-02-MySQL/</loc>
+    <lastmod>2018-10-02T01:27:53.332Z</lastmod>
+  </url>  <url>
+    <loc>http://zhongyp.me/2018/04/02/mysql/2018-04-02-SQL/</loc>
     <lastmod>2018-10-02T01:27:53.332Z</lastmod>
   </url>  <url>
     <loc>http://zhongyp.me/2016/12/16/javascript/2016-12-16-Knockout/</loc>
