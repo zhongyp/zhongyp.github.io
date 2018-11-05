@@ -93,7 +93,7 @@
   </header>
   <div class="post-content">
     <h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><p>系统系统性的学习Git，请移步<a href="https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-%E5%85%B3%E4%BA%8E%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6" target="_blank" rel="noopener">Git中文学习文档</a>，这篇文章只是分类记录一下git的常用命令。</p>
-<p><img src="/media/15403035072735.jpg" alt="Git版本控制系统VCS基本操作流程图"></p>
+<p><img src="/media/15403035072735.png" alt="Git版本控制系统VCS基本操作流程图"></p>
 <h2 id="常用命令总结"><a href="#常用命令总结" class="headerlink" title="常用命令总结"></a>常用命令总结</h2><h3 id="Git初始化"><a href="#Git初始化" class="headerlink" title="Git初始化"></a>Git初始化</h3><p><code>git init</code> 将当前目录变为可管理的仓库<br><code>git clone</code> 克隆一个仓库到本地</p>
 <h3 id="设置与配置"><a href="#设置与配置" class="headerlink" title="设置与配置"></a>设置与配置</h3><p><code>git config -global user.name/email &quot;参数&quot;</code> git是分布式版本控制，所以添加用户名和邮箱作为一个标识<br><code>ssh -keygen -t rsa -C &quot;email&quot;</code> 生成本地ssh key</p>
 <h3 id="将文件提交到版本库"><a href="#将文件提交到版本库" class="headerlink" title="将文件提交到版本库"></a>将文件提交到版本库</h3><p><code>git add &quot;filename.*&quot;</code> 添加到暂存区<br><code>git commit -m &quot;filename.*&quot;</code> 提交到仓库<br><code>git commit --amend</code> 尝试重新提交,这个操作需要组合操作</p>
