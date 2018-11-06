@@ -4,7 +4,7 @@
   <url>
     <loc>http://zhongyp.me/2018/10/23/utils/2018-10-23-git/</loc>
     
-    <lastmod>2018-11-05T09:56:42.065Z</lastmod>
+    <lastmod>2018-11-06T04:27:10.463Z</lastmod>
     
   </url>
   
@@ -282,14 +282,14 @@
   </url>
   
   <url>
-    <loc>http://zhongyp.me/2018/03/10/java/2018-03-10-JavaPara/</loc>
+    <loc>http://zhongyp.me/2018/03/18/java/2018-03-18-JavaReflection/</loc>
     
     <lastmod>2018-10-02T01:27:53.330Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://zhongyp.me/2018/03/18/java/2018-03-18-JavaReflection/</loc>
+    <loc>http://zhongyp.me/2018/03/10/java/2018-03-10-JavaPara/</loc>
     
     <lastmod>2018-10-02T01:27:53.330Z</lastmod>
     
@@ -338,13 +338,6 @@
   </url>
   
   <url>
-    <loc>http://zhongyp.me/2018/03/16/concurrent/2018-03-16-ThreadLocal/</loc>
-    
-    <lastmod>2018-10-02T01:27:53.323Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://zhongyp.me/2018/03/29/concurrent/2018-03-29-Callable/</loc>
     
     <lastmod>2018-10-02T01:27:53.323Z</lastmod>
@@ -352,14 +345,21 @@
   </url>
   
   <url>
-    <loc>http://zhongyp.me/2018/01/04/concurrent/2018-03-04-Volatile/</loc>
+    <loc>http://zhongyp.me/2018/03/16/concurrent/2018-03-16-ThreadLocal/</loc>
+    
+    <lastmod>2018-10-02T01:27:53.323Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zhongyp.me/2018/01/04/concurrent/2018-03-04-Semaphore/</loc>
     
     <lastmod>2018-10-02T01:27:53.322Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://zhongyp.me/2018/01/04/concurrent/2018-03-04-Semaphore/</loc>
+    <loc>http://zhongyp.me/2018/01/04/concurrent/2018-03-04-Volatile/</loc>
     
     <lastmod>2018-10-02T01:27:53.322Z</lastmod>
     
