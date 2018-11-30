@@ -92,7 +92,14 @@
     <hr>
   </header>
   <div class="post-content">
-    <h2 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h2><p>java.util.concurrent.Executosr是线程池的静态工厂，我们通常使用它方便地生产各种类型的线程池，主要的方法有三种：</p>
+    <h1 id="线程池底层实现机制及应用"><a href="#线程池底层实现机制及应用" class="headerlink" title="线程池底层实现机制及应用"></a>线程池底层实现机制及应用</h1><p>在线程简介中提到过，多线程环境可能存在性能风险，创建和销毁线程及线程之间频繁调度导致上下文切换导致巨大的系统资源开销。导致一种可能是，多线程执行效率不一定比串型代码高。</p>
+<p>线程池是一种多线程处理形式，处理过程中将任务添加到队列，然后在创建线程后自动启动这些任务。线程池线程都是后台线程。每个线程都使用默认的堆栈大小，以默认的优先级运行，并处于多线程单元中。当提交一个任务到线程池时处理流程如下：</p>
+<ol>
+<li>线程池判断核心线程池里的线程是否都在执行任务。如果不是，则创建一个新的工作线程来执行任务。</li>
+<li>如果核心线程池里的线程都在执行任务，如果工作队列没有满，则将新提交的任务存储在这个工作队列。</li>
+<li>如果工作队列满了，判断线程池的线程是否都处于工作状态。如果没有，则创建一个新的工作先线程执行任务。如果满了，则交给饱和策略来处理这个任务。</li>
+</ol>
+<h2 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h2><p>java.util.concurrent.Executosr是线程池的静态工厂，我们通常使用它方便地生产各种类型的线程池，主要的方法有三种：</p>
 <ul>
 <li><p>newSingleThreadExecutor()——创建一个单线程的线程池</p>
 </li>
@@ -102,8 +109,7 @@
 </li>
 </ul>
 <h2 id="线程参数"><a href="#线程参数" class="headerlink" title="线程参数"></a>线程参数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public ThreadPoolExecutor(int corePoolSize,//corePoolSize线程池中的核心线程数。</span><br><span class="line">                          int maximumPoolSize,//maximumPoolSize线程池中的最大线程数。</span><br><span class="line">                          long keepAliveTime,//keepAliveTime线程池中的线程存活时间，即回收时间</span><br><span class="line">                          TimeUnit unit,//参数keepAliveTime的时间单位</span><br><span class="line">                          BlockingQueue&lt;Runnable&gt; workQueue,//workQueue一个阻塞队列，用来存储等待执行的任务。</span><br><span class="line">                          ThreadFactory threadFactory,//threadFactory线程工厂，主要用来创建线程。</span><br><span class="line">                          RejectedExecutionHandler handler//任务拒绝策略，当运行线程数已达到maximumPoolSize，队列也已经装满时会调用该参数拒绝任务，有默认实现。</span><br><span class="line">                          ) &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<pre><code>corePoolSize 核心线程数
-</code></pre><ul>
+<h3 id="corePoolSize-核心线程数"><a href="#corePoolSize-核心线程数" class="headerlink" title="corePoolSize 核心线程数"></a>corePoolSize 核心线程数</h3><ul>
 <li><p>核心线程会一直存活，及时没有任务需要执行</p>
 </li>
 <li><p>当线程数小于核心线程数时，即使有线程空闲，线程池也会优先创建新线程处理</p>
@@ -112,11 +118,9 @@
 </li>
 </ul>
 <p>确定线程数： 线程数=CPU可用核心数/(1-阻塞系数)，通常IO密集型=2Ncpu，计算密集型=Ncpu+1。</p>
-<pre><code>keepAliveTime
-</code></pre><p>   当线程空闲时间达到keepAliveTime时，线程会退出，直到线程数量=corePoolSize</p>
+<h3 id="keepAliveTime"><a href="#keepAliveTime" class="headerlink" title="keepAliveTime"></a>keepAliveTime</h3><p>   当线程空闲时间达到keepAliveTime时，线程会退出，直到线程数量=corePoolSize</p>
 <p>   如果allowCoreThreadTimeout=true，则会直到线程数量=0</p>
-<pre><code>TimeUnit
-</code></pre><ul>
+<h3 id="TimeUnit"><a href="#TimeUnit" class="headerlink" title="TimeUnit"></a>TimeUnit</h3><ul>
 <li><p>TimeUnit.DAYS;    //天</p>
 </li>
 <li><p>TimeUnit.HOURS;    //小时</p>
@@ -133,8 +137,8 @@
 </li>
 </ul>
 <p>TimeUnit是java.util.concurrent包下面的一个类，TimeUnit提供了可读性更好的线程暂停操作，通常用来替换Thread.sleep()，在很长一段时间里Thread的sleep()方法作为暂停线程的标准方式。</p>
-<pre><code>BlockingQueue用来保存等待被执行的任务的阻塞队列，且任务必须实现Runable接口，在JDK中提供了如下阻塞队列：
-</code></pre><ul>
+<h3 id="BlockingQueue"><a href="#BlockingQueue" class="headerlink" title="BlockingQueue"></a>BlockingQueue</h3><p>用来保存等待被执行的任务的阻塞队列，且任务必须实现Runable接口，在JDK中提供了如下阻塞队列：</p>
+<ul>
 <li><p>ArrayBlockingQueue 有界队列</p>
 <p>  有助于防止资源耗尽，但是可能较难调整和控制。队列大小和最大池大小可能需要相互折衷：使用大型队列和小型池可以最大限度地降低 CPU 使用率、操作系统资源和上下文切换开销，但是可能导致人工降低吞吐量。如果任务频繁阻塞（例如，如果它们是 I/O边界），则系统可能为超过您许可的更多线程安排时间。使用小型队列通常要求较大的池大小，CPU使用率较高，但是可能遇到不可接受的调度开销，这样也会降低吞吐量。</p>
 </li>
@@ -148,11 +152,8 @@
 </li>
 </ul>
 <p>   适用于CachedThreadPool。它将任务直接提交给线程而不保持它们。如果不存在可用于立即运行任务的线程，则试图把任务加入队列将失败，因此会构造一个新的线程。此策略可以避免在处理可能具有内部依赖性的请求集时出现锁。直接提交通常要求最大的 maximumPoolSize 以避免拒绝新提交的任务（正如CachedThreadPool这个参数的值为Integer.MAX_VALUE）。当任务以超过队列所能处理的量、连续到达时，此策略允许线程具有增长的可能性。吞吐量较高。</p>
-<p>.</p>
-<pre><code>threadFactory
-</code></pre><p> 创建线程的工厂，通过自定义的线程工厂可以给每个新建的线程设置一个具有识别度的线程名。</p>
-<pre><code>handler 
-</code></pre><p>线程池的饱和策略，当阻塞队列满了，且没有空闲的工作线程，如果继续提交任务，必须采取一种策略处理该任务，线程池提供了4种策略：</p>
+<h3 id="threadFactory"><a href="#threadFactory" class="headerlink" title="threadFactory"></a>threadFactory</h3><p> 创建线程的工厂，通过自定义的线程工厂可以给每个新建的线程设置一个具有识别度的线程名。</p>
+<h3 id="handler"><a href="#handler" class="headerlink" title="handler"></a>handler</h3><p>线程池的饱和策略，当阻塞队列满了，且没有空闲的工作线程，如果继续提交任务，必须采取一种策略处理该任务，线程池提供了4种策略：</p>
 <ul>
 <li><p>ThreadPoolExecutor.AbortPolicy:丢弃任务并抛出RejectedExecutionException异常。 </p>
 </li>
@@ -195,7 +196,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建线程"><span class="toc-text">创建线程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程参数"><span class="toc-text">线程参数</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#线程池底层实现机制及应用"><span class="toc-text">线程池底层实现机制及应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建线程"><span class="toc-text">创建线程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程参数"><span class="toc-text">线程参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#corePoolSize-核心线程数"><span class="toc-text">corePoolSize 核心线程数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#keepAliveTime"><span class="toc-text">keepAliveTime</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TimeUnit"><span class="toc-text">TimeUnit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BlockingQueue"><span class="toc-text">BlockingQueue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#threadFactory"><span class="toc-text">threadFactory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#handler"><span class="toc-text">handler</span></a></li></ol></li></ol></li></ol>
   </div>
 
 
