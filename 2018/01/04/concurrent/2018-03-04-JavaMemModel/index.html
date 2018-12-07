@@ -145,8 +145,10 @@
 <li>正确<strong><em>同步</em></strong>的多线程程序。正确同步的多线程程序的执行将具有顺序一致性（程序的执行结果与该程序在顺序一致性内存模型中的执行结果相同）。<strong><em>JMM通过限制编译器和处理器的重排序来为程序员提供内存可见性保证。（这句话解决了本文中的两个问题，缓存一致性与重排序引起的多线程同步问题，我会在<a href="https://zhongyp.me/2018/12/06/concurrent/2018-12-06-thread-communication/">线程通信</a>的共享变量小节中讲解缓存一致性的解决方案，在<a href="https://zhongyp.me/2018/12/06/concurrent/2018-12-06-thread-security/">线程安全</a>一章中讲解重排序引起的多线程同步问题的解决方案）</em></strong></li>
 <li>未同步/未正确同步的多线程程序。JMM为他们提供最小的安全性保障：线程执行时读取到的值，要么是之前某个线程写入的值，要么时默认值（0、null、false）。</li>
 </ul>
-<h2 id="参考博文"><a href="#参考博文" class="headerlink" title="参考博文"></a>参考博文</h2><p><a href="http://www.importnew.com/24082.html" target="_blank" rel="noopener">你真的了解volatile关键字吗？</a></p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="http://www.importnew.com/24082.html" target="_blank" rel="noopener">你真的了解volatile关键字吗？</a></p>
 <p><a href="https://www.cnblogs.com/zhengbin/p/5654805.html" target="_blank" rel="noopener">Java中Volatile关键字详解</a></p>
+<p><a href="">Java并发编程艺术</a></p>
+<p><a href="">深入理解Java虚拟机-JVM高级特性与最佳实践</a></p>
 
   </div>
   <div class="post-tags">
@@ -158,8 +160,8 @@
       <div class="post-nav-item post-nav-next">
         
           <span>〈 </span>
-          <a href="/2018/01/04/concurrent/2018-03-04-Semaphore/" rel="next" title="Semaphore--Java信号灯">
-          Semaphore--Java信号灯
+          <a href="/2017/10/15/work/2017-10-15-Distribute-Lock/" rel="next" title="分布式锁">
+          分布式锁
           </a>
         
       </div>
@@ -178,7 +180,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java内存模型"><span class="toc-text">Java内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-概述"><span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-JMM的设计"><span class="toc-text">2. JMM的设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Java内存模型的抽象结构"><span class="toc-text">2.1 Java内存模型的抽象结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-缓存一致性问题"><span class="toc-text">2.2 缓存一致性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-指令序列的重排序"><span class="toc-text">2.3 指令序列的重排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-happens-before"><span class="toc-text">2.4 happens-before</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JMM总结"><span class="toc-text">JMM总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考博文"><span class="toc-text">参考博文</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java内存模型"><span class="toc-text">Java内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-概述"><span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-JMM的设计"><span class="toc-text">2. JMM的设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Java内存模型的抽象结构"><span class="toc-text">2.1 Java内存模型的抽象结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-缓存一致性问题"><span class="toc-text">2.2 缓存一致性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-指令序列的重排序"><span class="toc-text">2.3 指令序列的重排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-happens-before"><span class="toc-text">2.4 happens-before</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JMM总结"><span class="toc-text">JMM总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引用"><span class="toc-text">引用</span></a></li></ol></li></ol>
   </div>
 
 
