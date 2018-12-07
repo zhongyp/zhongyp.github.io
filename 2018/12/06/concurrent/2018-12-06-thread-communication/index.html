@@ -10,7 +10,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="google-site-verification" content="9GY-OrjvdT8TkXuLJFSJcJqolHfXKJ5NVYKRUv8mCRM">
   
-    <meta name="keywords" content="生活,">
+    <meta name="keywords" content="并发,">
   
 
   
@@ -18,7 +18,7 @@
   
   <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
   <link rel="icon" type="image/x-icon" href="/logo.png">
-  <title>博客声明 [ DO IT ]</title>
+  <title>多线程通信 [ DO IT ]</title>
   
     <!-- stylesheets list from config.yml -->
     
@@ -80,11 +80,11 @@
       <article class="post" id="post">
   <header class="post-header text-center">
     <h1 class="title">
-      博客声明
+      多线程通信
     </h1>
     
-    <time class="time" datetime="2018-11-27T16:00:00.000Z">
-      2018-11-28
+    <time class="time" datetime="2018-12-05T16:00:00.000Z">
+      2018-12-06
     </time>
      |
     <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv"></span>次
@@ -92,11 +92,13 @@
     <hr>
   </header>
   <div class="post-content">
-    <p>博客中的文章，如果没有特殊说明，均为原创，欢迎转载，但未经作者同意，必须保留此段声明；必须在文章中给出原文连接；否则必究法律责任。<br>博客中可能有些内容摘录至别人的文章/博客/书，仅为个人收藏，分享知识，如有侵权，请联系博主进行删除。📧：<a href="mailto:zhongyp001@163.com" target="_blank" rel="noopener">zhongyp001@163.com</a>，收到后一定尽快删除与您的相关内容。</p>
-
+    <h1 id="多线程通信"><a href="#多线程通信" class="headerlink" title="多线程通信"></a>多线程通信</h1><p>在<a href="https://zhongyp.me/2018/01/04/concurrent/2018-03-04-JavaMemModel/">Java内存模型</a>文中，我们了解到多线程的两个关键问题之一就是通信，本章就结合Java内存模型中的JMM设计，讲解多线程通信。</p>
+<h2 id="1-共享变量的可见性"><a href="#1-共享变量的可见性" class="headerlink" title="1. 共享变量的可见性"></a>1. 共享变量的可见性</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">boolan flag=false;</span><br><span class="line">new Thread(new Runnable() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        int i=0;</span><br><span class="line">        while(!flag)&#123;// code-1</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).start();</span><br><span class="line">SleepUtils.sleep(1000);</span><br><span class="line">new Thread(new Runnable() &#123;</span><br><span class="line">   @Override</span><br><span class="line">   public void run() &#123;</span><br><span class="line">       flag = true; // code-2</span><br><span class="line">   &#125;</span><br><span class="line">&#125;).start();</span><br></pre></td></tr></table></figure>
+<p>上述代码如果运行的话，code-2处的代码可能不会对code-1处的代码起作用，为什么？<br>我们都知道每个线程都有自己的工作内存，当程序运行时，会从主内存（比较宏观的说，包括堆和直接内存）中加载需要的数据到工作内存，如果没有线程内存可见性的控制，假如加载到工作内存的数据在主内存中发生改变，比如说code-2处，可能工作内存中的code-1处变量值并为改变，这就是我们所说的缓存一致性问题。JMM如果解决这个问题勒？我们先看下面的三个方法如果解决的。</p>
+<h3 id="1-1-synchronized"><a href="#1-1-synchronized" class="headerlink" title="1.1 synchronized"></a>1.1 synchronized</h3><h3 id="1-2-volatile"><a href="#1-2-volatile" class="headerlink" title="1.2 volatile"></a>1.2 volatile</h3><h3 id="1-3-final"><a href="#1-3-final" class="headerlink" title="1.3 final"></a>1.3 final</h3><h2 id="2-等待通知-wait-notify"><a href="#2-等待通知-wait-notify" class="headerlink" title="2. 等待通知(wait/notify)"></a>2. 等待通知(wait/notify)</h2><h2 id="3-管道通信"><a href="#3-管道通信" class="headerlink" title="3. 管道通信"></a>3. 管道通信</h2><h2 id="4-Thread-join"><a href="#4-Thread-join" class="headerlink" title="4. Thread.join()"></a>4. Thread.join()</h2><h2 id="5-ThreadLocal"><a href="#5-ThreadLocal" class="headerlink" title="5. ThreadLocal"></a>5. ThreadLocal</h2>
   </div>
   <div class="post-tags">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/生活/">生活</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
   </div>
 </article>
   
@@ -104,23 +106,23 @@
       <div class="post-nav-item post-nav-next">
         
           <span>〈 </span>
-          <a href="/2018/11/27/concurrent/2018-11-27-multithreads-basic/" rel="next" title="多线程基础">
-          多线程基础
+          <a href="/2018/12/06/concurrent/2018-12-06-thread-security/" rel="next" title="线程安全">
+          线程安全
           </a>
         
       </div>
   
       <div class="post-nav-item post-nav-prev">
         
-          <a href="/2018/11/28/life/2018-11-29-1/" rel="prev" title="我的博客">
-            我的博客
-          </a>
-          <span>〉</span>
-        
       </div>
     </div>
   
 
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#多线程通信"><span class="toc-text">多线程通信</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-共享变量的可见性"><span class="toc-text">1. 共享变量的可见性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-synchronized"><span class="toc-text">1.1 synchronized</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-volatile"><span class="toc-text">1.2 volatile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-final"><span class="toc-text">1.3 final</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-等待通知-wait-notify"><span class="toc-text">2. 等待通知(wait/notify)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-管道通信"><span class="toc-text">3. 管道通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Thread-join"><span class="toc-text">4. Thread.join()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-ThreadLocal"><span class="toc-text">5. ThreadLocal</span></a></li></ol></li></ol>
+  </div>
 
 
 

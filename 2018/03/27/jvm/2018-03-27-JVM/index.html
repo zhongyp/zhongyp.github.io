@@ -92,7 +92,8 @@
     <hr>
   </header>
   <div class="post-content">
-    <h2 id="1-JVM的自动内存管理机制"><a href="#1-JVM的自动内存管理机制" class="headerlink" title="1. JVM的自动内存管理机制"></a>1. JVM的自动内存管理机制</h2><h3 id="1-1-运行时数据区域"><a href="#1-1-运行时数据区域" class="headerlink" title="1.1 运行时数据区域"></a>1.1 运行时数据区域</h3><h4 id="1-1-1-程序计数器（PC-Register）"><a href="#1-1-1-程序计数器（PC-Register）" class="headerlink" title="1.1.1 程序计数器（PC Register）"></a>1.1.1 程序计数器（PC Register）</h4><ul>
+    <h2 id="1-JVM的自动内存管理机制"><a href="#1-JVM的自动内存管理机制" class="headerlink" title="1. JVM的自动内存管理机制"></a>1. JVM的自动内存管理机制</h2><h3 id="1-1-运行时数据区域"><a href="#1-1-运行时数据区域" class="headerlink" title="1.1 运行时数据区域"></a>1.1 运行时数据区域</h3><p><img src="/media/jvm-1.7-later.png" alt="jvm 1.7"></p>
+<h4 id="1-1-1-程序计数器（PC-Register）"><a href="#1-1-1-程序计数器（PC-Register）" class="headerlink" title="1.1.1 程序计数器（PC Register）"></a>1.1.1 程序计数器（PC Register）</h4><ul>
 <li>当前线程所执行字节码的行号指示器，字节码解释器的作用是通过改变计数器的值来选取下一条需要执行的字节码指令。</li>
 <li>如果当前执行的是Native方法，则这个计数器为空。</li>
 <li>Java虚拟机中<strong><em>唯一</em></strong>没有OOM的区域。</li>
@@ -141,8 +142,7 @@
 <li><p>分代收集算法： 根据对象的存活周期不同，将内存划分为几块，根据各个年代的特点进行垃圾回收。</p>
 </li>
 </ul>
-<h3 id="1-4-垃圾收集器"><a href="#1-4-垃圾收集器" class="headerlink" title="1.4 垃圾收集器"></a>1.4 垃圾收集器</h3><p><img src="https://github.com/zhongyp/jekyll.github.io/blob/master/files/gc.jpg?raw=true" alt="垃圾回收器"></p>
-<p>如果两个收集器之间存在连线，就说明他们可以搭配使用。</p>
+<h3 id="1-4-垃圾收集器"><a href="#1-4-垃圾收集器" class="headerlink" title="1.4 垃圾收集器"></a>1.4 垃圾收集器</h3><p><img src="https://github.com/zhongyp/jekyll.github.io/blob/master/files/gc.jpg?raw=true" alt="垃圾回收器"><br><a href="#垃圾收集器">图片来自《深入理解Java虚拟机》</a><br>如果两个收集器之间存在连线，就说明他们可以搭配使用。</p>
 <ol>
 <li><p>Serial</p>
 <p> 复制算法，新生代的单线程收集器，简单高效，stop the world。</p>

@@ -2,9 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://zhongyp.me/2018/12/06/concurrent/2018-12-06-thread-communication/</loc>
+    
+    <lastmod>2018-12-07T05:33:33.249Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zhongyp.me/2018/12/06/concurrent/2018-12-06-thread-security/</loc>
+    
+    <lastmod>2018-12-06T12:38:23.280Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zhongyp.me/2018/01/04/concurrent/2018-03-04-JavaMemModel/</loc>
+    
+    <lastmod>2018-12-06T12:38:18.535Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zhongyp.me/2018/11/22/jvm/2018-11-22-class-structure/</loc>
+    
+    <lastmod>2018-12-06T07:06:15.827Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zhongyp.me/2018/03/27/jvm/2018-03-27-JVM/</loc>
+    
+    <lastmod>2018-12-06T03:21:26.925Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zhongyp.me/2018/11/28/life/2018-11-29-myblog/</loc>
+    
+    <lastmod>2018-12-06T02:25:57.271Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zhongyp.me/2018/11/28/life/2018-11-29-blog-announce/</loc>
+    
+    <lastmod>2018-12-06T02:25:30.616Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://zhongyp.me/2018/12/04/concurrent/2018-12-04-thread-start-end/</loc>
     
-    <lastmod>2018-12-05T12:04:17.316Z</lastmod>
+    <lastmod>2018-12-06T02:20:28.035Z</lastmod>
     
   </url>
   
@@ -37,13 +86,6 @@
   </url>
   
   <url>
-    <loc>http://zhongyp.me/2018/01/04/concurrent/2018-03-04-JavaMemModel/</loc>
-    
-    <lastmod>2018-11-30T11:10:45.967Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://zhongyp.me/2018/03/04/concurrent/2018-03-04-Automic/</loc>
     
     <lastmod>2018-11-29T16:41:06.508Z</lastmod>
@@ -58,37 +100,9 @@
   </url>
   
   <url>
-    <loc>http://zhongyp.me/2018/11/28/life/2018-11-29-1/</loc>
-    
-    <lastmod>2018-11-29T08:52:39.944Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zhongyp.me/2018/11/28/life/2018-11-29/</loc>
-    
-    <lastmod>2018-11-29T08:49:19.431Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zhongyp.me/2018/03/27/jvm/2018-03-27-JVM/</loc>
-    
-    <lastmod>2018-11-28T06:33:29.864Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://zhongyp.me/2018/10/23/utils/2018-10-23-git/</loc>
     
     <lastmod>2018-11-27T03:20:14.166Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zhongyp.me/2018/11/22/jvm/2018-11-22/</loc>
-    
-    <lastmod>2018-11-22T12:16:57.451Z</lastmod>
     
   </url>
   
@@ -275,14 +289,14 @@
   </url>
   
   <url>
-    <loc>http://zhongyp.me/search/index.html</loc>
+    <loc>http://zhongyp.me/tags/index.html</loc>
     
     <lastmod>2018-10-02T01:27:53.336Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://zhongyp.me/tags/index.html</loc>
+    <loc>http://zhongyp.me/search/index.html</loc>
     
     <lastmod>2018-10-02T01:27:53.336Z</lastmod>
     
@@ -324,6 +338,13 @@
   </url>
   
   <url>
+    <loc>http://zhongyp.me/2018/01/26/java/2018-03-30-HashMap/</loc>
+    
+    <lastmod>2018-10-02T01:27:53.330Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://zhongyp.me/2018/03/18/java/2018-03-18-JavaReflection/</loc>
     
     <lastmod>2018-10-02T01:27:53.330Z</lastmod>
@@ -332,13 +353,6 @@
   
   <url>
     <loc>http://zhongyp.me/2018/03/10/java/2018-03-10-JavaPara/</loc>
-    
-    <lastmod>2018-10-02T01:27:53.330Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zhongyp.me/2018/01/26/java/2018-03-30-HashMap/</loc>
     
     <lastmod>2018-10-02T01:27:53.330Z</lastmod>
     
@@ -387,14 +401,14 @@
   </url>
   
   <url>
-    <loc>http://zhongyp.me/2018/03/29/concurrent/2018-03-29-Callable/</loc>
+    <loc>http://zhongyp.me/2018/03/16/concurrent/2018-03-16-ThreadLocal/</loc>
     
     <lastmod>2018-10-02T01:27:53.323Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://zhongyp.me/2018/03/16/concurrent/2018-03-16-ThreadLocal/</loc>
+    <loc>http://zhongyp.me/2018/03/29/concurrent/2018-03-29-Callable/</loc>
     
     <lastmod>2018-10-02T01:27:53.323Z</lastmod>
     
