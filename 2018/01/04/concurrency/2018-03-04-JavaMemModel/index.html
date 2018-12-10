@@ -92,29 +92,26 @@
     <hr>
   </header>
   <div class="post-content">
-    <h1 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h1><p>Java内存模型（简称：JMM），下文中如果没有特殊说明，JMM即代表“Java内存模型”。</p>
-<h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p>在并发编程模型中，需要处理两个关键的问题：线程之间以何种机制交换信息（通信）及如何控制不同线程之间操作发生相对顺序的机制（同步）。<br>线程之间的通信机制有两种：共享内存和消息传递。<br>共享内存模型：线程之间通过读-写内存中的公共状态进行隐式通信。<br>消息传递模型：线程之间没有公共状态，线程之间必须通过发送消息来显示的进行通信。<br><strong><em>Java并发采用的是共享内存模型</em></strong>。<br>注：<br>同步：指程序中用于控制不同线程间操作发生相对顺序的机制，意味着某种形式的原子性或者互斥。<br>共享内存的并发模型中，同步是显式，程序员必须显示的指定某个方法或某段代码需要在线程之间互斥执行。消息传递的并发模型中，消息的发送必须在消息的接收之前，因此同步是隐式的。</p>
-<h2 id="2-JMM的设计"><a href="#2-JMM的设计" class="headerlink" title="2. JMM的设计"></a>2. JMM的设计</h2><h3 id="2-1-Java内存模型的抽象结构"><a href="#2-1-Java内存模型的抽象结构" class="headerlink" title="2.1 Java内存模型的抽象结构"></a>2.1 Java内存模型的抽象结构</h3><p><img src="/media/jvm-1.8.png" alt="jmm抽象结构"><br>对于上图各个模块不太理解的可以看下<a href="https://zhongyp.me/2018/03/27/jvm/2018-03-27-JVM/">JVM</a>，里面有对各个模块的讲解。<br>Java线程之间的通信是由Java内存模型（Java Memory Model,简称：JMM）控制，JMM决定一个线程对共享变量的写入何时对另一个线程可见。JMM通过控制主内存与每个线程的本地内存之间的交互，提供内存可见性保证。JMM属于语言级别的内存模型，确保在不同的编译和不同处理器平台上，通过禁止特定类型的编译器重排序和处理器重排序，提供内存可见性保证。</p>
-<h3 id="2-2-缓存一致性问题"><a href="#2-2-缓存一致性问题" class="headerlink" title="2.2 缓存一致性问题"></a>2.2 缓存一致性问题</h3><p>在JMM模型中，对象驻留在共享内存中，每个线程具有一个私有的内存工作区，其中存放着该线程已读/已写的域的cache拷贝。在没有显示同步的情况下，对一个域执行了写操作的线程可能没有将它的更新立即传送到内存中；对一个域执行读操作的线程，当内存中的域的值发生改变时，其相应的内存工作区可能还没有被修改。JVM不保持这种cache的一致性。</p>
-<p>举个简单的例子：在java中，执行下面这个语句：</p>
+    <h1 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h1><p>Java内存模型（Java Memory Model，简称：JMM），下文中如果没有特殊说明，JMM即代表“Java内存模型”。</p>
+<h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><h3 id="1-1-缓存一致性"><a href="#1-1-缓存一致性" class="headerlink" title="1.1 缓存一致性"></a>1.1 缓存一致性</h3><p>在并发编程模型中，需要处理两个关键的问题：<strong>线程之间以何种机制交换信息（通信）及如何控制不同线程之间操作发生相对顺序的机制（同步）</strong>。<br>线程之间的通信机制有两种：共享内存和消息传递，每种通信机制对应不同的内存模型。<br>共享内存模型：线程之间通过读-写内存中的公共状态进行隐式通信。<br>消息传递模型：线程之间没有公共状态，线程之间必须通过发送消息来显示的进行通信。<br><strong><em>Java并发采用的是共享内存模型</em></strong>。<br>在共享的内存模型，多处理器体系架构中，每个<a href="https://www.oschina.net/translate/what-every-programmer-should-know-about-cpu-cache-part2" target="_blank" rel="noopener">处理器</a>都有自己的缓存，并且周期性的与主内存协调一致。处理器架构提供了不同级别的缓存一致性（cache coherence），有些仅提供最小的保证，几乎在任何时间内，都允许不同的处理器在相同位置上看到不同的值。<br>举个简单的例子：在java中，执行下面这个语句：</p>
 <p><code>i  = 10++;</code></p>
 <p>1) 执行线程必须先在自己的工作线程中对变量i所在的缓存行进行赋值操作，然后再写入主存当中。而不是直接将数值10写入主存当中。</p>
 <p>2) 比如同时有2个线程执行这段代码，假如初始时i的值为10，那么我们希望两个线程执行完之后i的值变为12。但是事实会是这样吗？</p>
 <p>3) 可能存在下面一种情况：初始时，两个线程分别读取i的值存入各自所在的工作内存当中，然后线程1进行加1操作，然后把i的最新值11写入到内存。此时线程2的工作内存当中i的值还是10，进行加1操作之后，i的值为11，然后线程2把i的值写入内存。</p>
-<p>4) 最终结果i的值是11，而不是12。这就是著名的缓存一致性问题。通常称这种被多个线程访问的变量为共享变量。</p>
-<p>为了解决缓存一致性问题，需要各个处理器访问缓存时遵循一些协议（MSI、MESI、MOSI、Synapse等），在读写时要根据协议进行操作。<br><img src="/media/cache-consistency.png" alt="resort"><br>图片来自：<a href="#指令序列的重排序">《深入理解Java虚拟机》</a></p>
-<h3 id="2-3-指令序列的重排序"><a href="#2-3-指令序列的重排序" class="headerlink" title="2.3 指令序列的重排序"></a>2.3 指令序列的重排序</h3><p>除了上述的缓存一致性问题外，在执行程序时，为了提高程序的性能，使得处理器内部的运算单元被充分利用，编译器和处理器常常会对指令做重排序。重排序也会导致多线程同步的问题。<br>重排序分类：</p>
+<p>4) 最终结果i的值是11，而不是12。这就是缓存一致性问题。通常称这种被多个线程访问的变量为共享变量。</p>
+<p><strong>注：</strong><br>同步：<strong>指程序中用于控制不同线程间操作发生相对顺序的机制</strong>，意味着某种形式的原子性或者互斥。<br>共享内存的并发模型中，同步是显式，程序员必须显示的指定某个方法或某段代码需要在线程之间互斥执行。消息传递的并发模型中，消息的发送必须在消息的接收之前，因此同步是隐式的。</p>
+<p>想要保证每个处理器能在任意时间内获知其他处理器正在处理的工作，代价很高而且很多时候这些信息都是不必要的，所以就牺牲掉存储的一致性来保证性能。为了共享数据时能得到存储协调的保证，Java提供了自己的JMM解决与底层平台存储模型的差异化。</p>
+<h3 id="1-2-重排序"><a href="#1-2-重排序" class="headerlink" title="1.2 重排序"></a>1.2 重排序</h3><p>除了上述的缓存一致性问题外，在执行程序时，为了提高程序的性能，使得处理器内部的运算单元被充分利用，编译器和处理器常常会对指令做重排序。<br>从Java源代码到最终执行的指令序列，会分别经历下面的三种重排序：<br><img src="/media/java-resort.png" alt="resort"><br>图片来自<a href="#2-4-happens-before">Java并发编程艺术</a></p>
 <ol>
 <li>编译器重排序。编译器不改变单线程语义的前提下，可以重新安排语句的执行顺序。</li>
 <li>指令级重排序。现代处理器采用指令级并行技术将多条指令重叠执行。<strong><em>如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。</em></strong></li>
 <li>内存系统的重排序。由于处理器使用缓存和读/写缓冲区，使得加载和存储操作看上去可能是在乱序执行。</li>
 </ol>
-<p>注：<br>数据依赖性：编译器和处理器不会改变存在数据以来关系的两个操作的执行顺序。数据依赖性仅针对单个处理器中执行的指令序列和单个线程中执行的操作，不同处理器之间和不同线程之间的数据依赖性不被编译器和处理器考虑。<br>as-if-serial：不管如何的重排序，单线程程序的执行结果不能被改变。编译器、runtime和处理器都必须遵守as-if-serial语义。</p>
-<p><img src="/media/resort.png" alt="resort"></p>
-<p>图中的1、2、3重排序可能会导致多线程的内存可见性问题。这与现代处理器使用写缓冲区有关。我们知道cpu处理和内存读写的处理速度差距太大，为了减少cpu等待读/写内存产生的延迟，cpu使用了写缓存区。写缓冲区可以保证指令流水线持续运行，通过批处理的方式刷新写缓冲，以及合并写缓冲中对同一内存地址的多次写，减少对内存总线的占用。<br>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 这段代码用来校验cpu对内存的读/写操作，不一定与内存实际发生的读/写顺序一致。</span><br><span class="line"> */</span><br><span class="line">    //初始状态 a=b=0</span><br><span class="line">  </span><br><span class="line">    //线程1</span><br><span class="line">        a = 1; // A1</span><br><span class="line">        x = b; // A2</span><br><span class="line">   </span><br><span class="line">    // 线程2</span><br><span class="line">        b=2; // B1</span><br><span class="line">        y=a; // B2</span><br></pre></td></tr></table></figure></p>
-<p>这个程序的结果是不确定的，有可能是x=y=0。线程1和线程2同时把共享变量a、b写入自己的写缓冲区，然后从内存中读取另一个共享变量a、b的值复制给x、y，最后再把所有的数据刷入内存。这种情况下x=y=0。<br><img src="/media/cpustore.png" alt="cpu-mem"><br>上述这种情况就是重排序对多线程的影响。</p>
-<h3 id="2-4-happens-before"><a href="#2-4-happens-before" class="headerlink" title="2.4 happens-before"></a>2.4 happens-before</h3><p>Java虚拟机试图定义一种Java内存模型来屏蔽掉各种硬件和操作系统的内存访问差异，且能够有足够的自由空间区利用硬件的各种特性来获取个好的执行速度，从JDK5开始，Java使用JSR-133内存模型。JSR-133使用happens-before概念保证内存的可见性。另外，Java内存模型具备一些先天的“有序性”，即不需要通过任何手段就能够得到保证的有序性，这个通常也称为 happens-before 原则。如果两个操作的执行次序无法从happens-before原则推导出来，那么它们就不能保证它们的有序性，虚拟机可以随意地对它们进行重排序。</p>
-<p>下面就来具体介绍下happens-before原则（先行发生原则）：</p>
+<p>编译器和处理器重排序时会遵守数据依赖性，编译器、运行时和处理器都必须遵守as-if-serial语义。<br><strong>注：</strong><br>数据依赖性：编译器和处理器不会改变存在数据以来关系的两个操作的执行顺序。<strong>数据依赖性仅针对单个处理器中执行的指令序列和单个线程中执行的操作，不同处理器之间和不同线程之间的数据依赖性不被编译器和处理器考虑。</strong><br>as-if-serial：内部线程类似顺序化语义。不管如何的重排序，单线程程序的执行结果不能被改变。</p>
+<h4 id="1-2-1-重排序的影响"><a href="#1-2-1-重排序的影响" class="headerlink" title="1.2.1 重排序的影响"></a>1.2.1 重排序的影响</h4><p>示例代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    int a = 0;</span><br><span class="line">    boolean flag = false;</span><br><span class="line"></span><br><span class="line">    public void writer()&#123;</span><br><span class="line">        a = 1; // 1</span><br><span class="line">        flag = true; // 2</span><br><span class="line">    &#125;</span><br><span class="line">    public void reader()&#123;</span><br><span class="line">        if (flag)&#123; // 3</span><br><span class="line">            int i = a * a; // 4</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>假设线程A先执行writrer方法，随后线程B执行reader方法，线程执行操作4时，不一定能看到1处的赋值。原因如下图：<br><img src="/media/resort.png" alt="resort"><br>图片来自<a href="#2-4-happens-before">Java并发编程艺术</a><br>由于操作1和2没有依赖关系，所以编译器和处理器可以对这两个操作重排序，线程A首先标记了flag，随后线程B读取flag。由于flag=true，线程B可以读取a，但是此时的a并为被线程A赋值。所以这里的多线程程序的语义被破坏了。JMM提供同步机制来抑制编译器、运行时和硬件对存储操作的各种方式的重排序，保证内存的可见性。                                              </p>
+<h2 id="2-JMM设计"><a href="#2-JMM设计" class="headerlink" title="2. JMM设计"></a>2. JMM设计</h2><p><img src="/media/jmm-abs.png" alt="JMM的抽象结构"><br>JMM在内存中的抽象结构，图片来自<a href="#2-4-happens-before">Java并发编程艺术</a></p>
+<p>JMM属于语言级别的内存模型，确保在不同的编译和不同处理器平台上，通过禁止特定类型的编译器重排序和处理器重排序，决定一个线程对共享变量的写入何时对另一个线程可见，提供内存可见性保证。<br>从JDK5开始，Java使用JSR-133内存模型。JSR-133使用<strong>happens-before概念保证内存的可见性</strong>。如果两个操作的执行次序无法从happens-before原则推导出来，那么它们就不能保证它们的有序性，虚拟机可以随意地对它们进行重排序。<br>下面就来具体介绍下happens-before原则（先行发生原则）：</p>
 <ol>
 <li><p><strong><em>程序次序规则：一个线程中的每个操作，happens-before于该线程中的任意后续操作。</em></strong></p>
 </li>
@@ -122,7 +119,7 @@
 </li>
 <li><p><strong><em>volatile变量规则：对一个volatile变量的写操作，happens-before于后续对这个volatile变量的读操作。</em></strong></p>
 </li>
-<li><p><strong><em>传递规则：如果操作A happens-before操作B，而操作B happens-before操作C，则可以得出操作A happens-before操作C。</em></strong></p>
+<li><p><strong><em>传递性：如果操作A happens-before操作B，而操作B happens-before操作C，则可以得出操作A happens-before操作C。</em></strong></p>
 </li>
 <li><p>start()规则：Thread对象的start()方法happens-before此线程的每个一个动作</p>
 </li>
@@ -133,22 +130,18 @@
 <li><p>对象终结规则：一个对象的初始化完成先行发生于他的finalize()方法的开始</p>
 </li>
 </ol>
-<p>对于程序次序规则来说，就是一段程序代码的执行在单个线程中<strong><em>看起来</em></strong>是有序的。程序看起来执行的顺序是按照代码顺序执行的，但是虚拟机可能会对程序代码进行指令重排序。虽然进行重排序，但是最终执行的结果是与程序顺序执行的结果一致的，它只会对不存在数据依赖性的指令进行重排序。因此，在单个线程中，程序执行看起来是有序执行的，这一点要注意理解。事实上，这个规则是用来保证程序在<strong><em>单线程中执行结果的正确性，但无法保证程序在多线程中执行的正确性。</em></strong><br>注意：<strong><em>两个操作之间具有的happens-before关系，并不是意味着前一个操作必须在后一个操作之前执行，仅仅要求前一个操作执行结果对后一个操作可见。</em></strong></p>
 <p><img src="/media/happens-before-design.png" alt="happens-before-design"><br>JMM设计图，图片来自<a href="#2-4-happens-before">Java并发编程艺术</a></p>
-<h2 id="JMM总结"><a href="#JMM总结" class="headerlink" title="JMM总结"></a>JMM总结</h2><p>JMM在设计上考虑两个关键因素：</p>
-<ol>
-<li>要为程序员提供足够强的内存可见性保证。</li>
-<li>对编译器和处理器的限制尽可能的放松，提高程序的运行性能，同时解决重排序导致的多线程同步问题。<br>总的来说JMM在设计上完成了如下的结果：</li>
-</ol>
-<ul>
+<h2 id="3-JMM的可见性保证"><a href="#3-JMM的可见性保证" class="headerlink" title="3. JMM的可见性保证"></a>3. JMM的可见性保证</h2><ul>
 <li>单线程程序。<strong><em>单线程程序不会出现内存可见性问题。</em></strong>编译器、runtime和处理器会共同确保单线程程序的执行结果与该程序在顺序一致性模型中的执行结果相同。</li>
-<li>正确<strong><em>同步</em></strong>的多线程程序。正确同步的多线程程序的执行将具有顺序一致性（程序的执行结果与该程序在顺序一致性内存模型中的执行结果相同）。<strong><em>JMM通过限制编译器和处理器的重排序来为程序员提供内存可见性保证。（这句话解决了本文中的两个问题，缓存一致性与重排序引起的多线程同步问题，我会在<a href="https://zhongyp.me/2018/12/06/concurrent/2018-12-06-thread-communication/">线程通信</a>的共享变量小节中讲解缓存一致性的解决方案，在<a href="https://zhongyp.me/2018/12/06/concurrent/2018-12-06-thread-security/">线程安全</a>一章中讲解重排序引起的多线程同步问题的解决方案）</em></strong></li>
+<li>正确<strong><em>同步</em></strong>的多线程程序。正确同步的多线程程序的执行将具有顺序一致性（程序的执行结果与该程序在顺序一致性内存模型中的执行结果相同）。JMM通过根据happens-before原则限制编译器和处理器的重排序来为程序员提供内存可见性保证。</li>
 <li>未同步/未正确同步的多线程程序。JMM为他们提供最小的安全性保障：线程执行时读取到的值，要么是之前某个线程写入的值，要么时默认值（0、null、false）。</li>
 </ul>
 <h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="http://www.importnew.com/24082.html" target="_blank" rel="noopener">你真的了解volatile关键字吗？</a></p>
 <p><a href="https://www.cnblogs.com/zhengbin/p/5654805.html" target="_blank" rel="noopener">Java中Volatile关键字详解</a></p>
 <p><a href="">Java并发编程艺术</a></p>
 <p><a href="">深入理解Java虚拟机-JVM高级特性与最佳实践</a></p>
+<p><a href="">Java并发编程实践</a></p>
+<p><a href="https://www.oschina.net/translate/what-every-programmer-should-know-about-cpu-cache-part2" target="_blank" rel="noopener">每个程序员都应该了解的 CPU 高速缓存</a></p>
 
   </div>
   <div class="post-tags">
@@ -168,8 +161,8 @@
   
       <div class="post-nav-item post-nav-prev">
         
-          <a href="/2018/03/02/interfaceview/2018-03-02-Classic-Interview-Questions/" rel="prev" title="经典面试题整理">
-            经典面试题整理
+          <a href="/2018/03/16/concurrency/2017-03-16-thread-brief/" rel="prev" title="线程简介">
+            线程简介
           </a>
           <span>〉</span>
         
@@ -180,7 +173,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java内存模型"><span class="toc-text">Java内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-概述"><span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-JMM的设计"><span class="toc-text">2. JMM的设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Java内存模型的抽象结构"><span class="toc-text">2.1 Java内存模型的抽象结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-缓存一致性问题"><span class="toc-text">2.2 缓存一致性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-指令序列的重排序"><span class="toc-text">2.3 指令序列的重排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-happens-before"><span class="toc-text">2.4 happens-before</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JMM总结"><span class="toc-text">JMM总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引用"><span class="toc-text">引用</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java内存模型"><span class="toc-text">Java内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景"><span class="toc-text">1. 背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-缓存一致性"><span class="toc-text">1.1 缓存一致性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-重排序"><span class="toc-text">1.2 重排序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-1-重排序的影响"><span class="toc-text">1.2.1 重排序的影响</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-JMM设计"><span class="toc-text">2. JMM设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-JMM的可见性保证"><span class="toc-text">3. JMM的可见性保证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引用"><span class="toc-text">引用</span></a></li></ol></li></ol>
   </div>
 
 
