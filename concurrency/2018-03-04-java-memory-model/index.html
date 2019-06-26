@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="google-site-verification" content="9GY-OrjvdT8TkXuLJFSJcJqolHfXKJ5NVYKRUv8mCRM">
+  
+    <meta name="keywords" content="并发,Java内存模型">
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客,钟宇鹏,个人博客">
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  <title>Java内存模型 [ zhongyp&#39;blog ]</title>
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="/css/pure.min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <!-- <li class="pure-menu-item toc-menu pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li> -->
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+        <ul class="pure-menu-children">
+        
+          
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+          
+          
+      </ul>
+      </li>
+    
+  </ul>
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">zhongyp&#39;blog</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      Java内存模型
+    </h1>
+    
+    <time class="time" datetime="2018-01-03T16:00:00.000Z">
+      2018-01-04
+    </time>
+     |
+    <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+</span>
+    <hr>
+  </header>
+  <div class="post-content">
+    <h1 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h1><p>Java内存模型（Java Memory Model，简称：JMM），下文中如果没有特殊说明，JMM即代表“Java内存模型”。</p>
+<h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><h3 id="1-1-缓存一致性"><a href="#1-1-缓存一致性" class="headerlink" title="1.1 缓存一致性"></a>1.1 缓存一致性</h3><p>在并发编程模型中，需要处理两个关键的问题：<strong>线程之间以何种机制交换信息（通信）及如何控制不同线程之间操作发生相对顺序的机制（同步）</strong>。<br>线程之间的通信机制有两种：共享内存和消息传递，每种通信机制对应不同的内存模型。<br>共享内存模型：线程之间通过读-写内存中的公共状态进行隐式通信。<br>消息传递模型：线程之间没有公共状态，线程之间必须通过发送消息来显示的进行通信。<br><strong><em>Java并发采用的是共享内存模型</em></strong>。<br>在共享的内存模型，多处理器体系架构中，每个<a href="https://www.oschina.net/translate/what-every-programmer-should-know-about-cpu-cache-part2" target="_blank" rel="noopener">处理器</a>都有自己的缓存，并且周期性的与主内存协调一致。处理器架构提供了不同级别的缓存一致性（cache coherence），有些仅提供最小的保证，几乎在任何时间内，都允许不同的处理器在相同位置上看到不同的值。<br>举个简单的例子：在java中，执行下面这个语句：</p>
+<p><code>i  = 10++;</code></p>
+<p>1) 执行线程必须先在自己的工作线程中对变量i所在的缓存行进行赋值操作，然后再写入主存当中。而不是直接将数值10写入主存当中。</p>
+<p>2) 比如同时有2个线程执行这段代码，假如初始时i的值为10，那么我们希望两个线程执行完之后i的值变为12。但是事实会是这样吗？</p>
+<p>3) 可能存在下面一种情况：初始时，两个线程分别读取i的值存入各自所在的工作内存当中，然后线程1进行加1操作，然后把i的最新值11写入到内存。此时线程2的工作内存当中i的值还是10，进行加1操作之后，i的值为11，然后线程2把i的值写入内存。</p>
+<p>4) 最终结果i的值是11，而不是12。这就是缓存一致性问题。通常称这种被多个线程访问的变量为共享变量。</p>
+<p><strong>注：</strong><br>同步：<strong>指程序中用于控制不同线程间操作发生相对顺序的机制</strong>，意味着某种形式的原子性或者互斥。<br>共享内存的并发模型中，同步是显式，程序员必须显示的指定某个方法或某段代码需要在线程之间互斥执行。消息传递的并发模型中，消息的发送必须在消息的接收之前，因此同步是隐式的。</p>
+<p>想要保证每个处理器能在任意时间内获知其他处理器正在处理的工作，代价很高而且很多时候这些信息都是不必要的，所以就牺牲掉存储的一致性来保证性能。为了共享数据时能得到存储协调的保证，Java提供了自己的JMM解决与底层平台存储模型的差异化。</p>
+<h3 id="1-2-重排序"><a href="#1-2-重排序" class="headerlink" title="1.2 重排序"></a>1.2 重排序</h3><p>除了上述的缓存一致性问题外，在执行程序时，为了提高程序的性能，使得处理器内部的运算单元被充分利用，编译器和处理器常常会对指令做重排序。<br>从Java源代码到最终执行的指令序列，会分别经历下面的三种重排序：<br><img src="/media/java-resort.png" alt="resort"><br>图片来自<a href="#2-4-happens-before">Java并发编程艺术</a></p>
+<ol>
+<li>编译器重排序。编译器不改变单线程语义的前提下，可以重新安排语句的执行顺序。</li>
+<li>指令级重排序。现代处理器采用指令级并行技术将多条指令重叠执行。<strong><em>如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。</em></strong></li>
+<li>内存系统的重排序。由于处理器使用缓存和读/写缓冲区，使得加载和存储操作看上去可能是在乱序执行。</li>
+</ol>
+<p>编译器和处理器重排序时会遵守数据依赖性，编译器、运行时和处理器都必须遵守as-if-serial语义。<br><strong>注：</strong><br>数据依赖性：编译器和处理器不会改变存在数据以来关系的两个操作的执行顺序。<strong>数据依赖性仅针对单个处理器中执行的指令序列和单个线程中执行的操作，不同处理器之间和不同线程之间的数据依赖性不被编译器和处理器考虑。</strong><br>as-if-serial：内部线程类似顺序化语义。不管如何的重排序，单线程程序的执行结果不能被改变。</p>
+<h4 id="1-2-1-重排序的影响"><a href="#1-2-1-重排序的影响" class="headerlink" title="1.2.1 重排序的影响"></a>1.2.1 重排序的影响</h4><p>示例代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    int a = 0;</span><br><span class="line">    boolean flag = false;</span><br><span class="line"></span><br><span class="line">    public void writer()&#123;</span><br><span class="line">        a = 1; // 1</span><br><span class="line">        flag = true; // 2</span><br><span class="line">    &#125;</span><br><span class="line">    public void reader()&#123;</span><br><span class="line">        if (flag)&#123; // 3</span><br><span class="line">            int i = a * a; // 4</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>假设线程A先执行writrer方法，随后线程B执行reader方法，线程执行操作4时，不一定能看到1处的赋值。原因如下图：<br><img src="/media/resort.png" alt="resort"><br>图片来自<a href="#2-4-happens-before">Java并发编程艺术</a><br>由于操作1和2没有依赖关系，所以编译器和处理器可以对这两个操作重排序，线程A首先标记了flag，随后线程B读取flag。由于flag=true，线程B可以读取a，但是此时的a并为被线程A赋值。所以这里的多线程程序的语义被破坏了。JMM提供同步机制来抑制编译器、运行时和硬件对存储操作的各种方式的重排序，保证内存的可见性。                                              </p>
+<h2 id="2-JMM设计"><a href="#2-JMM设计" class="headerlink" title="2. JMM设计"></a>2. JMM设计</h2><p><img src="/media/jmm-abs.png" alt="JMM的抽象结构"><br>JMM在内存中的抽象结构，图片来自<a href="#2-4-happens-before">Java并发编程艺术</a></p>
+<p>JMM属于语言级别的内存模型，确保在不同的编译和不同处理器平台上，通过禁止特定类型的编译器重排序和处理器重排序，决定一个线程对共享变量的写入何时对另一个线程可见，提供内存可见性保证。<br>从JDK5开始，Java使用JSR-133内存模型。JSR-133使用<strong>happens-before概念保证内存的可见性</strong>。如果两个操作的执行次序无法从happens-before原则推导出来，那么它们就不能保证它们的有序性，虚拟机可以随意地对它们进行重排序。<br>下面就来具体介绍下happens-before原则（先行发生原则）：</p>
+<ol>
+<li><p><strong><em>程序次序规则：一个线程中的每个操作，happens-before于该线程中的任意后续操作。</em></strong></p>
+</li>
+<li><p><strong><em>监视器锁规则：一个unLock操作先行发生于后面对同一个锁的lock操作。</em></strong></p>
+</li>
+<li><p><strong><em>volatile变量规则：对一个volatile变量的写操作，happens-before于后续对这个volatile变量的读操作。</em></strong></p>
+</li>
+<li><p><strong><em>传递性：如果操作A happens-before操作B，而操作B happens-before操作C，则可以得出操作A happens-before操作C。</em></strong></p>
+</li>
+<li><p>start()规则：Thread对象的start()方法happens-before此线程的每个一个动作</p>
+</li>
+<li><p>join()规则：如果线程A执行操作ThreadB.join()并成功返回，那么线程B中的任意操作happens-before于线程A从ThreadB.join()操作成功返回。</p>
+</li>
+<li><p>线程终结规则：线程中所有的操作都先行发生于线程的终止检测，我们可以通过Thread.join()方法结束、Thread.isAlive()的返回值手段检测到线程已经终止执行</p>
+</li>
+<li><p>对象终结规则：一个对象的初始化完成先行发生于他的finalize()方法的开始</p>
+</li>
+</ol>
+<p><img src="/media/happens-before-design.png" alt="happens-before-design"><br>JMM设计图，图片来自<a href="#2-4-happens-before">Java并发编程艺术</a></p>
+<h2 id="3-JMM的可见性保证"><a href="#3-JMM的可见性保证" class="headerlink" title="3. JMM的可见性保证"></a>3. JMM的可见性保证</h2><ul>
+<li>单线程程序。<strong><em>单线程程序不会出现内存可见性问题。</em></strong>编译器、runtime和处理器会共同确保单线程程序的执行结果与该程序在顺序一致性模型中的执行结果相同。</li>
+<li>正确<strong><em>同步</em></strong>的多线程程序。正确同步的多线程程序的执行将具有顺序一致性（程序的执行结果与该程序在顺序一致性内存模型中的执行结果相同）。JMM通过根据happens-before原则限制编译器和处理器的重排序来为程序员提供内存可见性保证。</li>
+<li>未同步/未正确同步的多线程程序。JMM为他们提供最小的安全性保障：线程执行时读取到的值，要么是之前某个线程写入的值，要么时默认值（0、null、false）。</li>
+</ul>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="http://www.importnew.com/24082.html" target="_blank" rel="noopener">你真的了解volatile关键字吗？</a></p>
+<p><a href="https://www.cnblogs.com/zhengbin/p/5654805.html" target="_blank" rel="noopener">Java中Volatile关键字详解</a></p>
+<p><a href="">Java并发编程艺术</a></p>
+<p><a href="">深入理解Java虚拟机-JVM高级特性与最佳实践</a></p>
+<p><a href="">Java并发编程实践</a></p>
+<p><a href="https://www.oschina.net/translate/what-every-programmer-should-know-about-cpu-cache-part2" target="_blank" rel="noopener">每个程序员都应该了解的 CPU 高速缓存</a></p>
+
+  </div>
+  <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+            <strong>本文作者： </strong>zhongyp</li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="https://zhongyp.me/concurrency/2018-03-04-java-memory-model/" title="使用simple主题并开始写作">https://zhongyp.me/concurrency/2018-03-04-java-memory-model/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
+  </div>
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/life/2017-7-5-journey/" rel="next" title="旅行">
+          旅行
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+          <a href="/algorithm/2018-01-10-Algorithm/" rel="prev" title="算法（Algorithm）">
+            算法（Algorithm）
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java内存模型"><span class="toc-text">Java内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景"><span class="toc-text">1. 背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-缓存一致性"><span class="toc-text">1.1 缓存一致性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-重排序"><span class="toc-text">1.2 重排序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-1-重排序的影响"><span class="toc-text">1.2.1 重排序的影响</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-JMM设计"><span class="toc-text">2. JMM设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-JMM的可见性保证"><span class="toc-text">3. JMM的可见性保证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引用"><span class="toc-text">引用</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+
+      <a href="http://programer.group" target="_blank">主站</a> |
+      <a href="http://zhongyp.me">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a> |
+      <a><span id="busuanzi_container_site_pv">本站访客数<span id="busuanzi_value_site_uv"></span>人次</span></a> |
+      <a><span id="busuanzi_container_site_pv">本站访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+    </div>
+  </footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     *
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      // var menu = document.getElementById('menu-main-post');
+      // if (menu) {
+      //   var toc = document.getElementById('toc');
+      //   if (toc) {
+      //     menu.onclick = function() {
+      //       if (toc) {
+      //         if (toc.style.display == 'block') {
+      //           toc.style.display = 'none';
+      //         } else {
+      //           toc.style.display = 'block';
+      //         }
+      //       }
+      //     };
+      //   } else {
+      //     menu.style.display = 'none';
+      //   }
+      // }
+    }
+
+  })(window, document);
+</script>
+
+
+  
+
+
+
+</body>
+</html>
