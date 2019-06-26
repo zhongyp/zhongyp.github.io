@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zhongyp.me/redis/2019-06-21-redis/</loc>
+    
+    <lastmod>2019-06-26T14:33:48.085Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/transaction/2019-03-07-spring-transaction-management/</loc>
+    
+    <lastmod>2019-06-26T06:02:34.284Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zhongyp.me/life/2017-7-5-journey/</loc>
     
     <lastmod>2019-06-26T03:25:22.904Z</lastmod>
@@ -47,13 +61,6 @@
     <loc>https://zhongyp.me/java/2019-05-02-effective-java/</loc>
     
     <lastmod>2019-06-26T02:44:53.168Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/redis/2019-06-21-redis/</loc>
-    
-    <lastmod>2019-06-26T02:40:46.266Z</lastmod>
     
   </url>
   
@@ -117,13 +124,6 @@
     <loc>https://zhongyp.me/java/2019-05-06-java-generics/</loc>
     
     <lastmod>2019-06-05T11:29:39.842Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/transaction/2019-03-07-spring-transaction-management/</loc>
-    
-    <lastmod>2019-05-31T03:34:01.413Z</lastmod>
     
   </url>
   
