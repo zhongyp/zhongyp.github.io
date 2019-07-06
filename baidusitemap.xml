@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://zhongyp.me/zhongyp.github.io/concurrency/2018-03-04-java-memory-model/</loc>
+    <lastmod>2019-07-06T10:17:58.503Z</lastmod>
+  </url>  <url>
     <loc>https://zhongyp.me/zhongyp.github.io/redis/2019-06-21-redis/</loc>
-    <lastmod>2019-06-26T14:33:48.085Z</lastmod>
+    <lastmod>2019-06-28T10:37:07.005Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/zhongyp.github.io/transaction/2019-03-07-spring-transaction-management/</loc>
     <lastmod>2019-06-26T06:02:34.284Z</lastmod>
@@ -57,9 +60,6 @@
   </url>  <url>
     <loc>https://zhongyp.me/zhongyp.github.io/java/2019-05-19-javadoc-guide/</loc>
     <lastmod>2019-05-19T12:28:11.035Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/zhongyp.github.io/concurrency/2018-03-04-java-memory-model/</loc>
-    <lastmod>2018-12-10T10:13:35.930Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/zhongyp.github.io/algorithm/2018-01-10-Algorithm/</loc>
     <lastmod>2018-10-26T08:44:50.520Z</lastmod>

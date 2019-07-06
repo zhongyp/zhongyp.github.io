@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zhongyp.me/concurrency/2018-03-04-java-memory-model/</loc>
+    
+    <lastmod>2019-07-06T10:17:58.503Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zhongyp.me/redis/2019-06-21-redis/</loc>
     
-    <lastmod>2019-06-26T14:33:48.085Z</lastmod>
+    <lastmod>2019-06-28T10:37:07.005Z</lastmod>
     
   </url>
   
@@ -142,13 +149,6 @@
   </url>
   
   <url>
-    <loc>https://zhongyp.me/concurrency/2018-03-04-java-memory-model/</loc>
-    
-    <lastmod>2018-12-10T10:13:35.930Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zhongyp.me/algorithm/2018-01-10-Algorithm/</loc>
     
     <lastmod>2018-10-26T08:44:50.520Z</lastmod>
@@ -170,14 +170,14 @@
   </url>
   
   <url>
-    <loc>https://zhongyp.me/search/index.html</loc>
+    <loc>https://zhongyp.me/tags/index.html</loc>
     
     <lastmod>2018-10-02T01:27:53.336Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zhongyp.me/tags/index.html</loc>
+    <loc>https://zhongyp.me/search/index.html</loc>
     
     <lastmod>2018-10-02T01:27:53.336Z</lastmod>
     
