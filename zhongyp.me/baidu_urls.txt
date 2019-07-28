@@ -7,4 +7,4 @@ https://zhongyp.me/java/2019-04-27-java-serializable/
 https://zhongyp.me/transaction/2019-03-07-spring-transaction-management/
 https://zhongyp.me/concurrency/2018-12-06-thread-communication/
 https://zhongyp.me/concurrency/2018-12-06-thread-security/
-https://zhongyp.me/concurrency/2018-12-04-thread-start-end/
+https://zhongyp.me/concurrency/2018-12-04-thread-start-end-1/
