@@ -251,6 +251,25 @@
     </entry>
     
     <entry>
+      <title>为什么不能在foreach中执行remove/add操作</title>
+      <link href="/faq/2018-07-30-foreach/"/>
+      <url>/faq/2018-07-30-foreach/</url>
+      
+        <content type="html"><![CDATA[<h2 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h2><p>测试代码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">    List&lt;String&gt; list = new Vector&lt;&gt;();</span><br><span class="line">    list.add(&quot;1&quot;);</span><br><span class="line">    list.add(&quot;2&quot;);</span><br><span class="line">    Iterator iterator = list.iterator();</span><br><span class="line">    for(String it:list)&#123;</span><br><span class="line">        // 如果it==2，删除it</span><br><span class="line">        if(&quot;2&quot;.equals(it))&#123;</span><br><span class="line">            list.remove(it);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>如果运行上述代码，会抛出ConcurrentModificationException异常。</p><p>为什么会报错呢？</p><p><code>javap -c</code>命令查看编译后代码，了解下上述代码运行过程:</p><p><img src="/media/article/java-foreach.png" alt="foreach"></p><p>上图代码A处，可以看到foreach循环是使用的是Iterator迭代器，代码B处使用Iterator迭代器中的next方法获取集合中的值，代码C处使用list.remove()删除集合中的值。</p><p>Itr迭代器类的next方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public E next() &#123;</span><br><span class="line">  synchronized (Vector.this) &#123;</span><br><span class="line">      if (modCount != expectedModCount)</span><br><span class="line">                throw new ConcurrentModificationException();</span><br><span class="line">      int i = cursor;</span><br><span class="line">      if (i &gt;= elementCount)</span><br><span class="line">          throw new NoSuchElementException();</span><br><span class="line">      cursor = i + 1;</span><br><span class="line">      return elementData(lastRet = i);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>list.remove方法代码:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public synchronized boolean removeElement(Object obj) &#123;</span><br><span class="line">   // 修改了modCount</span><br><span class="line">   modCount++;</span><br><span class="line">   int i = indexOf(obj);</span><br><span class="line">   if (i &gt;= 0) &#123;</span><br><span class="line">       removeElementAt(i);</span><br><span class="line">       return true;</span><br><span class="line">   &#125;</span><br><span class="line">   return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>首先next方法中，首先判断modCount的值，如果modCount的值和expectedModCount值不一致，就会抛出ConcurrentModificationException异常。而恰恰remove方法中就修改了modCount的值，而未修改expectedModCount的值，从而导致我们的测试代码抛出ConcurrentModificationException异常。</p><p>抛错的源头找到了，可是为什么会出现这种问题呢？</p><p>我们看下导致抛出源头的两个参数modCount和expectedModCount。modCount是类Vector的成员变量，主要记录Vector的修改次数；expectedModCount是内部迭代器类Itr的成员变量，初始化时等于modCount。我们使用foreach去remove集合内的值时，调用的是Vector类的remove方法，不是迭代器Itr的remove方法，所以只会修改modCount的值，而不更新expectedModCount的值。所以在测试代码中报错是因为在第一次删除后，modCount值+1，而expectedModCount的值未变化，所以在迭代器再次调用next方法获取集合内的值时就会抛出ConcurrentModificationException异常。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> FAQ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>高性能MySQL -- 摘自《高性能MySQL第三版》</title>
       <link href="/mysql/2018-04-02-mysql/"/>
       <url>/mysql/2018-04-02-mysql/</url>

@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zhongyp.me/faq/2018-07-30-foreach/</loc>
+    
+    <lastmod>2019-07-30T16:39:44.720Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zhongyp.me/concurrency/2018-03-04-java-memory-model/</loc>
     
     <lastmod>2019-07-25T11:22:58.824Z</lastmod>
