@@ -1,79 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://zhongyp.mezhongyp.github.io/faq/2018-07-30-foreach/</loc>
+    <loc>https://zhongyp.me/faq/2018-07-30-foreach/</loc>
     <lastmod>2019-07-30T16:39:44.720Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/concurrency/2018-03-04-java-memory-model/</loc>
+    <loc>https://zhongyp.me/concurrency/2018-03-04-java-memory-model/</loc>
     <lastmod>2019-07-25T11:22:58.824Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/redis/2019-06-21-redis/</loc>
+    <loc>https://zhongyp.me/redis/2019-06-21-redis/</loc>
     <lastmod>2019-07-19T11:22:00.326Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/transaction/2019-03-07-spring-transaction-management/</loc>
+    <loc>https://zhongyp.me/transaction/2019-03-07-spring-transaction-management/</loc>
     <lastmod>2019-06-26T06:02:34.284Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/life/2017-7-5-journey/</loc>
+    <loc>https://zhongyp.me/life/2017-7-5-journey/</loc>
     <lastmod>2019-06-26T03:25:22.904Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/concurrency/2017-03-16-thread-brief/</loc>
+    <loc>https://zhongyp.me/concurrency/2017-03-16-thread-brief/</loc>
     <lastmod>2019-06-26T03:20:37.695Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/life/2017-1-1-books/</loc>
+    <loc>https://zhongyp.me/life/2017-1-1-books/</loc>
     <lastmod>2019-06-26T03:04:52.610Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/mysql/2018-04-02-mysql/</loc>
+    <loc>https://zhongyp.me/mysql/2018-04-02-mysql/</loc>
     <lastmod>2019-06-26T02:51:55.692Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/java/2019-04-27-java-serializable/</loc>
+    <loc>https://zhongyp.me/java/2019-04-27-java-serializable/</loc>
     <lastmod>2019-06-26T02:46:34.471Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/java/2019-05-01-java-enum/</loc>
+    <loc>https://zhongyp.me/java/2019-05-01-java-enum/</loc>
     <lastmod>2019-06-26T02:45:28.470Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/java/2019-05-02-effective-java/</loc>
+    <loc>https://zhongyp.me/java/2019-05-02-effective-java/</loc>
     <lastmod>2019-06-26T02:44:53.168Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/concurrency/2018-12-06-thread-security/</loc>
+    <loc>https://zhongyp.me/concurrency/2018-12-06-thread-security/</loc>
     <lastmod>2019-06-18T11:06:43.122Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/concurrency/2018-12-04-thread-start-end/</loc>
+    <loc>https://zhongyp.me/concurrency/2018-12-04-thread-start-end/</loc>
     <lastmod>2019-06-17T10:15:12.977Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/utils/2018-10-23-git/</loc>
+    <loc>https://zhongyp.me/utils/2018-10-23-git/</loc>
     <lastmod>2019-06-17T00:35:38.851Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/interfaceview/2018-03-02-classic-interview-questions/</loc>
+    <loc>https://zhongyp.me/interfaceview/2018-03-02-classic-interview-questions/</loc>
     <lastmod>2019-06-08T07:36:56.436Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/jvm/2018-11-22-class-structure/</loc>
+    <loc>https://zhongyp.me/jvm/2018-11-22-class-structure/</loc>
     <lastmod>2019-06-06T05:42:17.178Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/concurrency/2018-11-27-concurrency-structure/</loc>
+    <loc>https://zhongyp.me/concurrency/2018-11-27-concurrency-structure/</loc>
     <lastmod>2019-06-06T02:20:23.865Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/concurrency/2018-12-06-thread-communication/</loc>
+    <loc>https://zhongyp.me/concurrency/2018-12-06-thread-communication/</loc>
     <lastmod>2019-06-06T02:05:14.088Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/jvm/2018-03-27-jvm/</loc>
+    <loc>https://zhongyp.me/jvm/2018-03-27-jvm/</loc>
     <lastmod>2019-06-06T01:57:28.963Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/java/2019-05-06-java-generics/</loc>
+    <loc>https://zhongyp.me/java/2019-05-06-java-generics/</loc>
     <lastmod>2019-06-05T11:29:39.842Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/java/2019-05-19-javadoc-guide/</loc>
+    <loc>https://zhongyp.me/java/2019-05-19-javadoc-guide/</loc>
     <lastmod>2019-05-19T12:28:11.035Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/concurrency/2018-12-04-thread-start-end-1/</loc>
+    <loc>https://zhongyp.me/concurrency/2018-12-04-thread-start-end-1/</loc>
     <lastmod>2019-03-20T15:42:49.167Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/algorithm/2018-01-10-Algorithm/</loc>
+    <loc>https://zhongyp.me/algorithm/2018-01-10-Algorithm/</loc>
     <lastmod>2018-10-26T08:44:50.520Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/algorithm/2015-08-04-BubbleSort/</loc>
+    <loc>https://zhongyp.me/algorithm/2015-08-04-BubbleSort/</loc>
     <lastmod>2018-10-23T12:02:04.943Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.mezhongyp.github.io/mysql/2018-04-02-sql/</loc>
+    <loc>https://zhongyp.me/mysql/2018-04-02-sql/</loc>
     <lastmod>2018-10-02T01:27:53.332Z</lastmod>
   </url>
 </urlset>

@@ -3,7 +3,7 @@
   <title>zhongyp&#39;blog</title>
   
   <subtitle>钟宇鹏的博客</subtitle>
-  <link href="zhongyp.github.io/atom.xml" rel="self"/>
+  <link href="/atom.xml" rel="self"/>
   
   <link href="https://zhongyp.me/"/>
   <updated>2019-07-19T11:22:00.326Z</updated>
