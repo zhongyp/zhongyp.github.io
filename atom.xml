@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://zhongyp.me/"/>
-  <updated>2019-07-19T11:22:00.326Z</updated>
+  <updated>2019-08-06T17:41:19.356Z</updated>
   <id>https://zhongyp.me/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Spring Data Redis的execute和executePipelined的区别</title>
+    <link href="https://zhongyp.me/redis/2019-08-06/"/>
+    <id>https://zhongyp.me/redis/2019-08-06/</id>
+    <published>2019-08-05T16:00:00.000Z</published>
+    <updated>2019-08-06T17:41:19.356Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="executePipelined方法说明"><a href="#executePipelined方法说明" class="headerlink" title="executePipelined方法说明"></a>executePipelined方法说明</h2><p>executePipelined方法基于Redis的pipelining。关于pipelining官方解释如下: </p><p>A Request/Response server can be implemented so that it is able to process new requests even if the client didn’t already read the old responses. This way it is possible to send multiple commands to the server without waiting for the replies at all, and finally read the replies in a single step.<br>—摘自<a href="https://redis.io/topics/pipelining" target="_blank" rel="noopener">Redis Piplining</a></p><p>上面的意思大概是Redis服务器可以实现即使没有读取旧响应的情况下也可以发送新的请求，以这种方式可以发送多个命令到服务器而不用等待回复，最后一次获取全部的回复。这就是Redis Pipelining。</p><p>executePipelined的官方注释:</p><p>Executes the given action object on a pipelined connection, returning the results. Note that the callback cannot return a non-null value as it gets overwritten by the pipeline. This method will use the default serializers to deserialize results.</p><p>上面这句话的意思在一个<strong><em>管道连接</em></strong>中执行给定的动作对象，并返回结果。但是需要注意的是callback不能返回一个非null的值，callback的值将被pipeline覆盖。这个方法将使用默认的序列化和反序列化方式处理结果集。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">public List&lt;Object&gt; executePipelined(SessionCallback&lt;?&gt; session, @Nullable RedisSerializer&lt;?&gt; resultSerializer) &#123;</span><br><span class="line">        Assert.isTrue(this.initialized, &quot;template not initialized; call afterPropertiesSet() before using it&quot;);</span><br><span class="line">        Assert.notNull(session, &quot;Callback object must not be null&quot;);</span><br><span class="line">        RedisConnectionFactory factory = this.getRequiredConnectionFactory();</span><br><span class="line">        // 是否开启事务管理，将当前连接注册到事务管理器</span><br><span class="line">        RedisConnectionUtils.bindConnection(factory, this.enableTransactionSupport);</span><br><span class="line"></span><br><span class="line">        List var4;</span><br><span class="line">        try &#123;</span><br><span class="line">            // </span><br><span class="line">            var4 = (List)this.execute((connection) -&gt; &#123;</span><br><span class="line">                // 开启管道</span><br><span class="line">                connection.openPipeline();</span><br><span class="line">                boolean pipelinedClosed = false;</span><br><span class="line"></span><br><span class="line">                List var7;</span><br><span class="line">                try &#123;</span><br><span class="line">                    // 在连接中执行SessionCallback中的动作，并获取结果集</span><br><span class="line">                    Object result = this.executeSession(session);</span><br><span class="line">                    // 如果结果集不为空，抛出InvalidDataAccessApiUsageException</span><br><span class="line">                    if (result != null) &#123;</span><br><span class="line">                        throw new InvalidDataAccessApiUsageException(&quot;Callback cannot return a non-null value as it gets overwritten by the pipeline&quot;);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    List&lt;Object&gt; closePipeline = connection.closePipeline();</span><br><span class="line">                    pipelinedClosed = true;</span><br><span class="line">                    // 获取管道返回的结果集并序列化</span><br><span class="line">                    var7 = this.deserializeMixedResults(closePipeline, resultSerializer, this.hashKeySerializer, this.hashValueSerializer);</span><br><span class="line">                &#125; finally &#123;</span><br><span class="line">                    if (!pipelinedClosed) &#123;</span><br><span class="line">                        connection.closePipeline();</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">                // 返回管道的结果集</span><br><span class="line">                return var7;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            RedisConnectionUtils.unbindConnection(factory);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return var4;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure><p>上述代码中<code>this.execute((connection)...</code>其实就是execute(RedisCallback&lt;?&gt; session)方法。</p><h2 id="execute方法说明"><a href="#execute方法说明" class="headerlink" title="execute方法说明"></a>execute方法说明</h2><p>execute相对于<code>executePipelined(SessionCallback&lt;?&gt; session)</code>比较简单，没有过多的处理，而是直接执行SessionCallback中的动作，官方注释如下:</p><p>Executes a Redis session. Allows multiple operations to be executed in the same session enabling ‘transactional’ capabilities through RedisOperations.multi() and RedisOperations.watch(Collection) operations.</p><p>大概意思是执行一个Redis会话。允许在<strong><em>同一会话</em></strong>中执行多个操作，通过RedisOperations.multi()和RedisOperations.watch(Collection)操作启用“事务”功能。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public &lt;T&gt; T execute(SessionCallback&lt;T&gt; session) &#123;</span><br><span class="line">        Assert.isTrue(this.initialized, &quot;template not initialized; call afterPropertiesSet() before using it&quot;);</span><br><span class="line">        Assert.notNull(session, &quot;Callback object must not be null&quot;);</span><br><span class="line">        RedisConnectionFactory factory = this.getRequiredConnectionFactory();</span><br><span class="line">        RedisConnectionUtils.bindConnection(factory, this.enableTransactionSupport);</span><br><span class="line"></span><br><span class="line">        Object var3;</span><br><span class="line">        try &#123;</span><br><span class="line">            // 执行SessionCallback并获取执行SessionCallback返回的结果集</span><br><span class="line">            var3 = session.execute(this);</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            RedisConnectionUtils.unbindConnection(factory);</span><br><span class="line">        &#125;</span><br><span class="line">        // 直接返回结果集</span><br><span class="line">        return var3;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure><h2 id="execute和executePipelined区别"><a href="#execute和executePipelined区别" class="headerlink" title="execute和executePipelined区别"></a>execute和executePipelined区别</h2><p>从上面两段源码示例可以看出，execute和executePipelined的最主要区别是executePipelined开启了pipeline。pipline与execute正常的请求/响应的区别主要在于请求/响应模式上，execute是串行化的命令请求，executePipelined请求与响应则是穿插进行。两者区别如图所示:<br>串行:<br><img src="/media/article/redis-execute.png" alt="redis-execute"></p><p>execute方法是串行的，命令请求发出后，必须得到响应数据，才能发送下一条命令请求。所以在一次Redis会话中，一次会话可能包含多次请求，即多次RTT。</p><p>穿插:</p><p><img src="/media/article/redis-executepipeline.png" alt="redis-executepipeline.png"></p><p>executePipelined是穿插的，可以批量发送命令到服务器，也可以批量获取响应数据。</p><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://blog.csdn.net/wuxian90/article/details/81322536" target="_blank" rel="noopener">Redis客户端与服务端交互详解</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;executePipelined方法说明&quot;&gt;&lt;a href=&quot;#executePipelined方法说明&quot; class=&quot;headerlink&quot; title=&quot;executePipelined方法说明&quot;&gt;&lt;/a&gt;executePipelined方法说明&lt;/h2&gt;&lt;
+      
+    
+    </summary>
+    
+    
+      <category term="redis" scheme="https://zhongyp.me/tags/redis/"/>
+    
+      <category term="FAQ" scheme="https://zhongyp.me/tags/FAQ/"/>
+    
+  </entry>
   
   <entry>
     <title>Redis 设计与实现</title>
@@ -198,29 +223,6 @@
   </entry>
   
   <entry>
-    <title>多线程通信</title>
-    <link href="https://zhongyp.me/concurrency/2018-12-06-thread-communication/"/>
-    <id>https://zhongyp.me/concurrency/2018-12-06-thread-communication/</id>
-    <published>2018-12-05T16:00:00.000Z</published>
-    <updated>2019-06-06T02:05:14.088Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="1-共享变量的可见性"><a href="#1-共享变量的可见性" class="headerlink" title="1. 共享变量的可见性"></a>1. 共享变量的可见性</h2><p>线程通信主要是通过对共享变量的读写来进行的，一般共享变量，我们会采用 a)使共享变量不可变、b)在任何访问状态变量的时候使用同步 两种措施共享。</p><h3 id="1-1-synchronized（内置锁）"><a href="#1-1-synchronized（内置锁）" class="headerlink" title="1.1 synchronized（内置锁）"></a>1.1 synchronized（内置锁）</h3><p>synchronized我们知道常常用来临界区互斥执行，但是除此之外，它还有最重要的功能：锁的内存语义。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class MonitorExample&#123;</span><br><span class="line">    int a = 0;</span><br><span class="line">    public synchronized void writer()&#123;// 1</span><br><span class="line">        a++; // 2</span><br><span class="line">    &#125; // 3</span><br><span class="line">    public synchronized void reader()&#123; // 4</span><br><span class="line">        int i=a; // 5</span><br><span class="line">    &#125; // 6</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>假设线程A<strong>先</strong>执行writer()方法，<strong>随后</strong>线程B执行reader()方法。根据JMM的happens-before规则，这段代码包含的happens-before关系可以分为3类。</p><p>1）根据程序次序规则，1 happens-before2, 2 happens-before 3; 4 happens-before 5, 5 happens-before 6。</p><p>2) 根据监视器锁规则，3 happens-before 4。<br>3) 根据happens-before的传递性，2 happens-before 5。</p><p><strong>注：</strong>happens-before规则保证了线程A执行后的结果对B可见，但是线程A的代码不一定在线程B之前执行。上面A与B线程是有先后顺序的，主要是为了方便解释锁的内存语义。 </p><p><img src="/media/article/happens-before-relation.jpg" alt="happens-beofre"><br>图片来自<a href="">Java并发编程艺术图3-24</a></p><p>锁释放和锁获取的内存语义：</p><p><strong>线程A释放一个锁，实质上是线程A向接下来将要获取的这个锁的某个线程发出了（线程A对共享变量所做修改的）消息。</strong></p><p><strong>线程B释放一个锁，实质上是线程B接收了之前某个线程发出的（释放这个锁之前对共享变量所做的修改的）消息。</strong></p><p><strong>线程A释放锁，线程B获取锁，这个过程实质上是线程A通过主内存向线程B发送消息。</strong></p><p><img src="/media/article/lock-acquire-state.png" alt="lock-acquire-state"><br>图片来自<a href="">Java并发编程艺术图3-26</a></p><h3 id="1-2-volatile"><a href="#1-2-volatile" class="headerlink" title="1.2 volatile"></a>1.2 volatile</h3><p>volatile我们熟知的特性是：</p><p>1.可见性</p><p>对一个volatile变量的读，总能看到任意线程对这个volatile变量最后的写入。</p><p>2.有序性</p><p>如果程序是在多处理器上运行，就为cmpxchg指令加上lock前缀。lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成。</p><h3 id="1-3-final"><a href="#1-3-final" class="headerlink" title="1.3 final"></a>1.3 final</h3><h2 id="2-等待通知-wait-notify"><a href="#2-等待通知-wait-notify" class="headerlink" title="2. 等待通知(wait/notify)"></a>2. 等待通知(wait/notify)</h2><h2 id="3-管道通信"><a href="#3-管道通信" class="headerlink" title="3. 管道通信"></a>3. 管道通信</h2><h2 id="4-Thread-join"><a href="#4-Thread-join" class="headerlink" title="4. Thread.join()"></a>4. Thread.join()</h2><h2 id="5-ThreadLocal"><a href="#5-ThreadLocal" class="headerlink" title="5. ThreadLocal"></a>5. ThreadLocal</h2><h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="">Java并发编程实践</a><br><a href="">Java并发编程艺术</a></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;1-共享变量的可见性&quot;&gt;&lt;a href=&quot;#1-共享变量的可见性&quot; class=&quot;headerlink&quot; title=&quot;1. 共享变量的可见性&quot;&gt;&lt;/a&gt;1. 共享变量的可见性&lt;/h2&gt;&lt;p&gt;线程通信主要是通过对共享变量的读写来进行的，一般共享变量，我们会采用 a
-      
-    
-    </summary>
-    
-    
-      <category term="并发" scheme="https://zhongyp.me/tags/%E5%B9%B6%E5%8F%91/"/>
-    
-  </entry>
-  
-  <entry>
     <title>线程安全</title>
     <link href="https://zhongyp.me/concurrency/2018-12-06-thread-security/"/>
     <id>https://zhongyp.me/concurrency/2018-12-06-thread-security/</id>
@@ -234,6 +236,29 @@
       
       
         &lt;h1 id=&quot;线程安全-读书笔记&quot;&gt;&lt;a href=&quot;#线程安全-读书笔记&quot; class=&quot;headerlink&quot; title=&quot;线程安全-读书笔记&quot;&gt;&lt;/a&gt;线程安全-读&lt;a href=&quot;#引用&quot;&gt;书&lt;/a&gt;笔记&lt;/h1&gt;&lt;h2 id=&quot;1-概述&quot;&gt;&lt;a href=&quot;#1-概
+      
+    
+    </summary>
+    
+    
+      <category term="并发" scheme="https://zhongyp.me/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>多线程通信</title>
+    <link href="https://zhongyp.me/concurrency/2018-12-06-thread-communication/"/>
+    <id>https://zhongyp.me/concurrency/2018-12-06-thread-communication/</id>
+    <published>2018-12-05T16:00:00.000Z</published>
+    <updated>2019-06-06T02:05:14.088Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="1-共享变量的可见性"><a href="#1-共享变量的可见性" class="headerlink" title="1. 共享变量的可见性"></a>1. 共享变量的可见性</h2><p>线程通信主要是通过对共享变量的读写来进行的，一般共享变量，我们会采用 a)使共享变量不可变、b)在任何访问状态变量的时候使用同步 两种措施共享。</p><h3 id="1-1-synchronized（内置锁）"><a href="#1-1-synchronized（内置锁）" class="headerlink" title="1.1 synchronized（内置锁）"></a>1.1 synchronized（内置锁）</h3><p>synchronized我们知道常常用来临界区互斥执行，但是除此之外，它还有最重要的功能：锁的内存语义。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class MonitorExample&#123;</span><br><span class="line">    int a = 0;</span><br><span class="line">    public synchronized void writer()&#123;// 1</span><br><span class="line">        a++; // 2</span><br><span class="line">    &#125; // 3</span><br><span class="line">    public synchronized void reader()&#123; // 4</span><br><span class="line">        int i=a; // 5</span><br><span class="line">    &#125; // 6</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>假设线程A<strong>先</strong>执行writer()方法，<strong>随后</strong>线程B执行reader()方法。根据JMM的happens-before规则，这段代码包含的happens-before关系可以分为3类。</p><p>1）根据程序次序规则，1 happens-before2, 2 happens-before 3; 4 happens-before 5, 5 happens-before 6。</p><p>2) 根据监视器锁规则，3 happens-before 4。<br>3) 根据happens-before的传递性，2 happens-before 5。</p><p><strong>注：</strong>happens-before规则保证了线程A执行后的结果对B可见，但是线程A的代码不一定在线程B之前执行。上面A与B线程是有先后顺序的，主要是为了方便解释锁的内存语义。 </p><p><img src="/media/article/happens-before-relation.jpg" alt="happens-beofre"><br>图片来自<a href="">Java并发编程艺术图3-24</a></p><p>锁释放和锁获取的内存语义：</p><p><strong>线程A释放一个锁，实质上是线程A向接下来将要获取的这个锁的某个线程发出了（线程A对共享变量所做修改的）消息。</strong></p><p><strong>线程B释放一个锁，实质上是线程B接收了之前某个线程发出的（释放这个锁之前对共享变量所做的修改的）消息。</strong></p><p><strong>线程A释放锁，线程B获取锁，这个过程实质上是线程A通过主内存向线程B发送消息。</strong></p><p><img src="/media/article/lock-acquire-state.png" alt="lock-acquire-state"><br>图片来自<a href="">Java并发编程艺术图3-26</a></p><h3 id="1-2-volatile"><a href="#1-2-volatile" class="headerlink" title="1.2 volatile"></a>1.2 volatile</h3><p>volatile我们熟知的特性是：</p><p>1.可见性</p><p>对一个volatile变量的读，总能看到任意线程对这个volatile变量最后的写入。</p><p>2.有序性</p><p>如果程序是在多处理器上运行，就为cmpxchg指令加上lock前缀。lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成。</p><h3 id="1-3-final"><a href="#1-3-final" class="headerlink" title="1.3 final"></a>1.3 final</h3><h2 id="2-等待通知-wait-notify"><a href="#2-等待通知-wait-notify" class="headerlink" title="2. 等待通知(wait/notify)"></a>2. 等待通知(wait/notify)</h2><h2 id="3-管道通信"><a href="#3-管道通信" class="headerlink" title="3. 管道通信"></a>3. 管道通信</h2><h2 id="4-Thread-join"><a href="#4-Thread-join" class="headerlink" title="4. Thread.join()"></a>4. Thread.join()</h2><h2 id="5-ThreadLocal"><a href="#5-ThreadLocal" class="headerlink" title="5. ThreadLocal"></a>5. ThreadLocal</h2><h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="">Java并发编程实践</a><br><a href="">Java并发编程艺术</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;1-共享变量的可见性&quot;&gt;&lt;a href=&quot;#1-共享变量的可见性&quot; class=&quot;headerlink&quot; title=&quot;1. 共享变量的可见性&quot;&gt;&lt;/a&gt;1. 共享变量的可见性&lt;/h2&gt;&lt;p&gt;线程通信主要是通过对共享变量的读写来进行的，一般共享变量，我们会采用 a
       
     
     </summary>
@@ -476,31 +501,6 @@
     
     
       <category term="并发" scheme="https://zhongyp.me/tags/%E5%B9%B6%E5%8F%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>经典面试题整理</title>
-    <link href="https://zhongyp.me/interfaceview/2018-03-02-classic-interview-questions/"/>
-    <id>https://zhongyp.me/interfaceview/2018-03-02-classic-interview-questions/</id>
-    <published>2018-03-01T16:00:00.000Z</published>
-    <updated>2019-06-08T07:36:56.436Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="corejava"><a href="#corejava" class="headerlink" title="corejava"></a>corejava</h2><ol><li><p>hashcode 相等两个类一定相等么？equals呢？相反呢？</p></li><li><p>介绍一下集合框架</p></li><li><p>hashmap hashtable 底层实现什么区别？hashtale和concurrenthashmap呢？</p></li><li><p>hashmap和treemap 什么区别？底层数据结构呢？</p></li><li><p>线程池用过么？都有什么参数？底层如何实现的？</p></li><li><p>sychnized和Lock什么区别？sychnize什么情况是对象锁，什么时候是全局锁？为什么？</p></li><li><p>ThreadLocal 是什么？底层如何实现？写一个例子？</p></li><li><p>volitile的工作原理？</p></li><li><p>cas知道么？如何实现的？</p></li><li><p>请用至少四种写法？写一个单例模式？</p></li></ol><h2 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h2><ol><li><p>请介绍一下JVM内存模型？用过什么垃圾回收器，都说说？</p></li><li><p>线上发送频繁full gc如何处理？CPU使用率过高怎么办？如何定位问题？如何解决？说一下解决思路和处理方法。</p></li><li><p>知道字节码么？字节码都有那些？Integer * 5,int y=5, 比较x==y 都经过那些步骤？</p></li><li><p>讲讲类加载机制？都有哪些类加载器，这些类加载器都加载哪些文件？手写一下类加载Demo</p></li><li><p>知道osgi么？他是如何实现的？</p></li><li><p>请问你做过哪些JVM优化？使用什么方法？达到什么效果？</p></li><li><p>class.forName(“java.lang.String”)和String.class.getClassLoader.loadClass(“java.lang.String”)什么区别？</p></li></ol><h2 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h2><ol><li><p>spring都有哪些机制？AOP底层如何实现的？IOC？</p></li><li><p>cglib知道么？它和JDK动态代理有什么区别？手写一个jdk动态代理？</p></li></ol><h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><ol><li><p>使用mysql索引都有哪些原则？索引什么数据结构？B+tree和B tree什么区别？</p></li><li><p>mysql有哪些存储引擎啊？都有啥区别？要详细？</p></li><li><p>设计高并发系统数据库层面该怎么设计？数据库锁有哪些类型？如何实现？</p></li><li><p>数据库事务有哪些？</p></li></ol><h2 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h2><ol><li><p>如何设计可以动态扩容缩容的分库分表方案？</p></li><li><p>用过哪些分库分表的中间件，有啥优点和缺点，讲一下你了解的分库分表中间件的底层实现原理。</p></li><li><p>我现在有一个未分库分表的系统，以后系统需要分库分表，如何设计，让未分库分表的系统动态切换到分库分表系统上？</p></li><li><p>分布式事务知道么？ 你们怎么解决的？ TCC?那若出现网络原因，网络连不通怎么办啊？</p></li><li><p>为什么分库分表？</p></li><li><p>分布式寻址方式都有哪些算法？知道一致hash么？手写一下Java实现代码？你若userId取模分片，那我要查一段连续时间里的数据怎么办？</p></li><li><p>如何解决分库分表主键问题？有什么实现方案？</p></li></ol><h2 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h2><ol><li><p>redis和memched 什么区别？为什么单线程的redis比多线程的memched效率要高？</p></li><li><p>redis有什么数据类型？都在哪些场景下使用？</p></li><li><p>redis的主从复制是怎么实现的？redis的集群模式是如何实现的呢？redis的key是如何寻址的？</p></li><li><p>使用redis如何设计分布式锁？使用zk可以么？如何实现？这两种哪个效率更高？</p></li><li><p>知道redis的持久化么？有什么优点和缺点？具体底层实现呢？</p></li><li><p>redis过期策略都有哪些？LRU？写一下Java版本代码？</p></li></ol><h2 id="分布式服务框架"><a href="#分布式服务框架" class="headerlink" title="分布式服务框架"></a>分布式服务框架</h2><ol><li><p>说一下dubbo的实现过程，注册中心挂了可以继续通信么？</p></li><li><p>zk原理知道么？zk都可以干什么？paxos算法知道么？说一下原理和实现？</p></li><li><p>dubbo支持哪些序列化协议？hessian？说一下hessian的数据结构？PB知道么？为啥PB效率是最高的？</p></li><li><p>知道netty么？netty可以干嘛？NIO,BIO,AIO都是什么啊？有什么区别？</p></li><li><p>dubbo复制均衡策略和高可用策略都有哪些？动态代理策略呢？</p></li><li><p>为什么要进行系统拆分啊？拆分不用dubbo可以么？dubbo和thrift什么区别啊？</p></li></ol><h2 id="分布式消息队列"><a href="#分布式消息队列" class="headerlink" title="分布式消息队列"></a>分布式消息队列</h2><ol><li><p>为什么使用消息队列？消息队列有什么优点和缺点？</p></li><li><p>如何保证消息队列的高可用？如何保证消息不被重复消费？</p></li><li><p>kafka，activemq，rabbitmq，rocketmq都有什么优点和缺点？</p></li><li><p>如果让你写一个消息队列，该如何进行架构设计？说一下你的思路？</p></li></ol><h2 id="分布式搜索引擎"><a href="#分布式搜索引擎" class="headerlink" title="分布式搜索引擎"></a>分布式搜索引擎</h2><ol><li><p>es的工作过程实现是如何的？如何实现分布式的啊？</p></li><li><p>es在数据量很大的情况下，如何提高查询效率？</p></li><li><p>es的查询是一个怎么的工作过程？底层的lucence介绍一下？倒排索引知道么？es和mongodb什么区别？都在什么场景下使用？</p></li></ol><h2 id="高并发高可用架构设计"><a href="#高并发高可用架构设计" class="headerlink" title="高并发高可用架构设计"></a>高并发高可用架构设计</h2><ol><li><p>如何设计一个高并发高可用系统？</p></li><li><p>如何限流？工程中怎么做的，说一下具体实现？</p></li><li><p>缓存如何使用的？缓存使用不会造成什么后果？</p></li><li><p>如何熔断？熔断框架都有哪些？具体实现原理知道么？</p></li><li><p>如何降级？ 如何进行系统拆分？如何数据库拆分？</p></li></ol><h2 id="通信协议"><a href="#通信协议" class="headerlink" title="通信协议"></a>通信协议</h2><ol><li><p>说一下TCP/IP 四层？</p></li><li><p>http的工作流程？ http1.0 http1.1 http2.0具体哪些区别？</p></li><li><p>TCP三次握手，四层分手的工作流程？画一下流程图？为什么不是四次五次或者两次？</p></li><li><p>画一下https的工作流程？具体如何实现？如何防止被抓包？</p></li></ol><h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><ol><li>45亿阿拉伯数字，如何进行去重？如何找出最大的那个数？</li></ol><h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><ol><li>二叉树和红黑树<br><a href="https://www.jianshu.com/p/a07d1d4004b0" target="_blank" rel="noopener">博文推荐</a></li></ol>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;corejava&quot;&gt;&lt;a href=&quot;#corejava&quot; class=&quot;headerlink&quot; title=&quot;corejava&quot;&gt;&lt;/a&gt;corejava&lt;/h2&gt;&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;hashcode 相等两个类一定相等么？equals呢？相反呢？&lt;/p&gt;
-
-      
-    
-    </summary>
-    
-    
-      <category term="Interview" scheme="https://zhongyp.me/tags/Interview/"/>
     
   </entry>
   
