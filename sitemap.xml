@@ -4,7 +4,14 @@
   <url>
     <loc>https://zhongyp.me/redis/2019-08-06/</loc>
     
-    <lastmod>2019-08-07T03:15:10.876Z</lastmod>
+    <lastmod>2019-08-07T12:03:06.859Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/concurrency/2018-12-06-thread-communication/</loc>
+    
+    <lastmod>2019-08-07T11:24:28.427Z</lastmod>
     
   </url>
   
@@ -138,13 +145,6 @@
     <loc>https://zhongyp.me/concurrency/2018-11-27-concurrency-structure/</loc>
     
     <lastmod>2019-06-06T02:20:23.865Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/concurrency/2018-12-06-thread-communication/</loc>
-    
-    <lastmod>2019-06-06T02:05:14.088Z</lastmod>
     
   </url>
   
