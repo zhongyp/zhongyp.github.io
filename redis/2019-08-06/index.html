@@ -93,7 +93,7 @@
   </header>
   <div class="post-content">
     <blockquote>
-<p>使用的Spring-data-redis版本为2.0.7.RELEASE</p>
+<p>Spring-data-redis 2.0.7.RELEASE</p>
 </blockquote>
 <h2 id="executePipelined方法说明"><a href="#executePipelined方法说明" class="headerlink" title="executePipelined方法说明"></a>executePipelined方法说明</h2><p>executePipelined方法基于Redis的pipelining。关于pipelining官方解释如下: </p>
 <p>A Request/Response server can be implemented so that it is able to process new requests even if the client didn’t already read the old responses. This way it is possible to send multiple commands to the server without waiting for the replies at all, and finally read the replies in a single step.<br>—摘自<a href="https://redis.io/topics/pipelining" target="_blank" rel="noopener">Redis Piplining</a></p>
@@ -111,7 +111,7 @@
 <p>execute方法是串行的，命令请求发出后，必须得到响应数据，才能发送下一条命令请求。所以在一次Redis会话中，一次会话可能包含多次请求，即多次RTT。</p>
 <p>穿插:</p>
 <p><img src="/media/article/redis-executepipeline.png" alt="redis-executepipeline.png"></p>
-<p>executePipelined是穿插的，可以批量发送命令到服务器，也可以批量获取响应数据。</p>
+<p>executePipelined是穿插的，可以批量发送命令到服务器，也可以批量获取响应数据。即可能使用一次RTT就能完成批量操作。</p>
 <p>除了网络协议上的区别外，execute和executePipelined都支持事务管理器，支持multi，watch，exec，discard等事务操作，不过execute与executePipelined的这些操作还是有些区别的。</p>
 <p>例如 JedisConnection开启multi:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public void multi() &#123;</span><br><span class="line">   if (!this.isQueueing()) &#123;</span><br><span class="line">       try &#123;</span><br><span class="line">           if (this.isPipelined()) &#123;</span><br><span class="line">               // 如果开启了pipeline，则使用Pipeline内部的multi</span><br><span class="line">               // Pipeline绑定的是client</span><br><span class="line">               this.getRequiredPipeline().multi();</span><br><span class="line">           &#125; else &#123;</span><br><span class="line">               // 没有开启pipeline使用jedis的multi</span><br><span class="line">               // jedis的multi绑定的是connection</span><br><span class="line">               this.transaction = this.jedis.multi();</span><br><span class="line">           &#125;</span><br><span class="line">       &#125; catch (Exception var2) &#123;</span><br><span class="line">           throw this.convertJedisAccessException(var2);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -148,6 +148,11 @@
       </div>
   
       <div class="post-nav-item post-nav-prev">
+        
+          <a href="/jvm/2019-08-08/" rel="prev" title="JVM官方文档指南">
+            JVM官方文档指南
+          </a>
+          <span>〉</span>
         
       </div>
     </div>

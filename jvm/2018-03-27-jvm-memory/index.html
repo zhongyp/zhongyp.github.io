@@ -1,0 +1,364 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="google-site-verification" content="9GY-OrjvdT8TkXuLJFSJcJqolHfXKJ5NVYKRUv8mCRM">
+  
+    <meta name="keywords" content="JVM,Java虚拟机内存管理">
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客,钟宇鹏,个人博客">
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  <title>Java虚拟机内存管理 [ zhongyp&#39;blog ]</title>
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="/css/pure.min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <!-- <li class="pure-menu-item toc-menu pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li> -->
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+        <ul class="pure-menu-children">
+        
+          
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+          
+          
+      </ul>
+      </li>
+    
+  </ul>
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">zhongyp&#39;blog</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      Java虚拟机内存管理
+    </h1>
+    
+    <time class="time" datetime="2018-03-26T16:00:00.000Z">
+      2018-03-27
+    </time>
+     |
+    <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+</span>
+    <hr>
+  </header>
+  <div class="post-content">
+    <h2 id="1-JVM的自动内存管理机制"><a href="#1-JVM的自动内存管理机制" class="headerlink" title="1. JVM的自动内存管理机制"></a>1. JVM的自动内存管理机制</h2><h3 id="1-1-对象状态算法"><a href="#1-1-对象状态算法" class="headerlink" title="1.1 对象状态算法"></a>1.1 对象状态算法</h3><ul>
+<li><p>引用计数算法： 很难解决对象之间相互引用的问题，内存泄露。</p>
+</li>
+<li><p>跟搜索算法：通过一系列名为“GC Roots”的对象作为起点，从这些节点开始向下搜索，搜索的路径成为引用链，当一个对象到GC Root没有一个引用时，则证明此对象是不可用的。</p>
+</li>
+</ul>
+<p>注：1. GC对象包括：虚拟机栈（栈帧中的本地变量表）中引用的对象，方法区中类静态属性引用的对象，方法区中常量引用的对象，本地方法栈中JNI。2. 跟搜索算法中，没有引用的对象并非非死不可，还有经历两次标记，第一次发现没有引用，则进行标记，并且进行一次筛选，筛选的条件是此对象是否有必要执行finalize()方法，当对象没有覆盖finalize()方法或finalize()已经被调用过，虚拟机将这两种情况都视为没有必要执行。</p>
+<h3 id="1-2-回收方法区"><a href="#1-2-回收方法区" class="headerlink" title="1.2 回收方法区"></a>1.2 回收方法区</h3><p>方法区主要回收废弃变量和无用的类。无用的类：该类所有实例都已被回收，加载该类的ClassLoader被回收，该类对应的java.lang.Class对象没有在任何地方被引用。只有同时满足无用的类的三个条件，才<strong><em>可以</em></strong>被回收。反射、动态代理、CGLib等bytecode框架场景以及频繁定义ClassLoader的场景都需要具备卸载功能，以保证永久代不会溢出。</p>
+<h3 id="1-3-垃圾收集算法"><a href="#1-3-垃圾收集算法" class="headerlink" title="1.3 垃圾收集算法"></a>1.3 垃圾收集算法</h3><ul>
+<li><p>标记清除算法： 标记所有需要回收的对象，在标记完成后统一回收掉所有被标记的对象。效率问题，空间问题（内存碎片）。</p>
+</li>
+<li><p>复制算法： 新生代使用复制算法回收，由于新生代98%的对象都是朝生夕死的，所以不需要1:1的比例划分内存空间（Hotspot默认8:1），而是将内存分为一块较大的Eden空间和两块较小的Survivor空间，每次使用Eden和其中一个Survivor。当回收时，将Eden和Survivor中还存活的对象一次性的拷贝到另一块的Survivor上。最后清理掉Eden和刚才使用过的Survivor。当Survivor空间不够用时，需要依赖其他的老年代进行分配担保（Handle Promotion）。分配担保：如果Survivor空间没有足够的空间存放上次新生代收集下来的存活对象，这些对象将直接通过分配担保机制进入老年代。</p>
+</li>
+<li><p>标记-整理算法：让所有存活的对象向一端移动，然后清理掉端边界以外的内存。老年代常用的算法。</p>
+</li>
+<li><p>分代收集算法： 根据对象的存活周期不同，将内存划分为几块，根据各个年代的特点进行垃圾回收。</p>
+</li>
+</ul>
+<h3 id="1-4-垃圾收集器"><a href="#1-4-垃圾收集器" class="headerlink" title="1.4 垃圾收集器"></a>1.4 垃圾收集器</h3><p><img src="https://github.com/zhongyp/jekyll.github.io/blob/master/files/gc.jpg?raw=true" alt="垃圾回收器"><br><a href="#垃圾收集器">图片来自《深入理解Java虚拟机》</a><br>如果两个收集器之间存在连线，就说明他们可以搭配使用。</p>
+<ol>
+<li><p>Serial</p>
+<p> 复制算法，新生代的单线程收集器，简单高效，stop the world。</p>
+</li>
+<li><p>ParNew</p>
+<p> 复制算法，Serial的多线程版本，stop the world。首选的新生代收集器。</p>
+</li>
+<li><p>Parallel Scavenge</p>
+<p> 新生代收集器，使用复制算法，多线程并行, stop the world。目标达到可控制的吞吐量。运行用户代码时间/CPU消耗总时常=吞吐量。该收集器提供两个参数用于精确控制吞吐量，分别是控制最大垃圾收集停顿时间的-XX:MaxGCPauseMills参数及直接设置吞吐量大小的-XX:GCTimeRatio参数。MaxGCPauseMills参数允许的值是一个大于0的毫秒数，收集器将尽力保证内存回收花费的时间不超过设定值。GCTimeRatio参数的值应该是一个大于0的整数，也就是垃圾收集时间占总时间的比率，相当于吞吐量的倒数。除了这两个参数，还有一个-XX:+UseAdaptiveSizePolicy值得关注。打开这个参数后，不需要手工指定新生代的大小（-Xmn）、Eden与Survivor区的比例（-XX:SurvivorRatio）、晋升老年代对象年龄（-XX:PretenureSizeThreshold）等细节参数。虚拟机会根据当前系统的运行情况收集性能监控信息，动态调整这些参数以提供最合适的停顿时间或最大吞吐量这种方式称为GC自适应的调节策略（GC Ergonomics）</p>
+</li>
+<li><p>Serial Old</p>
+<p> Serial收集器的老年代版本，单线程收集器，使用标记-整理算法，stop the world。主要有两个用途：1. 在JDK1.5及之前的版本中与Parallel Scavenge收集器搭配使用，另外一个就是作为CMS收集器的后备预案，在并发收集发生Concurrent Mode Failure的时候用。</p>
+</li>
+<li><p>Parallel Old</p>
+<p> Parallel Scavenge的老年代版本，标记-整理算法，stop the world。</p>
+</li>
+<li><p>CMS（Concurrent Mark Sweep）收集器</p>
+</li>
+</ol>
+<p>最短回收停顿时间为目标的收集器，重视服务响应速度，标记-清除算法实现。第一款并发收集器，可与用户线程并发执行。执行过程分为4个步骤：初始标记(CMS initial mark)、并发标记(CMS concurrent mark)、重新标记(CMS remark)、并发清除(CMS concurrent sweep)。初始和重新stop the world。初始标记只是标记GCRoots能直接关联的对象，速度很快，并发标记进行GCROOTs Tracing的过程。重新标记为了修复并发标记期间，因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录。<br>优点：并发收集、低停顿。<br>缺点：1. 对CPU资源非常敏感，解决方案，减少GC线程的独占时间。2. 无法处理浮动垃圾。CMS运行期间，用户线程产生的垃圾为浮动垃圾，CMS无法在本次收集中个清理这些浮动垃圾。如果CMS运行期间，内存无法满足用户线程要求，就会出现Concurrent Mode Failure失败，可能导致另一个FullGC产生，启动预备方案 Serial Old。3. 产生大量的空间碎片。</p>
+<ol start="7">
+<li><p>G1收集器</p>
+<p> 标记整理算法实现，精确的控制停顿，指定一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间不超过N毫秒。G1将整个Java堆（老年代，新生代）划分多个大小固定的独立区域（Region），并且追踪这些区域里面的垃圾堆积程度。在后台维护一个优先列表，每次根据允许的收集时间，优先回收垃圾最多的区域。</p>
+</li>
+</ol>
+<h3 id="1-5-内存分配与回收"><a href="#1-5-内存分配与回收" class="headerlink" title="1.5 内存分配与回收"></a>1.5 内存分配与回收</h3><p>对象在Eden中分配内存，没有足够的空间进行垃圾回收。MinorGC。</p>
+<pre><code>MinorGC: 新生代垃圾回收的动作，频繁且速度快。
+
+MajorGC（FullGC）: 指发生在老年代的GC，慢，清理新生代和老年代，CMS
+</code></pre><p>大对象指需要大量连续空间的Java对象。典型就是很长的字符串和数组。直接进入老年代分配，避免在Eden及Survivor中大量复制拷贝。</p>
+<p>长期生活的对象进入老年代。对象年龄计数器，每一次MinorGC增长1岁。默认15岁进入老年代。</p>
+<p>动态对象年龄判断，如果在Survivor空间中，相同年龄所有对象大小的总和大于Survivor空间的一半，年龄大于或等于该年龄段的对象直接进入老年代。</p>
+<p>空间担保分配，每次MinorGC,检测升级到老年代的大小是否大于老年代的空间，如果大于，则进行FullGC。</p>
+
+  </div>
+  <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+            <strong>本文作者： </strong>zhongyp</li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="https://zhongyp.me/jvm/2018-03-27-jvm-memory/" title="使用simple主题并开始写作">https://zhongyp.me/jvm/2018-03-27-jvm-memory/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li></ul>
+  </div>
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/jvm/2018-03-27-jvm/" rel="next" title="Java虚拟机运行时数据区域">
+          Java虚拟机运行时数据区域
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+          <a href="/mysql/2018-04-02-sql/" rel="prev" title="SQL优化">
+            SQL优化
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-JVM的自动内存管理机制"><span class="toc-text">1. JVM的自动内存管理机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-对象状态算法"><span class="toc-text">1.1 对象状态算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-回收方法区"><span class="toc-text">1.2 回收方法区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-垃圾收集算法"><span class="toc-text">1.3 垃圾收集算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-垃圾收集器"><span class="toc-text">1.4 垃圾收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-内存分配与回收"><span class="toc-text">1.5 内存分配与回收</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+
+      <a href="http://programer.group" target="_blank">主站</a> |
+      <a href="http://zhongyp.me">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a> |
+      <a><span id="busuanzi_container_site_pv">本站访客数<span id="busuanzi_value_site_uv"></span>人次</span></a> |
+      <a><span id="busuanzi_container_site_pv">本站访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+    </div>
+  </footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     *
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      // var menu = document.getElementById('menu-main-post');
+      // if (menu) {
+      //   var toc = document.getElementById('toc');
+      //   if (toc) {
+      //     menu.onclick = function() {
+      //       if (toc) {
+      //         if (toc.style.display == 'block') {
+      //           toc.style.display = 'none';
+      //         } else {
+      //           toc.style.display = 'block';
+      //         }
+      //       }
+      //     };
+      //   } else {
+      //     menu.style.display = 'none';
+      //   }
+      // }
+    }
+
+  })(window, document);
+</script>
+
+
+  
+
+
+
+</body>
+</html>

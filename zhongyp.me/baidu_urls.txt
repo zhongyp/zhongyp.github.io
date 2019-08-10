@@ -1,3 +1,4 @@
+https://zhongyp.me/jvm/2019-08-08/
 https://zhongyp.me/redis/2019-08-06/
 https://zhongyp.me/redis/2019-06-21-redis/
 https://zhongyp.me/java/2019-05-19-javadoc-guide/
@@ -7,4 +8,3 @@ https://zhongyp.me/java/2019-05-01-java-enum/
 https://zhongyp.me/java/2019-04-27-java-serializable/
 https://zhongyp.me/transaction/2019-03-07-spring-transaction-management/
 https://zhongyp.me/concurrency/2018-12-06-thread-communication/
-https://zhongyp.me/concurrency/2018-12-06-thread-security/
