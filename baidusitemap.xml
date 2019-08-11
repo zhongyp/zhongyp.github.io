@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://zhongyp.me/redis/2019-08-06/</loc>
-    <lastmod>2019-08-09T09:49:59.830Z</lastmod>
+    <loc>https://zhongyp.me/redis/2019-08-06-execute-executePipelined/</loc>
+    <lastmod>2019-08-11T11:29:54.996Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.me/jvm/2018-03-27-jvm/</loc>
-    <lastmod>2019-08-09T08:07:41.890Z</lastmod>
+    <loc>https://zhongyp.me/jvm/2018-04-07-jvm-tools/</loc>
+    <lastmod>2019-08-11T11:21:56.228Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/jvm/2019-08-08-offical-document/</loc>
+    <lastmod>2019-08-11T11:01:42.708Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/jvm/2018-11-22-class-structure/</loc>
-    <lastmod>2019-08-09T05:49:45.430Z</lastmod>
+    <lastmod>2019-08-11T11:00:47.748Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/jvm/2018-03-27-jvm-runtime-data-area/</loc>
+    <lastmod>2019-08-09T08:07:41.890Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/concurrency/2018-03-04-java-memory-model/</loc>
     <lastmod>2019-08-08T11:36:32.426Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/jvm/2018-03-27-jvm-memory/</loc>
     <lastmod>2019-08-08T09:29:10.104Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/jvm/2018-04-18-jvm-performence/</loc>
-    <lastmod>2019-08-08T09:28:46.865Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/jvm/2018-04-07-jvm-tools/</loc>
-    <lastmod>2019-08-08T09:26:18.920Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/jvm/2019-08-08/</loc>
-    <lastmod>2019-08-08T08:06:37.046Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/concurrency/2018-12-06-thread-communication/</loc>
     <lastmod>2019-08-07T11:24:28.427Z</lastmod>
