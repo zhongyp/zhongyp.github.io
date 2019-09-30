@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://zhongyp.me/life/2019-09-08-logs/</loc>
-    <lastmod>2019-09-08T07:43:06.024Z</lastmod>
+    <loc>https://zhongyp.me/java/2019-09-09-java-proxy/</loc>
+    <lastmod>2019-09-29T13:26:12.830Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/java/2019-09-29-knowledge-structure/</loc>
+    <lastmod>2019-09-29T01:51:10.571Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/java/2019-09-15-reference/</loc>
+    <lastmod>2019-09-23T11:33:10.812Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/jvm/2018-04-07-jvm-tools/</loc>
+    <lastmod>2019-09-23T11:02:51.009Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/java/2018-01-11-arraylist/</loc>
+    <lastmod>2019-09-22T10:07:07.215Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/jvm/2019-08-18-jvm-classloading/</loc>
-    <lastmod>2019-09-08T07:35:33.739Z</lastmod>
+    <lastmod>2019-09-10T08:44:34.872Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/jvm/2019-09-08-jvm-structure/</loc>
+    <lastmod>2019-09-08T12:59:18.234Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/redis/2019-08-06-execute-executePipelined/</loc>
     <lastmod>2019-09-05T06:31:08.333Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/jvm/2018-03-27-jvm-memory/</loc>
     <lastmod>2019-08-11T16:55:49.434Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/jvm/2018-04-07-jvm-tools/</loc>
-    <lastmod>2019-08-11T11:21:56.228Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/jvm/2019-08-08-offical-document/</loc>
     <lastmod>2019-08-11T11:01:42.708Z</lastmod>
@@ -33,12 +45,6 @@
   </url>  <url>
     <loc>https://zhongyp.me/faq/2018-07-30-foreach/</loc>
     <lastmod>2019-08-02T17:04:26.363Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/java/2018-03-30-hashmap/</loc>
-    <lastmod>2019-07-31T11:37:14.332Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/java/2018-01-11-arraylist/</loc>
-    <lastmod>2019-07-31T11:34:43.275Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/redis/2019-06-21-redis/</loc>
     <lastmod>2019-07-19T11:22:00.326Z</lastmod>
@@ -84,9 +90,6 @@
   </url>  <url>
     <loc>https://zhongyp.me/java/2019-05-19-javadoc-guide/</loc>
     <lastmod>2019-05-19T12:28:11.035Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/concurrency/2018-12-04-thread-start-end-1/</loc>
-    <lastmod>2019-03-20T15:42:49.167Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/algorithm/2018-01-10-Algorithm/</loc>
     <lastmod>2018-10-26T08:44:50.520Z</lastmod>

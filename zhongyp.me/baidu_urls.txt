@@ -1,10 +1,10 @@
-https://zhongyp.me/life/2019-09-08-logs/
+https://zhongyp.me/java/2019-09-29-knowledge-structure/
+https://zhongyp.me/java/2019-09-15-reference/
+https://zhongyp.me/jvm/2019-09-08-jvm-structure/
+https://zhongyp.me/java/2019-09-09-java-proxy/
 https://zhongyp.me/jvm/2019-08-18-jvm-classloading/
 https://zhongyp.me/jvm/2019-08-08-offical-document/
 https://zhongyp.me/redis/2019-08-06-execute-executePipelined/
 https://zhongyp.me/redis/2019-06-21-redis/
 https://zhongyp.me/java/2019-05-19-javadoc-guide/
 https://zhongyp.me/java/2019-05-06-java-generics/
-https://zhongyp.me/java/2019-05-02-effective-java/
-https://zhongyp.me/java/2019-05-01-java-enum/
-https://zhongyp.me/java/2019-04-27-java-serializable/
