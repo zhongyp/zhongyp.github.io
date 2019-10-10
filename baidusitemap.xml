@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://zhongyp.me/java/2019-10-04-jdk-proxy/</loc>
+    <lastmod>2019-10-10T13:45:17.452Z</lastmod>
+  </url>  <url>
     <loc>https://zhongyp.me/java/2019-09-09-java-proxy/</loc>
-    <lastmod>2019-09-30T12:04:33.631Z</lastmod>
+    <lastmod>2019-10-09T12:25:46.937Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/java/2019-09-04-javassist/</loc>
+    <lastmod>2019-10-09T10:43:47.494Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/java/2019-10-04-cglib/</loc>
+    <lastmod>2019-10-09T10:42:09.521Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/java/2019-10-04-reflection/</loc>
+    <lastmod>2019-10-09T09:17:03.674Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/java/2019-10-04-aspectj/</loc>
+    <lastmod>2019-10-09T08:59:33.900Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/java/2019-09-29-knowledge-structure/</loc>
     <lastmod>2019-09-29T01:51:10.571Z</lastmod>
