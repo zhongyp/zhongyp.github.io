@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://zhongyp.me/java/2019-10-04-cglib/</loc>
+    <lastmod>2019-10-12T14:04:37.399Z</lastmod>
+  </url>  <url>
     <loc>https://zhongyp.me/java/2019-10-04-jdk-proxy/</loc>
-    <lastmod>2019-10-10T13:45:17.452Z</lastmod>
+    <lastmod>2019-10-12T13:02:30.637Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/transaction/2019-03-07-spring-transaction-management/</loc>
+    <lastmod>2019-10-12T06:34:32.721Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/java/2019-10-04-reflection/</loc>
+    <lastmod>2019-10-12T02:22:06.843Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/java/2019-10-06-asm/</loc>
+    <lastmod>2019-10-11T09:04:37.524Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/java/2019-09-09-java-proxy/</loc>
     <lastmod>2019-10-09T12:25:46.937Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/java/2019-09-04-javassist/</loc>
     <lastmod>2019-10-09T10:43:47.494Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/java/2019-10-04-cglib/</loc>
-    <lastmod>2019-10-09T10:42:09.521Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/java/2019-10-04-reflection/</loc>
-    <lastmod>2019-10-09T09:17:03.674Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/java/2019-10-04-aspectj/</loc>
     <lastmod>2019-10-09T08:59:33.900Z</lastmod>
@@ -63,9 +69,6 @@
   </url>  <url>
     <loc>https://zhongyp.me/redis/2019-06-21-redis/</loc>
     <lastmod>2019-07-19T11:22:00.326Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/transaction/2019-03-07-spring-transaction-management/</loc>
-    <lastmod>2019-06-26T06:02:34.284Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/concurrency/2017-03-16-thread-brief/</loc>
     <lastmod>2019-06-26T03:20:37.695Z</lastmod>
