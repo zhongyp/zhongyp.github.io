@@ -112,7 +112,7 @@
 <p><img src="/media/article/cglib-processor.png"></p>
 <p>cglib动态代理基于ASM技术，使用<a href="/java/2019-10-06-asm/">ASM</a>技术的部分就是图中标红的模块。</p>
 <p>这里贴出的是cglib获取/生成动态代理类实例的源码流程，可以参考着上面的缓存结构了解cglib的生成及缓存的流程。</p>
-<p>方法调用流程：</p>
+<p>方法调用流程<a href="/media/article/cglib-method-invoke.png">点击看大图</a>：</p>
 <p><img src="/media/article/cglib-method-invoke.png" alt="cglib-invoke-method"></p>
 <p>下面是一些比较核心的一些代码解析：</p>
 <p>AbstractGenerator中的create(key)方法，key=KeyFactory.newInstance()。KeyFactory也是动态生成的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">// 参数key是Enhancer.KeyFactory(superclassname)的实例，这个KeyFactory类也是cglib动态生成的，当你new Enhancer()时，Enhancer会动态的生成该实例对象，superclassname就是上面的UserDAO。</span><br><span class="line">protected Object create(Object key) &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        ClassLoader loader = this.getClassLoader();</span><br><span class="line">        // CACHE时WeakHashMap 第一层缓存的容器</span><br><span class="line">        Map&lt;ClassLoader, AbstractClassGenerator.ClassLoaderData&gt; cache = CACHE;</span><br><span class="line">        // 第一层缓存 key是classLoader</span><br><span class="line">        AbstractClassGenerator.ClassLoaderData data = (AbstractClassGenerator.ClassLoaderData)cache.get(loader);</span><br><span class="line">        if (data == null) &#123;</span><br><span class="line">            Class var5 = AbstractClassGenerator.class;</span><br><span class="line">            // 加锁意义在于CACHE时静态变量，属于该类，不是该实例对象，所以线程安全需要加锁。</span><br><span class="line">            synchronized(AbstractClassGenerator.class) &#123;</span><br><span class="line">                cache = CACHE;</span><br><span class="line">                data = (AbstractClassGenerator.ClassLoaderData)cache.get(loader);</span><br><span class="line">                if (data == null) &#123;</span><br><span class="line">                    Map&lt;ClassLoader, AbstractClassGenerator.ClassLoaderData&gt; newCache = new WeakHashMap(cache);</span><br><span class="line">                    // 创建第二层缓存容器</span><br><span class="line">                    data = new AbstractClassGenerator.ClassLoaderData(loader);</span><br><span class="line">                    // 将第二层缓存容器放入第一层容器内，key为classloader</span><br><span class="line">                    newCache.put(loader, data);</span><br><span class="line">                    CACHE = newCache;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        this.key = key;</span><br><span class="line">        // 使用ClassLoaderData data获取Enhancer.EnhancerFactoryData对象，Enhancer.EnhancerFactoryData对象中是代理类的Class对象，也可以直接获取KeyFactory的Class对象</span><br><span class="line">        Object obj = data.get(this, this.getUseCache());</span><br><span class="line">        // firstInstance主要是针对KeyFactory生成的Class对象，例如接口方法生成的MethodWraper的代理类Class对象，nextInstance针对Enhancer实例生成的Enhancer.EnhancerFactoryData实例，实例中存储着真正的代理类的Class对象，如果生成的代理类中有接口方法，生成代理类时，会生成接口方法的MethodWrapper的代理类实例。</span><br><span class="line">        return obj instanceof Class ? this.firstInstance((Class)obj) : this.nextInstance(obj);</span><br><span class="line">    &#125; catch (Error | RuntimeException var9) &#123;</span><br><span class="line">        throw var9;</span><br><span class="line">    &#125; catch (Exception var10) &#123;</span><br><span class="line">        throw new CodeGenerationException(var10);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -156,16 +156,16 @@
       <div class="post-nav-item post-nav-next">
         
           <span>〈 </span>
-          <a href="/java/2019-10-04-reflection/" rel="next" title="Java反射">
-          Java反射
+          <a href="/java/2019-09-29-knowledge-structure/" rel="next" title="知识结构图">
+          知识结构图
           </a>
         
       </div>
   
       <div class="post-nav-item post-nav-prev">
         
-          <a href="/java/2019-10-04-jdk-proxy/" rel="prev" title="JDK动态代理浅析">
-            JDK动态代理浅析
+          <a href="/java/2019-10-04-aspectj/" rel="prev" title="AspectJ">
+            AspectJ
           </a>
           <span>〉</span>
         
