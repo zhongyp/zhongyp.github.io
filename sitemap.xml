@@ -4,7 +4,21 @@
   <url>
     <loc>https://zhongyp.me/java/2019-10-04-cglib/</loc>
     
-    <lastmod>2019-10-17T14:03:50.347Z</lastmod>
+    <lastmod>2019-10-22T14:16:40.820Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/java/2019-10-06-asm/</loc>
+    
+    <lastmod>2019-10-21T11:34:13.411Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/java/2019-10-04-reflection/</loc>
+    
+    <lastmod>2019-10-21T07:04:38.052Z</lastmod>
     
   </url>
   
@@ -23,30 +37,9 @@
   </url>
   
   <url>
-    <loc>https://zhongyp.me/java/2019-10-04-reflection/</loc>
-    
-    <lastmod>2019-10-12T02:22:06.843Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/java/2019-10-06-asm/</loc>
-    
-    <lastmod>2019-10-11T09:04:37.524Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zhongyp.me/java/2019-09-09-java-proxy/</loc>
     
     <lastmod>2019-10-09T12:25:46.937Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/java/2019-09-04-javassist/</loc>
-    
-    <lastmod>2019-10-09T10:43:47.494Z</lastmod>
     
   </url>
   
@@ -282,14 +275,14 @@
   </url>
   
   <url>
-    <loc>https://zhongyp.me/search/index.html</loc>
+    <loc>https://zhongyp.me/tags/index.html</loc>
     
     <lastmod>2018-10-02T01:27:53.336Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zhongyp.me/tags/index.html</loc>
+    <loc>https://zhongyp.me/search/index.html</loc>
     
     <lastmod>2018-10-02T01:27:53.336Z</lastmod>
     

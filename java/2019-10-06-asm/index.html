@@ -94,9 +94,10 @@
     <hr>
   </header>
   <div class="post-content">
-    <h2 id="ASM"><a href="#ASM" class="headerlink" title="ASM"></a>ASM</h2><blockquote>
+    <h2 id="ASM-是个啥"><a href="#ASM-是个啥" class="headerlink" title="ASM 是个啥"></a>ASM 是个啥</h2><blockquote>
 <p><strong><a href="https://asm.ow2.io/" target="_blank" rel="noopener">ASM</a>技术是个啥？</strong><br>ASM 是一个 Java 字节码操控框架。它能够以二进制形式修改已有类或者动态生成类。ASM 可以直接产生二进制 class 文件，也可以在类被加载入 Java 虚拟机之前动态改变类行为。ASM 从类文件中读入信息后，能够改变类行为，分析类信息，甚至能够根据用户要求生成新类。<br>ASM是一个通用的Java字节码操作和分析框架。它可以直接以二进制形式用于修改现有类或动态生成类。 ASM提供了一些常见的字节码转换和分析算法，可以从中构建定制的复杂转换和代码分析工具。 ASM提供与其他Java字节码框架类似的功能，但侧重于性能。因为它的设计和实现是尽可能的小和尽可能快，所以它非常适合在动态系统中使用（但当然也可以以静态方式使用，例如在编译器中使用）。<br>ASM应用广泛：OpenJDK lambda call sites，<a href="http://hg.openjdk.java.net/jdk8/jdk8/nashorn/file/096dc407d310/src/jdk/nashorn/internal/codegen/ClassEmitter.java" target="_blank" rel="noopener">Nashorn compiler</a><br>CGLIB，以动态生成代理类（用于其他项目，例如Mockito和EasyMock），Gradle，在运行时生成一些类。</p>
 </blockquote>
+<h2 id="ASM的原理解析"><a href="#ASM的原理解析" class="headerlink" title="ASM的原理解析"></a>ASM的原理解析</h2><p>ASM中最主要通过<a href="https://github.com/zhongyp/demo/tree/master/src/main/java/com/zhongyp/advanced/pattern/visitor" target="_blank" rel="noopener">访问模式</a>对字节码文件进行修改，读取。</p>
 
   </div>
   <div>
@@ -121,8 +122,8 @@
       <div class="post-nav-item post-nav-next">
         
           <span>〈 </span>
-          <a href="/java/2019-09-04-javassist/" rel="next" title="Javassist">
-          Javassist
+          <a href="/jvm/2019-08-18-jvm-classloading/" rel="next" title="Java虚拟机类加载机制">
+          Java虚拟机类加载机制
           </a>
         
       </div>
@@ -141,7 +142,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ASM"><span class="toc-text">ASM</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ASM-是个啥"><span class="toc-text">ASM 是个啥</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ASM的原理解析"><span class="toc-text">ASM的原理解析</span></a></li></ol>
   </div>
 
 
