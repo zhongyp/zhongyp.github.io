@@ -1,7 +1,7 @@
 https://zhongyp.me/java/2019-10-04-jdk-proxy/
-https://zhongyp.me/java/2019-10-04-cglib/
 https://zhongyp.me/java/2019-10-04-reflection/
 https://zhongyp.me/java/2019-10-04-aspectj/
+https://zhongyp.me/java/2019-10-04-cglib/
 https://zhongyp.me/java/2019-09-29-knowledge-structure/
 https://zhongyp.me/java/2019-09-15-reference/
 https://zhongyp.me/jvm/2019-09-08-jvm-structure/
