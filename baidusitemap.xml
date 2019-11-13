@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://zhongyp.me/java/2019-10-04-cglib/</loc>
+    <lastmod>2019-11-13T13:27:57.595Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/concurrency/2019-11-07-threadpool/</loc>
+    <lastmod>2019-11-13T13:24:54.599Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/redis/2019-11-13-redis-space-optimization/</loc>
+    <lastmod>2019-11-13T13:23:01.981Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/redis/2019-06-21-redis/</loc>
+    <lastmod>2019-11-13T10:58:04.698Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/redis/2019-08-06-execute-executePipelined/</loc>
+    <lastmod>2019-11-13T08:27:03.428Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/concurrency/2018-12-17-java-lock/</loc>
+    <lastmod>2019-11-12T06:36:39.058Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/utils/2019-11-02-docker-command/</loc>
+    <lastmod>2019-11-12T06:32:13.574Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/java/2018-01-10-pattern/</loc>
+    <lastmod>2019-11-07T03:48:40.733Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/algorithm/2018-03-07-redblacktree/</loc>
+    <lastmod>2019-11-07T03:16:43.735Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/transaction/2018-02-28-Transaction/</loc>
+    <lastmod>2019-10-31T16:09:59.640Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/interfaceview/2018-03-02-classic-interview-questions/</loc>
+    <lastmod>2019-10-28T11:30:50.444Z</lastmod>
+  </url>  <url>
     <loc>https://zhongyp.me/java/2019-10-04-aspectj/</loc>
     <lastmod>2019-10-22T17:16:13.270Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/java/2019-10-04-reflection/</loc>
     <lastmod>2019-10-22T17:11:01.908Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/java/2019-10-04-cglib/</loc>
-    <lastmod>2019-10-22T14:16:40.820Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/java/2019-10-06-asm/</loc>
     <lastmod>2019-10-21T11:34:13.411Z</lastmod>
@@ -40,9 +70,6 @@
     <loc>https://zhongyp.me/jvm/2019-09-08-jvm-structure/</loc>
     <lastmod>2019-09-08T12:59:18.234Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.me/redis/2019-08-06-execute-executePipelined/</loc>
-    <lastmod>2019-09-05T06:31:08.333Z</lastmod>
-  </url>  <url>
     <loc>https://zhongyp.me/jvm/2018-03-27-jvm-memory/</loc>
     <lastmod>2019-08-11T16:55:49.434Z</lastmod>
   </url>  <url>
@@ -63,9 +90,6 @@
   </url>  <url>
     <loc>https://zhongyp.me/faq/2018-07-30-foreach/</loc>
     <lastmod>2019-08-02T17:04:26.363Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/redis/2019-06-21-redis/</loc>
-    <lastmod>2019-07-19T11:22:00.326Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/concurrency/2017-03-16-thread-brief/</loc>
     <lastmod>2019-06-26T03:20:37.695Z</lastmod>
@@ -94,9 +118,6 @@
     <loc>https://zhongyp.me/utils/2018-10-23-git/</loc>
     <lastmod>2019-06-17T00:35:38.851Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.me/interfaceview/2018-03-02-classic-interview-questions/</loc>
-    <lastmod>2019-06-08T07:36:56.436Z</lastmod>
-  </url>  <url>
     <loc>https://zhongyp.me/concurrency/2018-11-27-concurrency-structure/</loc>
     <lastmod>2019-06-06T02:20:23.865Z</lastmod>
   </url>  <url>
@@ -105,9 +126,6 @@
   </url>  <url>
     <loc>https://zhongyp.me/java/2019-05-19-javadoc-guide/</loc>
     <lastmod>2019-05-19T12:28:11.035Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/algorithm/2018-01-10-Algorithm/</loc>
-    <lastmod>2018-10-26T08:44:50.520Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/algorithm/2015-08-04-BubbleSort/</loc>
     <lastmod>2018-10-23T12:02:04.943Z</lastmod>

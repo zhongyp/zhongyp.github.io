@@ -94,150 +94,15 @@
     <hr>
   </header>
   <div class="post-content">
-    <h2 id="corejava"><a href="#corejava" class="headerlink" title="corejava"></a>corejava</h2><ol>
-<li><p>hashcode 相等两个类一定相等么？equals呢？相反呢？</p>
-</li>
-<li><p>介绍一下集合框架</p>
-</li>
-<li><p>hashmap hashtable 底层实现什么区别？hashtale和concurrenthashmap呢？</p>
-</li>
-<li><p>hashmap和treemap 什么区别？底层数据结构呢？</p>
-</li>
-<li><p>线程池用过么？都有什么参数？底层如何实现的？</p>
-</li>
-<li><p>sychnized和Lock什么区别？sychnize什么情况是对象锁，什么时候是全局锁？为什么？</p>
-</li>
-<li><p>ThreadLocal 是什么？底层如何实现？写一个例子？</p>
-</li>
-<li><p>volitile的工作原理？</p>
-</li>
-<li><p>cas知道么？如何实现的？</p>
-</li>
-<li><p>请用至少四种写法？写一个单例模式？</p>
-</li>
-</ol>
-<h2 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h2><ol>
-<li><p>请介绍一下JVM内存模型？用过什么垃圾回收器，都说说？</p>
-</li>
-<li><p>线上发送频繁full gc如何处理？CPU使用率过高怎么办？如何定位问题？如何解决？说一下解决思路和处理方法。</p>
-</li>
-<li><p>知道字节码么？字节码都有那些？Integer * 5,int y=5, 比较x==y 都经过那些步骤？</p>
-</li>
-<li><p>讲讲类加载机制？都有哪些类加载器，这些类加载器都加载哪些文件？手写一下类加载Demo</p>
-</li>
-<li><p>知道osgi么？他是如何实现的？</p>
-</li>
-<li><p>请问你做过哪些JVM优化？使用什么方法？达到什么效果？</p>
-</li>
-<li><p>class.forName(“java.lang.String”)和String.class.getClassLoader.loadClass(“java.lang.String”)什么区别？</p>
-</li>
-</ol>
-<h2 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h2><ol>
-<li><p>spring都有哪些机制？AOP底层如何实现的？IOC？</p>
-</li>
-<li><p>cglib知道么？它和JDK动态代理有什么区别？手写一个jdk动态代理？</p>
-</li>
-</ol>
-<h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><ol>
-<li><p>使用mysql索引都有哪些原则？索引什么数据结构？B+tree和B tree什么区别？</p>
-</li>
-<li><p>mysql有哪些存储引擎啊？都有啥区别？要详细？</p>
-</li>
-<li><p>设计高并发系统数据库层面该怎么设计？数据库锁有哪些类型？如何实现？</p>
-</li>
-<li><p>数据库事务有哪些？</p>
-</li>
-</ol>
-<h2 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h2><ol>
-<li><p>如何设计可以动态扩容缩容的分库分表方案？</p>
-</li>
-<li><p>用过哪些分库分表的中间件，有啥优点和缺点，讲一下你了解的分库分表中间件的底层实现原理。</p>
-</li>
-<li><p>我现在有一个未分库分表的系统，以后系统需要分库分表，如何设计，让未分库分表的系统动态切换到分库分表系统上？</p>
-</li>
-<li><p>分布式事务知道么？ 你们怎么解决的？ TCC?那若出现网络原因，网络连不通怎么办啊？</p>
-</li>
-<li><p>为什么分库分表？</p>
-</li>
-<li><p>分布式寻址方式都有哪些算法？知道一致hash么？手写一下Java实现代码？你若userId取模分片，那我要查一段连续时间里的数据怎么办？</p>
-</li>
-<li><p>如何解决分库分表主键问题？有什么实现方案？</p>
-</li>
-</ol>
-<h2 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h2><ol>
-<li><p>redis和memched 什么区别？为什么单线程的redis比多线程的memched效率要高？</p>
-</li>
-<li><p>redis有什么数据类型？都在哪些场景下使用？</p>
-</li>
-<li><p>redis的主从复制是怎么实现的？redis的集群模式是如何实现的呢？redis的key是如何寻址的？</p>
-</li>
-<li><p>使用redis如何设计分布式锁？使用zk可以么？如何实现？这两种哪个效率更高？</p>
-</li>
-<li><p>知道redis的持久化么？有什么优点和缺点？具体底层实现呢？</p>
-</li>
-<li><p>redis过期策略都有哪些？LRU？写一下Java版本代码？</p>
-</li>
-</ol>
-<h2 id="分布式服务框架"><a href="#分布式服务框架" class="headerlink" title="分布式服务框架"></a>分布式服务框架</h2><ol>
-<li><p>说一下dubbo的实现过程，注册中心挂了可以继续通信么？</p>
-</li>
-<li><p>zk原理知道么？zk都可以干什么？paxos算法知道么？说一下原理和实现？</p>
-</li>
-<li><p>dubbo支持哪些序列化协议？hessian？说一下hessian的数据结构？PB知道么？为啥PB效率是最高的？</p>
-</li>
-<li><p>知道netty么？netty可以干嘛？NIO,BIO,AIO都是什么啊？有什么区别？</p>
-</li>
-<li><p>dubbo复制均衡策略和高可用策略都有哪些？动态代理策略呢？</p>
-</li>
-<li><p>为什么要进行系统拆分啊？拆分不用dubbo可以么？dubbo和thrift什么区别啊？</p>
-</li>
-</ol>
-<h2 id="分布式消息队列"><a href="#分布式消息队列" class="headerlink" title="分布式消息队列"></a>分布式消息队列</h2><ol>
-<li><p>为什么使用消息队列？消息队列有什么优点和缺点？</p>
-</li>
-<li><p>如何保证消息队列的高可用？如何保证消息不被重复消费？</p>
-</li>
-<li><p>kafka，activemq，rabbitmq，rocketmq都有什么优点和缺点？</p>
-</li>
-<li><p>如果让你写一个消息队列，该如何进行架构设计？说一下你的思路？</p>
-</li>
-</ol>
-<h2 id="分布式搜索引擎"><a href="#分布式搜索引擎" class="headerlink" title="分布式搜索引擎"></a>分布式搜索引擎</h2><ol>
-<li><p>es的工作过程实现是如何的？如何实现分布式的啊？</p>
-</li>
-<li><p>es在数据量很大的情况下，如何提高查询效率？</p>
-</li>
-<li><p>es的查询是一个怎么的工作过程？底层的lucence介绍一下？倒排索引知道么？es和mongodb什么区别？都在什么场景下使用？</p>
-</li>
-</ol>
-<h2 id="高并发高可用架构设计"><a href="#高并发高可用架构设计" class="headerlink" title="高并发高可用架构设计"></a>高并发高可用架构设计</h2><ol>
-<li><p>如何设计一个高并发高可用系统？</p>
-</li>
-<li><p>如何限流？工程中怎么做的，说一下具体实现？</p>
-</li>
-<li><p>缓存如何使用的？缓存使用不会造成什么后果？</p>
-</li>
-<li><p>如何熔断？熔断框架都有哪些？具体实现原理知道么？</p>
-</li>
-<li><p>如何降级？ 如何进行系统拆分？如何数据库拆分？</p>
-</li>
-</ol>
-<h2 id="通信协议"><a href="#通信协议" class="headerlink" title="通信协议"></a>通信协议</h2><ol>
-<li><p>说一下TCP/IP 四层？</p>
-</li>
-<li><p>http的工作流程？ http1.0 http1.1 http2.0具体哪些区别？</p>
-</li>
-<li><p>TCP三次握手，四层分手的工作流程？画一下流程图？为什么不是四次五次或者两次？</p>
-</li>
-<li><p>画一下https的工作流程？具体如何实现？如何防止被抓包？</p>
-</li>
-</ol>
-<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><ol>
-<li>45亿阿拉伯数字，如何进行去重？如何找出最大的那个数？</li>
-</ol>
-<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><ol>
-<li>二叉树和红黑树<br><a href="https://www.jianshu.com/p/a07d1d4004b0" target="_blank" rel="noopener">博文推荐</a></li>
-</ol>
+    <h2 id="corejava"><a href="#corejava" class="headerlink" title="corejava"></a>corejava</h2><h3 id="1-hashcode-相等两个类一定相等么？equals呢？相反呢？"><a href="#1-hashcode-相等两个类一定相等么？equals呢？相反呢？" class="headerlink" title="1. hashcode 相等两个类一定相等么？equals呢？相反呢？"></a>1. hashcode 相等两个类一定相等么？equals呢？相反呢？</h3><p>对于默认未重写的两个方法，hashcode不一定相等，equals一定相等。</p>
+<p>对于重写两个方法且按照规范重写的，结果相同。<br>规范：<br>自反性：x.equals(x)，始终为true。<br>对称性：x.equals(y)，y.equals(x)结果相同。<br>传递性：x.equals(y)，y.equals(z)，则x.equals(z)。<br>一致性：x.equals(y)永远返回相同的结果。<br>非null性：当一个引用x不为null时，则x.equals(null)返回false。</p>
+<h3 id="2-介绍一下集合框架"><a href="#2-介绍一下集合框架" class="headerlink" title="2. 介绍一下集合框架"></a>2. 介绍一下集合框架</h3><p>集合框架包含Collection和Map两类。集合又分为Set和List，</p>
+<p><img src="/media/article/collection-structure.png" alt="collection-structure"></p>
+<p>详细如下图：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2243690-9cd9c896e0d512ed.gif?imageMogr2/auto-orient/strip|imageView2/2/w/643/format/webp" alt="集合框架图"></p>
+<p>–引用自<a href="https://www.jianshu.com/p/63e76826e852" target="_blank" rel="noopener">Java - 集合框架完全解析</a></p>
+<h3 id="3-hashmap-hashtable-底层实现什么区别？hashtale和concurrenthashmap呢？"><a href="#3-hashmap-hashtable-底层实现什么区别？hashtale和concurrenthashmap呢？" class="headerlink" title="3. hashmap hashtable 底层实现什么区别？hashtale和concurrenthashmap呢？"></a>3. hashmap hashtable 底层实现什么区别？hashtale和concurrenthashmap呢？</h3><p><img src="/media/article/hashtable-hashmap.png" alt="hash"></p>
+<h3 id="4-hashmap和treemap-什么区别？底层数据结构呢？"><a href="#4-hashmap和treemap-什么区别？底层数据结构呢？" class="headerlink" title="4. hashmap和treemap 什么区别？底层数据结构呢？"></a>4. hashmap和treemap 什么区别？底层数据结构呢？</h3><h3 id="5-线程池用过么？都有什么参数？底层如何实现的？"><a href="#5-线程池用过么？都有什么参数？底层如何实现的？" class="headerlink" title="5. 线程池用过么？都有什么参数？底层如何实现的？"></a>5. 线程池用过么？都有什么参数？底层如何实现的？</h3><h3 id="6-sychnized和Lock什么区别？sychnize什么情况是对象锁，什么时候是全局锁？为什么？"><a href="#6-sychnized和Lock什么区别？sychnize什么情况是对象锁，什么时候是全局锁？为什么？" class="headerlink" title="6. sychnized和Lock什么区别？sychnize什么情况是对象锁，什么时候是全局锁？为什么？"></a>6. sychnized和Lock什么区别？sychnize什么情况是对象锁，什么时候是全局锁？为什么？</h3><h3 id="7-ThreadLocal-是什么？底层如何实现？写一个例子？"><a href="#7-ThreadLocal-是什么？底层如何实现？写一个例子？" class="headerlink" title="7. ThreadLocal 是什么？底层如何实现？写一个例子？"></a>7. ThreadLocal 是什么？底层如何实现？写一个例子？</h3><h3 id="8-volitile的工作原理？"><a href="#8-volitile的工作原理？" class="headerlink" title="8. volitile的工作原理？"></a>8. volitile的工作原理？</h3><h3 id="9-cas知道么？如何实现的？"><a href="#9-cas知道么？如何实现的？" class="headerlink" title="9. cas知道么？如何实现的？"></a>9. cas知道么？如何实现的？</h3><h3 id="10-请用至少四种写法？写一个单例模式？"><a href="#10-请用至少四种写法？写一个单例模式？" class="headerlink" title="10. 请用至少四种写法？写一个单例模式？"></a>10. 请用至少四种写法？写一个单例模式？</h3><h2 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h2><h3 id="1-请介绍一下JVM内存模型？用过什么垃圾回收器，都说说？"><a href="#1-请介绍一下JVM内存模型？用过什么垃圾回收器，都说说？" class="headerlink" title="1. 请介绍一下JVM内存模型？用过什么垃圾回收器，都说说？"></a>1. 请介绍一下JVM内存模型？用过什么垃圾回收器，都说说？</h3><h3 id="2-线上发送频繁full-gc如何处理？CPU使用率过高怎么办？如何定位问题？如何解决？说一下解决思路和处理方法。"><a href="#2-线上发送频繁full-gc如何处理？CPU使用率过高怎么办？如何定位问题？如何解决？说一下解决思路和处理方法。" class="headerlink" title="2. 线上发送频繁full gc如何处理？CPU使用率过高怎么办？如何定位问题？如何解决？说一下解决思路和处理方法。"></a>2. 线上发送频繁full gc如何处理？CPU使用率过高怎么办？如何定位问题？如何解决？说一下解决思路和处理方法。</h3><h3 id="3-知道字节码么？字节码都有那些？Integer-5-int-y-5-比较x-y-都经过那些步骤？"><a href="#3-知道字节码么？字节码都有那些？Integer-5-int-y-5-比较x-y-都经过那些步骤？" class="headerlink" title="3. 知道字节码么？字节码都有那些？Integer * 5,int y=5, 比较x==y 都经过那些步骤？"></a>3. 知道字节码么？字节码都有那些？Integer * 5,int y=5, 比较x==y 都经过那些步骤？</h3><h3 id="4-讲讲类加载机制？都有哪些类加载器，这些类加载器都加载哪些文件？手写一下类加载Demo"><a href="#4-讲讲类加载机制？都有哪些类加载器，这些类加载器都加载哪些文件？手写一下类加载Demo" class="headerlink" title="4. 讲讲类加载机制？都有哪些类加载器，这些类加载器都加载哪些文件？手写一下类加载Demo"></a>4. 讲讲类加载机制？都有哪些类加载器，这些类加载器都加载哪些文件？手写一下类加载Demo</h3><h3 id="5-知道osgi么？他是如何实现的？"><a href="#5-知道osgi么？他是如何实现的？" class="headerlink" title="5. 知道osgi么？他是如何实现的？"></a>5. 知道osgi么？他是如何实现的？</h3><h3 id="6-请问你做过哪些JVM优化？使用什么方法？达到什么效果？"><a href="#6-请问你做过哪些JVM优化？使用什么方法？达到什么效果？" class="headerlink" title="6. 请问你做过哪些JVM优化？使用什么方法？达到什么效果？"></a>6. 请问你做过哪些JVM优化？使用什么方法？达到什么效果？</h3><h3 id="7-class-forName-“java-lang-String”-和String-class-getClassLoader-loadClass-“java-lang-String”-什么区别？"><a href="#7-class-forName-“java-lang-String”-和String-class-getClassLoader-loadClass-“java-lang-String”-什么区别？" class="headerlink" title="7. class.forName(“java.lang.String”)和String.class.getClassLoader.loadClass(“java.lang.String”)什么区别？"></a>7. class.forName(“java.lang.String”)和String.class.getClassLoader.loadClass(“java.lang.String”)什么区别？</h3><h2 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h2><h3 id="1-spring都有哪些机制？AOP底层如何实现的？IOC？"><a href="#1-spring都有哪些机制？AOP底层如何实现的？IOC？" class="headerlink" title="1. spring都有哪些机制？AOP底层如何实现的？IOC？"></a>1. spring都有哪些机制？AOP底层如何实现的？IOC？</h3><h3 id="2-cglib知道么？它和JDK动态代理有什么区别？手写一个jdk动态代理？"><a href="#2-cglib知道么？它和JDK动态代理有什么区别？手写一个jdk动态代理？" class="headerlink" title="2. cglib知道么？它和JDK动态代理有什么区别？手写一个jdk动态代理？"></a>2. cglib知道么？它和JDK动态代理有什么区别？手写一个jdk动态代理？</h3><h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><h3 id="1-使用mysql索引都有哪些原则？索引什么数据结构？B-tree和B-tree什么区别？"><a href="#1-使用mysql索引都有哪些原则？索引什么数据结构？B-tree和B-tree什么区别？" class="headerlink" title="1. 使用mysql索引都有哪些原则？索引什么数据结构？B+tree和B tree什么区别？"></a>1. 使用mysql索引都有哪些原则？索引什么数据结构？B+tree和B tree什么区别？</h3><h3 id="2-mysql有哪些存储引擎啊？都有啥区别？要详细？"><a href="#2-mysql有哪些存储引擎啊？都有啥区别？要详细？" class="headerlink" title="2. mysql有哪些存储引擎啊？都有啥区别？要详细？"></a>2. mysql有哪些存储引擎啊？都有啥区别？要详细？</h3><h3 id="3-设计高并发系统数据库层面该怎么设计？数据库锁有哪些类型？如何实现？"><a href="#3-设计高并发系统数据库层面该怎么设计？数据库锁有哪些类型？如何实现？" class="headerlink" title="3. 设计高并发系统数据库层面该怎么设计？数据库锁有哪些类型？如何实现？"></a>3. 设计高并发系统数据库层面该怎么设计？数据库锁有哪些类型？如何实现？</h3><h3 id="4-数据库事务有哪些？"><a href="#4-数据库事务有哪些？" class="headerlink" title="4. 数据库事务有哪些？"></a>4. 数据库事务有哪些？</h3><h2 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h2><h3 id="1-如何设计可以动态扩容缩容的分库分表方案？"><a href="#1-如何设计可以动态扩容缩容的分库分表方案？" class="headerlink" title="1. 如何设计可以动态扩容缩容的分库分表方案？"></a>1. 如何设计可以动态扩容缩容的分库分表方案？</h3><h3 id="2-用过哪些分库分表的中间件，有啥优点和缺点，讲一下你了解的分库分表中间件的底层实现原理。"><a href="#2-用过哪些分库分表的中间件，有啥优点和缺点，讲一下你了解的分库分表中间件的底层实现原理。" class="headerlink" title="2. 用过哪些分库分表的中间件，有啥优点和缺点，讲一下你了解的分库分表中间件的底层实现原理。"></a>2. 用过哪些分库分表的中间件，有啥优点和缺点，讲一下你了解的分库分表中间件的底层实现原理。</h3><h3 id="3-我现在有一个未分库分表的系统，以后系统需要分库分表，如何设计，让未分库分表的系统动态切换到分库分表系统上？"><a href="#3-我现在有一个未分库分表的系统，以后系统需要分库分表，如何设计，让未分库分表的系统动态切换到分库分表系统上？" class="headerlink" title="3. 我现在有一个未分库分表的系统，以后系统需要分库分表，如何设计，让未分库分表的系统动态切换到分库分表系统上？"></a>3. 我现在有一个未分库分表的系统，以后系统需要分库分表，如何设计，让未分库分表的系统动态切换到分库分表系统上？</h3><h3 id="4-分布式事务知道么？-你们怎么解决的？-TCC-那若出现网络原因，网络连不通怎么办啊？"><a href="#4-分布式事务知道么？-你们怎么解决的？-TCC-那若出现网络原因，网络连不通怎么办啊？" class="headerlink" title="4. 分布式事务知道么？ 你们怎么解决的？ TCC?那若出现网络原因，网络连不通怎么办啊？"></a>4. 分布式事务知道么？ 你们怎么解决的？ TCC?那若出现网络原因，网络连不通怎么办啊？</h3><h3 id="5-为什么分库分表？"><a href="#5-为什么分库分表？" class="headerlink" title="5. 为什么分库分表？"></a>5. 为什么分库分表？</h3><h3 id="6-分布式寻址方式都有哪些算法？知道一致hash么？手写一下Java实现代码？你若userId取模分片，那我要查一段连续时间里的数据怎么办？"><a href="#6-分布式寻址方式都有哪些算法？知道一致hash么？手写一下Java实现代码？你若userId取模分片，那我要查一段连续时间里的数据怎么办？" class="headerlink" title="6. 分布式寻址方式都有哪些算法？知道一致hash么？手写一下Java实现代码？你若userId取模分片，那我要查一段连续时间里的数据怎么办？"></a>6. 分布式寻址方式都有哪些算法？知道一致hash么？手写一下Java实现代码？你若userId取模分片，那我要查一段连续时间里的数据怎么办？</h3><h3 id="7-如何解决分库分表主键问题？有什么实现方案？"><a href="#7-如何解决分库分表主键问题？有什么实现方案？" class="headerlink" title="7. 如何解决分库分表主键问题？有什么实现方案？"></a>7. 如何解决分库分表主键问题？有什么实现方案？</h3><h2 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h2><h3 id="1-redis和memched-什么区别？为什么单线程的redis比多线程的memched效率要高？"><a href="#1-redis和memched-什么区别？为什么单线程的redis比多线程的memched效率要高？" class="headerlink" title="1. redis和memched 什么区别？为什么单线程的redis比多线程的memched效率要高？"></a>1. redis和memched 什么区别？为什么单线程的redis比多线程的memched效率要高？</h3><h3 id="2-redis有什么数据类型？都在哪些场景下使用？"><a href="#2-redis有什么数据类型？都在哪些场景下使用？" class="headerlink" title="2. redis有什么数据类型？都在哪些场景下使用？"></a>2. redis有什么数据类型？都在哪些场景下使用？</h3><h3 id="3-redis的主从复制是怎么实现的？redis的集群模式是如何实现的呢？redis的key是如何寻址的？"><a href="#3-redis的主从复制是怎么实现的？redis的集群模式是如何实现的呢？redis的key是如何寻址的？" class="headerlink" title="3. redis的主从复制是怎么实现的？redis的集群模式是如何实现的呢？redis的key是如何寻址的？"></a>3. redis的主从复制是怎么实现的？redis的集群模式是如何实现的呢？redis的key是如何寻址的？</h3><h3 id="4-使用redis如何设计分布式锁？使用zk可以么？如何实现？这两种哪个效率更高？"><a href="#4-使用redis如何设计分布式锁？使用zk可以么？如何实现？这两种哪个效率更高？" class="headerlink" title="4. 使用redis如何设计分布式锁？使用zk可以么？如何实现？这两种哪个效率更高？"></a>4. 使用redis如何设计分布式锁？使用zk可以么？如何实现？这两种哪个效率更高？</h3><h3 id="5-知道redis的持久化么？有什么优点和缺点？具体底层实现呢？"><a href="#5-知道redis的持久化么？有什么优点和缺点？具体底层实现呢？" class="headerlink" title="5. 知道redis的持久化么？有什么优点和缺点？具体底层实现呢？"></a>5. 知道redis的持久化么？有什么优点和缺点？具体底层实现呢？</h3><h3 id="6-redis过期策略都有哪些？LRU？写一下Java版本代码？"><a href="#6-redis过期策略都有哪些？LRU？写一下Java版本代码？" class="headerlink" title="6. redis过期策略都有哪些？LRU？写一下Java版本代码？"></a>6. redis过期策略都有哪些？LRU？写一下Java版本代码？</h3><h2 id="分布式服务框架"><a href="#分布式服务框架" class="headerlink" title="分布式服务框架"></a>分布式服务框架</h2><h3 id="1-说一下dubbo的实现过程，注册中心挂了可以继续通信么？"><a href="#1-说一下dubbo的实现过程，注册中心挂了可以继续通信么？" class="headerlink" title="1. 说一下dubbo的实现过程，注册中心挂了可以继续通信么？"></a>1. 说一下dubbo的实现过程，注册中心挂了可以继续通信么？</h3><h3 id="2-zk原理知道么？zk都可以干什么？paxos算法知道么？说一下原理和实现？"><a href="#2-zk原理知道么？zk都可以干什么？paxos算法知道么？说一下原理和实现？" class="headerlink" title="2. zk原理知道么？zk都可以干什么？paxos算法知道么？说一下原理和实现？"></a>2. zk原理知道么？zk都可以干什么？paxos算法知道么？说一下原理和实现？</h3><h3 id="3-dubbo支持哪些序列化协议？hessian？说一下hessian的数据结构？PB知道么？为啥PB效率是最高的？"><a href="#3-dubbo支持哪些序列化协议？hessian？说一下hessian的数据结构？PB知道么？为啥PB效率是最高的？" class="headerlink" title="3. dubbo支持哪些序列化协议？hessian？说一下hessian的数据结构？PB知道么？为啥PB效率是最高的？"></a>3. dubbo支持哪些序列化协议？hessian？说一下hessian的数据结构？PB知道么？为啥PB效率是最高的？</h3><h3 id="4-知道netty么？netty可以干嘛？NIO-BIO-AIO都是什么啊？有什么区别？"><a href="#4-知道netty么？netty可以干嘛？NIO-BIO-AIO都是什么啊？有什么区别？" class="headerlink" title="4. 知道netty么？netty可以干嘛？NIO,BIO,AIO都是什么啊？有什么区别？"></a>4. 知道netty么？netty可以干嘛？NIO,BIO,AIO都是什么啊？有什么区别？</h3><h3 id="5-dubbo复制均衡策略和高可用策略都有哪些？动态代理策略呢？"><a href="#5-dubbo复制均衡策略和高可用策略都有哪些？动态代理策略呢？" class="headerlink" title="5. dubbo复制均衡策略和高可用策略都有哪些？动态代理策略呢？"></a>5. dubbo复制均衡策略和高可用策略都有哪些？动态代理策略呢？</h3><h3 id="6-为什么要进行系统拆分啊？拆分不用dubbo可以么？dubbo和thrift什么区别啊？"><a href="#6-为什么要进行系统拆分啊？拆分不用dubbo可以么？dubbo和thrift什么区别啊？" class="headerlink" title="6. 为什么要进行系统拆分啊？拆分不用dubbo可以么？dubbo和thrift什么区别啊？"></a>6. 为什么要进行系统拆分啊？拆分不用dubbo可以么？dubbo和thrift什么区别啊？</h3><h2 id="分布式消息队列"><a href="#分布式消息队列" class="headerlink" title="分布式消息队列"></a>分布式消息队列</h2><h3 id="1-为什么使用消息队列？消息队列有什么优点和缺点？"><a href="#1-为什么使用消息队列？消息队列有什么优点和缺点？" class="headerlink" title="1. 为什么使用消息队列？消息队列有什么优点和缺点？"></a>1. 为什么使用消息队列？消息队列有什么优点和缺点？</h3><h3 id="2-如何保证消息队列的高可用？如何保证消息不被重复消费？"><a href="#2-如何保证消息队列的高可用？如何保证消息不被重复消费？" class="headerlink" title="2. 如何保证消息队列的高可用？如何保证消息不被重复消费？"></a>2. 如何保证消息队列的高可用？如何保证消息不被重复消费？</h3><h3 id="3-kafka，activemq，rabbitmq，rocketmq都有什么优点和缺点？"><a href="#3-kafka，activemq，rabbitmq，rocketmq都有什么优点和缺点？" class="headerlink" title="3. kafka，activemq，rabbitmq，rocketmq都有什么优点和缺点？"></a>3. kafka，activemq，rabbitmq，rocketmq都有什么优点和缺点？</h3><h3 id="4-如果让你写一个消息队列，该如何进行架构设计？说一下你的思路？"><a href="#4-如果让你写一个消息队列，该如何进行架构设计？说一下你的思路？" class="headerlink" title="4. 如果让你写一个消息队列，该如何进行架构设计？说一下你的思路？"></a>4. 如果让你写一个消息队列，该如何进行架构设计？说一下你的思路？</h3><h2 id="分布式搜索引擎"><a href="#分布式搜索引擎" class="headerlink" title="分布式搜索引擎"></a>分布式搜索引擎</h2><h3 id="1-es的工作过程实现是如何的？如何实现分布式的啊？"><a href="#1-es的工作过程实现是如何的？如何实现分布式的啊？" class="headerlink" title="1. es的工作过程实现是如何的？如何实现分布式的啊？"></a>1. es的工作过程实现是如何的？如何实现分布式的啊？</h3><h3 id="2-es在数据量很大的情况下，如何提高查询效率？"><a href="#2-es在数据量很大的情况下，如何提高查询效率？" class="headerlink" title="2. es在数据量很大的情况下，如何提高查询效率？"></a>2. es在数据量很大的情况下，如何提高查询效率？</h3><h3 id="3-es的查询是一个怎么的工作过程？底层的lucence介绍一下？倒排索引知道么？es和mongodb什么区别？都在什么场景下使用？"><a href="#3-es的查询是一个怎么的工作过程？底层的lucence介绍一下？倒排索引知道么？es和mongodb什么区别？都在什么场景下使用？" class="headerlink" title="3. es的查询是一个怎么的工作过程？底层的lucence介绍一下？倒排索引知道么？es和mongodb什么区别？都在什么场景下使用？"></a>3. es的查询是一个怎么的工作过程？底层的lucence介绍一下？倒排索引知道么？es和mongodb什么区别？都在什么场景下使用？</h3><h2 id="高并发高可用架构设计"><a href="#高并发高可用架构设计" class="headerlink" title="高并发高可用架构设计"></a>高并发高可用架构设计</h2><h3 id="1-如何设计一个高并发高可用系统？"><a href="#1-如何设计一个高并发高可用系统？" class="headerlink" title="1. 如何设计一个高并发高可用系统？"></a>1. 如何设计一个高并发高可用系统？</h3><h3 id="2-如何限流？工程中怎么做的，说一下具体实现？"><a href="#2-如何限流？工程中怎么做的，说一下具体实现？" class="headerlink" title="2. 如何限流？工程中怎么做的，说一下具体实现？"></a>2. 如何限流？工程中怎么做的，说一下具体实现？</h3><h3 id="3-缓存如何使用的？缓存使用不会造成什么后果？"><a href="#3-缓存如何使用的？缓存使用不会造成什么后果？" class="headerlink" title="3. 缓存如何使用的？缓存使用不会造成什么后果？"></a>3. 缓存如何使用的？缓存使用不会造成什么后果？</h3><h3 id="4-如何熔断？熔断框架都有哪些？具体实现原理知道么？"><a href="#4-如何熔断？熔断框架都有哪些？具体实现原理知道么？" class="headerlink" title="4. 如何熔断？熔断框架都有哪些？具体实现原理知道么？"></a>4. 如何熔断？熔断框架都有哪些？具体实现原理知道么？</h3><h3 id="5-如何降级？-如何进行系统拆分？如何数据库拆分？"><a href="#5-如何降级？-如何进行系统拆分？如何数据库拆分？" class="headerlink" title="5. 如何降级？ 如何进行系统拆分？如何数据库拆分？"></a>5. 如何降级？ 如何进行系统拆分？如何数据库拆分？</h3><h2 id="通信协议"><a href="#通信协议" class="headerlink" title="通信协议"></a>通信协议</h2><h3 id="1-说一下TCP-IP-四层？"><a href="#1-说一下TCP-IP-四层？" class="headerlink" title="1. 说一下TCP/IP 四层？"></a>1. 说一下TCP/IP 四层？</h3><h3 id="2-http的工作流程？-http1-0-http1-1-http2-0具体哪些区别？"><a href="#2-http的工作流程？-http1-0-http1-1-http2-0具体哪些区别？" class="headerlink" title="2. http的工作流程？ http1.0 http1.1 http2.0具体哪些区别？"></a>2. http的工作流程？ http1.0 http1.1 http2.0具体哪些区别？</h3><h3 id="3-TCP三次握手，四层分手的工作流程？画一下流程图？为什么不是四次五次或者两次？"><a href="#3-TCP三次握手，四层分手的工作流程？画一下流程图？为什么不是四次五次或者两次？" class="headerlink" title="3. TCP三次握手，四层分手的工作流程？画一下流程图？为什么不是四次五次或者两次？"></a>3. TCP三次握手，四层分手的工作流程？画一下流程图？为什么不是四次五次或者两次？</h3><h3 id="4-画一下https的工作流程？具体如何实现？如何防止被抓包？"><a href="#4-画一下https的工作流程？具体如何实现？如何防止被抓包？" class="headerlink" title="4. 画一下https的工作流程？具体如何实现？如何防止被抓包？"></a>4. 画一下https的工作流程？具体如何实现？如何防止被抓包？</h3><h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><h3 id="1-45亿阿拉伯数字，如何进行去重？如何找出最大的那个数？"><a href="#1-45亿阿拉伯数字，如何进行去重？如何找出最大的那个数？" class="headerlink" title="1. 45亿阿拉伯数字，如何进行去重？如何找出最大的那个数？"></a>1. 45亿阿拉伯数字，如何进行去重？如何找出最大的那个数？</h3><h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><h3 id="1-二叉树和红黑树"><a href="#1-二叉树和红黑树" class="headerlink" title="1. 二叉树和红黑树"></a>1. 二叉树和红黑树</h3><p><a href="https://www.jianshu.com/p/a07d1d4004b0" target="_blank" rel="noopener">博文推荐</a></p>
 
   </div>
   <div>
@@ -262,16 +127,16 @@
       <div class="post-nav-item post-nav-next">
         
           <span>〈 </span>
-          <a href="/algorithm/2018-01-10-Algorithm/" rel="next" title="算法（Algorithm）">
-          算法（Algorithm）
+          <a href="/java/2018-01-10-pattern/" rel="next" title="设计模式原理及应用场景">
+          设计模式原理及应用场景
           </a>
         
       </div>
   
       <div class="post-nav-item post-nav-prev">
         
-          <a href="/concurrency/2017-03-16-thread-brief/" rel="prev" title="线程简介">
-            线程简介
+          <a href="/algorithm/2018-03-07-redblacktree/" rel="prev" title="红黑树">
+            红黑树
           </a>
           <span>〉</span>
         
@@ -282,7 +147,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#corejava"><span class="toc-text">corejava</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM"><span class="toc-text">JVM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring"><span class="toc-text">Spring</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库"><span class="toc-text">数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分库分表"><span class="toc-text">分库分表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式缓存"><span class="toc-text">分布式缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式服务框架"><span class="toc-text">分布式服务框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式消息队列"><span class="toc-text">分布式消息队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式搜索引擎"><span class="toc-text">分布式搜索引擎</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#高并发高可用架构设计"><span class="toc-text">高并发高可用架构设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通信协议"><span class="toc-text">通信协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法"><span class="toc-text">算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据结构"><span class="toc-text">数据结构</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#corejava"><span class="toc-text">corejava</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-hashcode-相等两个类一定相等么？equals呢？相反呢？"><span class="toc-text">1. hashcode 相等两个类一定相等么？equals呢？相反呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-介绍一下集合框架"><span class="toc-text">2. 介绍一下集合框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-hashmap-hashtable-底层实现什么区别？hashtale和concurrenthashmap呢？"><span class="toc-text">3. hashmap hashtable 底层实现什么区别？hashtale和concurrenthashmap呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-hashmap和treemap-什么区别？底层数据结构呢？"><span class="toc-text">4. hashmap和treemap 什么区别？底层数据结构呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-线程池用过么？都有什么参数？底层如何实现的？"><span class="toc-text">5. 线程池用过么？都有什么参数？底层如何实现的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-sychnized和Lock什么区别？sychnize什么情况是对象锁，什么时候是全局锁？为什么？"><span class="toc-text">6. sychnized和Lock什么区别？sychnize什么情况是对象锁，什么时候是全局锁？为什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-ThreadLocal-是什么？底层如何实现？写一个例子？"><span class="toc-text">7. ThreadLocal 是什么？底层如何实现？写一个例子？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-volitile的工作原理？"><span class="toc-text">8. volitile的工作原理？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-cas知道么？如何实现的？"><span class="toc-text">9. cas知道么？如何实现的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-请用至少四种写法？写一个单例模式？"><span class="toc-text">10. 请用至少四种写法？写一个单例模式？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM"><span class="toc-text">JVM</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-请介绍一下JVM内存模型？用过什么垃圾回收器，都说说？"><span class="toc-text">1. 请介绍一下JVM内存模型？用过什么垃圾回收器，都说说？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-线上发送频繁full-gc如何处理？CPU使用率过高怎么办？如何定位问题？如何解决？说一下解决思路和处理方法。"><span class="toc-text">2. 线上发送频繁full gc如何处理？CPU使用率过高怎么办？如何定位问题？如何解决？说一下解决思路和处理方法。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-知道字节码么？字节码都有那些？Integer-5-int-y-5-比较x-y-都经过那些步骤？"><span class="toc-text">3. 知道字节码么？字节码都有那些？Integer * 5,int y=5, 比较x==y 都经过那些步骤？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-讲讲类加载机制？都有哪些类加载器，这些类加载器都加载哪些文件？手写一下类加载Demo"><span class="toc-text">4. 讲讲类加载机制？都有哪些类加载器，这些类加载器都加载哪些文件？手写一下类加载Demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-知道osgi么？他是如何实现的？"><span class="toc-text">5. 知道osgi么？他是如何实现的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-请问你做过哪些JVM优化？使用什么方法？达到什么效果？"><span class="toc-text">6. 请问你做过哪些JVM优化？使用什么方法？达到什么效果？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-class-forName-“java-lang-String”-和String-class-getClassLoader-loadClass-“java-lang-String”-什么区别？"><span class="toc-text">7. class.forName(“java.lang.String”)和String.class.getClassLoader.loadClass(“java.lang.String”)什么区别？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring"><span class="toc-text">Spring</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-spring都有哪些机制？AOP底层如何实现的？IOC？"><span class="toc-text">1. spring都有哪些机制？AOP底层如何实现的？IOC？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-cglib知道么？它和JDK动态代理有什么区别？手写一个jdk动态代理？"><span class="toc-text">2. cglib知道么？它和JDK动态代理有什么区别？手写一个jdk动态代理？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库"><span class="toc-text">数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-使用mysql索引都有哪些原则？索引什么数据结构？B-tree和B-tree什么区别？"><span class="toc-text">1. 使用mysql索引都有哪些原则？索引什么数据结构？B+tree和B tree什么区别？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-mysql有哪些存储引擎啊？都有啥区别？要详细？"><span class="toc-text">2. mysql有哪些存储引擎啊？都有啥区别？要详细？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-设计高并发系统数据库层面该怎么设计？数据库锁有哪些类型？如何实现？"><span class="toc-text">3. 设计高并发系统数据库层面该怎么设计？数据库锁有哪些类型？如何实现？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-数据库事务有哪些？"><span class="toc-text">4. 数据库事务有哪些？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分库分表"><span class="toc-text">分库分表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-如何设计可以动态扩容缩容的分库分表方案？"><span class="toc-text">1. 如何设计可以动态扩容缩容的分库分表方案？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-用过哪些分库分表的中间件，有啥优点和缺点，讲一下你了解的分库分表中间件的底层实现原理。"><span class="toc-text">2. 用过哪些分库分表的中间件，有啥优点和缺点，讲一下你了解的分库分表中间件的底层实现原理。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-我现在有一个未分库分表的系统，以后系统需要分库分表，如何设计，让未分库分表的系统动态切换到分库分表系统上？"><span class="toc-text">3. 我现在有一个未分库分表的系统，以后系统需要分库分表，如何设计，让未分库分表的系统动态切换到分库分表系统上？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-分布式事务知道么？-你们怎么解决的？-TCC-那若出现网络原因，网络连不通怎么办啊？"><span class="toc-text">4. 分布式事务知道么？ 你们怎么解决的？ TCC?那若出现网络原因，网络连不通怎么办啊？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-为什么分库分表？"><span class="toc-text">5. 为什么分库分表？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-分布式寻址方式都有哪些算法？知道一致hash么？手写一下Java实现代码？你若userId取模分片，那我要查一段连续时间里的数据怎么办？"><span class="toc-text">6. 分布式寻址方式都有哪些算法？知道一致hash么？手写一下Java实现代码？你若userId取模分片，那我要查一段连续时间里的数据怎么办？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-如何解决分库分表主键问题？有什么实现方案？"><span class="toc-text">7. 如何解决分库分表主键问题？有什么实现方案？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式缓存"><span class="toc-text">分布式缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-redis和memched-什么区别？为什么单线程的redis比多线程的memched效率要高？"><span class="toc-text">1. redis和memched 什么区别？为什么单线程的redis比多线程的memched效率要高？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-redis有什么数据类型？都在哪些场景下使用？"><span class="toc-text">2. redis有什么数据类型？都在哪些场景下使用？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-redis的主从复制是怎么实现的？redis的集群模式是如何实现的呢？redis的key是如何寻址的？"><span class="toc-text">3. redis的主从复制是怎么实现的？redis的集群模式是如何实现的呢？redis的key是如何寻址的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-使用redis如何设计分布式锁？使用zk可以么？如何实现？这两种哪个效率更高？"><span class="toc-text">4. 使用redis如何设计分布式锁？使用zk可以么？如何实现？这两种哪个效率更高？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-知道redis的持久化么？有什么优点和缺点？具体底层实现呢？"><span class="toc-text">5. 知道redis的持久化么？有什么优点和缺点？具体底层实现呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-redis过期策略都有哪些？LRU？写一下Java版本代码？"><span class="toc-text">6. redis过期策略都有哪些？LRU？写一下Java版本代码？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式服务框架"><span class="toc-text">分布式服务框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-说一下dubbo的实现过程，注册中心挂了可以继续通信么？"><span class="toc-text">1. 说一下dubbo的实现过程，注册中心挂了可以继续通信么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-zk原理知道么？zk都可以干什么？paxos算法知道么？说一下原理和实现？"><span class="toc-text">2. zk原理知道么？zk都可以干什么？paxos算法知道么？说一下原理和实现？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-dubbo支持哪些序列化协议？hessian？说一下hessian的数据结构？PB知道么？为啥PB效率是最高的？"><span class="toc-text">3. dubbo支持哪些序列化协议？hessian？说一下hessian的数据结构？PB知道么？为啥PB效率是最高的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-知道netty么？netty可以干嘛？NIO-BIO-AIO都是什么啊？有什么区别？"><span class="toc-text">4. 知道netty么？netty可以干嘛？NIO,BIO,AIO都是什么啊？有什么区别？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-dubbo复制均衡策略和高可用策略都有哪些？动态代理策略呢？"><span class="toc-text">5. dubbo复制均衡策略和高可用策略都有哪些？动态代理策略呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-为什么要进行系统拆分啊？拆分不用dubbo可以么？dubbo和thrift什么区别啊？"><span class="toc-text">6. 为什么要进行系统拆分啊？拆分不用dubbo可以么？dubbo和thrift什么区别啊？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式消息队列"><span class="toc-text">分布式消息队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-为什么使用消息队列？消息队列有什么优点和缺点？"><span class="toc-text">1. 为什么使用消息队列？消息队列有什么优点和缺点？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-如何保证消息队列的高可用？如何保证消息不被重复消费？"><span class="toc-text">2. 如何保证消息队列的高可用？如何保证消息不被重复消费？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-kafka，activemq，rabbitmq，rocketmq都有什么优点和缺点？"><span class="toc-text">3. kafka，activemq，rabbitmq，rocketmq都有什么优点和缺点？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-如果让你写一个消息队列，该如何进行架构设计？说一下你的思路？"><span class="toc-text">4. 如果让你写一个消息队列，该如何进行架构设计？说一下你的思路？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式搜索引擎"><span class="toc-text">分布式搜索引擎</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-es的工作过程实现是如何的？如何实现分布式的啊？"><span class="toc-text">1. es的工作过程实现是如何的？如何实现分布式的啊？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-es在数据量很大的情况下，如何提高查询效率？"><span class="toc-text">2. es在数据量很大的情况下，如何提高查询效率？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-es的查询是一个怎么的工作过程？底层的lucence介绍一下？倒排索引知道么？es和mongodb什么区别？都在什么场景下使用？"><span class="toc-text">3. es的查询是一个怎么的工作过程？底层的lucence介绍一下？倒排索引知道么？es和mongodb什么区别？都在什么场景下使用？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#高并发高可用架构设计"><span class="toc-text">高并发高可用架构设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-如何设计一个高并发高可用系统？"><span class="toc-text">1. 如何设计一个高并发高可用系统？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-如何限流？工程中怎么做的，说一下具体实现？"><span class="toc-text">2. 如何限流？工程中怎么做的，说一下具体实现？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-缓存如何使用的？缓存使用不会造成什么后果？"><span class="toc-text">3. 缓存如何使用的？缓存使用不会造成什么后果？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-如何熔断？熔断框架都有哪些？具体实现原理知道么？"><span class="toc-text">4. 如何熔断？熔断框架都有哪些？具体实现原理知道么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-如何降级？-如何进行系统拆分？如何数据库拆分？"><span class="toc-text">5. 如何降级？ 如何进行系统拆分？如何数据库拆分？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通信协议"><span class="toc-text">通信协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-说一下TCP-IP-四层？"><span class="toc-text">1. 说一下TCP/IP 四层？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-http的工作流程？-http1-0-http1-1-http2-0具体哪些区别？"><span class="toc-text">2. http的工作流程？ http1.0 http1.1 http2.0具体哪些区别？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-TCP三次握手，四层分手的工作流程？画一下流程图？为什么不是四次五次或者两次？"><span class="toc-text">3. TCP三次握手，四层分手的工作流程？画一下流程图？为什么不是四次五次或者两次？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-画一下https的工作流程？具体如何实现？如何防止被抓包？"><span class="toc-text">4. 画一下https的工作流程？具体如何实现？如何防止被抓包？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法"><span class="toc-text">算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-45亿阿拉伯数字，如何进行去重？如何找出最大的那个数？"><span class="toc-text">1. 45亿阿拉伯数字，如何进行去重？如何找出最大的那个数？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据结构"><span class="toc-text">数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-二叉树和红黑树"><span class="toc-text">1. 二叉树和红黑树</span></a></li></ol></li></ol>
   </div>
 
 
