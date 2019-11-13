@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://zhongyp.me/redis/2019-11-13-redis-space-optimization/</loc>
+    <lastmod>2019-11-13T13:43:10.898Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/algorithm/2018-03-07-redblacktree/</loc>
+    <lastmod>2019-11-13T13:42:27.084Z</lastmod>
+  </url>  <url>
     <loc>https://zhongyp.me/java/2019-10-04-cglib/</loc>
     <lastmod>2019-11-13T13:27:57.595Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/concurrency/2019-11-07-threadpool/</loc>
     <lastmod>2019-11-13T13:24:54.599Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/redis/2019-11-13-redis-space-optimization/</loc>
-    <lastmod>2019-11-13T13:23:01.981Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/redis/2019-06-21-redis/</loc>
     <lastmod>2019-11-13T10:58:04.698Z</lastmod>
@@ -24,9 +27,6 @@
   </url>  <url>
     <loc>https://zhongyp.me/java/2018-01-10-pattern/</loc>
     <lastmod>2019-11-07T03:48:40.733Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/algorithm/2018-03-07-redblacktree/</loc>
-    <lastmod>2019-11-07T03:16:43.735Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/transaction/2018-02-28-Transaction/</loc>
     <lastmod>2019-10-31T16:09:59.640Z</lastmod>
