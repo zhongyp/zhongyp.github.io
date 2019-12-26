@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="google-site-verification" content="9GY-OrjvdT8TkXuLJFSJcJqolHfXKJ5NVYKRUv8mCRM">
+  
+    <meta name="keywords" content="笔记,数据库,数据库系统概念">
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客,钟宇鹏,个人博客">
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  
+    <title>数据库系统概念</title>
+  
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="/css/pure.min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <!-- <li class="pure-menu-item toc-menu pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li> -->
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+        <ul class="pure-menu-children">
+        
+          
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+          
+          
+      </ul>
+      </li>
+    
+  </ul>
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">zhongyp&#39;blog</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      数据库系统概念
+    </h1>
+    
+    <time class="time" datetime="2019-12-04T16:00:00.000Z">
+      2019-12-05
+    </time>
+     |
+    <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+</span>
+    <hr>
+  </header>
+  <div class="post-content">
+    <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h3 id="1-什么是数据库？"><a href="#1-什么是数据库？" class="headerlink" title="1. 什么是数据库？"></a>1. 什么是数据库？</h3><p>数据库管理系统（DataBase-Management System， DBMS）由一个互相关联的数据的集合和一组用以访问这些数据的程序组成。这个数据集通常称为数据库。</p>
+<p>数据库结构的基础是数据模型（data model）。数据模型是一个描述数据、数据联系、数据语义以及一致性约束的概念工具的集合。数据模型提供了一种描述物理层、逻辑层以及视图层数据库设计的方式。</p>
+<p>数据模型可被划分为四类：</p>
+<ul>
+<li>关系模型（relational）：关系模型用表的集合来表示数据和数据间的联系。</li>
+<li>实体-联系模型（entity-relationship model）：实体-联系（E-R）数据模型给予对现实世界的这样一种认识：现实世界由一组称作实体的基本对象以及这些对象间的联系构成。</li>
+<li>基于对象的数据模型（object-based data model）：面向对象的数据模型可以看成是E-R模型增加封装、方法和对象标识等概念后的扩展。</li>
+<li>半结构化数据模型（semistructured data model）：半结构化数据结构模型允许那些相同类型的数据项含有不同的属性集的数据定义。可扩展标记语言（eXtensible Markup Language， XML）被广泛的用来表示半结构化数据。</li>
+</ul>
+<h3 id="2-数据库语言"><a href="#2-数据库语言" class="headerlink" title="2. 数据库语言"></a>2. 数据库语言</h3><p>数据库操纵语言（Data-manipulationn Language）来表达数据的查询和更新。数据库定义语言（data-definition language）来定义数据库模型。</p>
+<h3 id="3-关系数据库"><a href="#3-关系数据库" class="headerlink" title="3. 关系数据库"></a>3. 关系数据库</h3><p>关系数据库基于关系模型，使用一系列来表达数据以及这些数据之间的联系。</p>
+<h4 id="3-1-关系数据库的结构"><a href="#3-1-关系数据库的结构" class="headerlink" title="3.1 关系数据库的结构"></a>3.1 关系数据库的结构</h4><p>关系数据库由表的集合构成，每个表有唯一的名字。</p>
+<p>一般来说，表中一行代表了一组值之间的一种联系。由于一个表就是这种联系的一个集合，表这个概念和数学上的关系这个概念是密切相关的，这也正是关系数据模型名称的由来。</p>
+<h3 id="4-数据库存储和查询"><a href="#4-数据库存储和查询" class="headerlink" title="4. 数据库存储和查询"></a>4. 数据库存储和查询</h3><p>存储管理器是数据库系统中负责在数据库中存储的低层数据与应用程序以及向系统提交的查询之间提供接口的部件。存储管理器负责与文件管理器交互。原始数据通过操作系统提供的文件系统存储在磁盘上。存储管理器将各种DML语句翻译为底层文件系统命令。</p>
+<p>存储管理部件：</p>
+<ul>
+<li>权限及完整性管理器（authorization and integrity manager）,它检测是否满足完整性约束，并检查试图访问数据的用户的权限。</li>
+<li>事务管理器（transaction manager），它保证即使发生了故障，数据库也保持在一致的状态，并保证并发事务的执行不发生冲突。</li>
+<li>文件管理器（file manager），它管理磁盘存储空间的分配，管理用于表示磁盘上所存储信息的数据结构。</li>
+<li>缓冲区管理器（buffer manager），它负责将数据从磁盘取到内存中来，并决定你哪些数据应被缓冲存储在内存中。缓冲区管理器 是数据库系统中的一个关键部分，因为它使用数据库可以处理比内存更大的数据。</li>
+</ul>
+<p>存储管理器实现了集中数据结构：</p>
+<ul>
+<li>数据文件（data files），存储数据库自身。</li>
+<li>数据字典（data dictionary），存储关于数据库结构的元数据，尤其是数据库模式。</li>
+<li>索引（index），提供对数据项的快速访问。</li>
+</ul>
+<p>查询处理器：</p>
+<ul>
+<li>DDL解释器（DDL interpreter），它解释DDL语句并将这些定义记录在数据字典中。</li>
+<li>DML编译器（DML compiler），将查询语言中的 DML语句翻译为一个执行方案，包括一系列查询执行引擎能理解的低级指令。</li>
+</ul>
+<p>一个查询通常可被翻译为多种等价的具有相同结果的执行方案的一种。DML编译器还进行查询优化（query optimization），也就是从几种选择中选出代价最小的一种。</p>
+<ul>
+<li>查询执行引擎（query evaluation engine），执行由DML编译器产生的低级指令。</li>
+</ul>
+<h3 id="5-事务管理"><a href="#5-事务管理" class="headerlink" title="5. 事务管理"></a>5. 事务管理</h3><p>事务（transaction）是数据库应用中完成单一逻辑功能的操作集合。每一个事务是一个既具有原子性又具有一致性的单元。</p>
+<p>事务管理器（transaction manager）包括并发控制管理器和恢复管理器。</p>
+<p>并发管理器（concurrency-control manager）控制并发事务间的相互影响，保证数据库一致性。</p>
+<p>恢复管理器（recovery manager）负责保证原子性和持久性。</p>
+<h3 id="6-数据库体系结构"><a href="#6-数据库体系结构" class="headerlink" title="6. 数据库体系结构"></a>6. 数据库体系结构</h3><p>数据库应用通常可分为两或三个部分。</p>
+<p><img src="/media/article/database-structure.png" alt="database-structure"></p>
+<h3 id="7-数据挖掘和信息检索"><a href="#7-数据挖掘和信息检索" class="headerlink" title="7. 数据挖掘和信息检索"></a>7. 数据挖掘和信息检索</h3><p>数据挖掘（data mining）这个术语指半自动地分析大型数据库并从中找出有用的模式的过程。</p>
+<h2 id="SQL基础"><a href="#SQL基础" class="headerlink" title="SQL基础"></a>SQL基础</h2><h3 id="1-SQL查询语言预览"><a href="#1-SQL查询语言预览" class="headerlink" title="1. SQL查询语言预览"></a>1. SQL查询语言预览</h3><ul>
+<li>数据定义语言 （Data-Definition Language， DDL）：SQL DDL提供定义关系模式、删除关系以及修改关系模式的命令。</li>
+<li>数据操作语言（Data-Manipulation Language， DML）：SQL DML提供从数据库中查询信息，以及 在数据库中插入元组、删除元组、修改元组的能力。</li>
+<li>完整性（integrity）：SQL DDL包括定义完整性约束的命令，保存在数据库中的数据必须满足所定义的完整性约束。破坏完整性约束的更新是不允许的。</li>
+<li>视图定义 （view definition）：SQL DDL包括定义视图的命令。</li>
+<li>事务控制（transaction control）：SQL 包括定义事务的开始和结束的命令。</li>
+<li>嵌入式SQL和动态SQL（embedded SQL and dynamic SQL）：嵌入式和动态SQL定义SQL语句如何嵌入到通用编程语言，如C、C++和Java中。</li>
+<li>授权（authorization）：SQL DDL包括定义对关系和视图的访问权限的命令。</li>
+</ul>
+<h4 id="1-1-SQL数据定义"><a href="#1-1-SQL数据定义" class="headerlink" title="1.1 SQL数据定义"></a>1.1 SQL数据定义</h4><p>基本类型：</p>
+<ul>
+<li>char(n)：固定长度的字符串，用户指定长度n。也可以使用全称character。</li>
+<li>varchar(n)：可变长度的字符串，用户指定最大长度n，等价于全称character varying。</li>
+<li>int：整数类型，等价于integer。</li>
+<li>smallint：小整数类型。</li>
+<li>numeric(p,d)：定点数，精度由用户指定。</li>
+<li>real，double precision：浮点数与双精度浮点数，精度与机器相关。</li>
+<li>float(n)：精度至少为n位的浮点数。</li>
+</ul>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>两种基本的索引类型：</p>
+<ul>
+<li>顺序索引。基于值的顺序排序。</li>
+<li>散列索引。介于将值平均分不到若干散列桶中。一个值所属的散列桶是由一个函数决定的，该函数称为散列函数。</li>
+</ul>
+<p>对于索引的考虑因素：</p>
+<ul>
+<li>访问类型（access type）：能有效支持的访问类型。访问类型可以包括找到具有特定属性值的记录，以及找到属性值落在某个特定范围内的记录。</li>
+<li>访问时间（access time）：在查询中使用该技术找到一个特定数据项货数据项集所需的时间。</li>
+<li>插入时间（insertion time）：插入一个新数据项所需的时间。该值包括找到待删除项所需的时间，以及更新索引结构所需的时间。</li>
+<li>空间开销（space overhead）：索引结构所占用的额外存储空间。</li>
+</ul>
+<h3 id="1-顺序索引"><a href="#1-顺序索引" class="headerlink" title="1. 顺序索引"></a>1. 顺序索引</h3><p>顺序索引按照顺序存储搜索码的值，并将每个搜索码与包含该搜索码的记录关联起来。<br>被索引的文件中的记录自身也可以按照某种排序顺序存储，正如图书馆中的书按某些属性顺序存放一样。一个文件可以有多个索引，分别基于不同的搜索码。<br><strong><em>如果包含记录的文件按照某个搜索码指定的顺序排序，那么该搜索码对应的索引称为聚集索引（clustering index）</em></strong>。聚集索引也称为 主索引（primary index）；搜索码指定的顺序与文件中记录的物理顺序不同的索引称为非聚集索引（nonclustering index）或辅助索引（secondary index）。</p>
+<h4 id="稠密索引和稀疏索引"><a href="#稠密索引和稀疏索引" class="headerlink" title="稠密索引和稀疏索引"></a>稠密索引和稀疏索引</h4><p>索引项（index entry）或索引记录（index record）由一个搜索码值和指向具有该搜索码值的一条或者多条记录的指针构成。指向记录的指针包括磁盘块的标识和标识磁盘块内记录的块内偏移量。<br>可以使用的顺序索引有两类：</p>
+<ul>
+<li>稠密索引（dense index）：在稠密索引中，文件中的每个搜索码值都有一个索引项。在稠密索引中，索引项包括搜索码值以及指向具有该搜索码的第一条数据记录的指针。具有相同搜索码值的其余记录顺序的存储在第一条数据记录之后，由于该索引是聚集索引，因此记录根据相同的索引码值排序。在稠密非聚集索引中，索引必须存储指向所有具有相同搜索码值的记录的指针列表。</li>
+<li>稀疏索引（sparse index）：在稀疏索引中，只为搜索码的某些值建立索引项。只有当关系按搜索码排列顺序存储时才能使用稀疏索引，换句话说，只有索引是聚集索引时才能使用稀疏索引。和稠密索引一样，每个索引项也包括一个搜索码和指向具有该搜索码值的第一条记录的指针。为了定位一条记录，我们找到其最大搜索码值小于或等于所查找记录的搜索码值的索引项。然后从该索引项指向的记录开始，沿着文件的指针查找，直到找到记录为止。</li>
+</ul>
+<p><img src="/media/article/dense-sparse-index.png" alt="dennse-sparse"></p>
+<h4 id="多级索引"><a href="#多级索引" class="headerlink" title="多级索引"></a>多级索引</h4><p>具有两级或者两级以上的索引称为多集（multilevel）索引。多级索引搜索记录于用二分法搜索记录相比需要的I/O操作要少得多。</p>
+
+  </div>
+  <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+            <strong>本文作者： </strong>zhongyp</li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="https://zhongyp.me/mysql/2019-12-05-database/" title="使用simple主题并开始写作">https://zhongyp.me/mysql/2019-12-05-database/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/笔记/">笔记</a></li></ul>
+  </div>
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/redis/2019-11-13-redis-space-optimization/" rel="next" title="Redis空间优化">
+          Redis空间优化
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+          <a href="/spring/2019-12-13-spring-boot-init/" rel="prev" title="初探 Spring Boot">
+            初探 Spring Boot
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-什么是数据库？"><span class="toc-text">1. 什么是数据库？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-数据库语言"><span class="toc-text">2. 数据库语言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-关系数据库"><span class="toc-text">3. 关系数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-关系数据库的结构"><span class="toc-text">3.1 关系数据库的结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-数据库存储和查询"><span class="toc-text">4. 数据库存储和查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-事务管理"><span class="toc-text">5. 事务管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-数据库体系结构"><span class="toc-text">6. 数据库体系结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-数据挖掘和信息检索"><span class="toc-text">7. 数据挖掘和信息检索</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL基础"><span class="toc-text">SQL基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-SQL查询语言预览"><span class="toc-text">1. SQL查询语言预览</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-SQL数据定义"><span class="toc-text">1.1 SQL数据定义</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#索引"><span class="toc-text">索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-顺序索引"><span class="toc-text">1. 顺序索引</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#稠密索引和稀疏索引"><span class="toc-text">稠密索引和稀疏索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多级索引"><span class="toc-text">多级索引</span></a></li></ol></li></ol></li></ol>
+  </div>
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+
+      <a href="http://programer.group" target="_blank">主站</a> |
+      <a href="http://zhongyp.me">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a> |
+      <a><span id="busuanzi_container_site_pv">本站访客数<span id="busuanzi_value_site_uv"></span>人次</span></a> |
+      <a><span id="busuanzi_container_site_pv">本站访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+    </div>
+  </footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     *
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      // var menu = document.getElementById('menu-main-post');
+      // if (menu) {
+      //   var toc = document.getElementById('toc');
+      //   if (toc) {
+      //     menu.onclick = function() {
+      //       if (toc) {
+      //         if (toc.style.display == 'block') {
+      //           toc.style.display = 'none';
+      //         } else {
+      //           toc.style.display = 'block';
+      //         }
+      //       }
+      //     };
+      //   } else {
+      //     menu.style.display = 'none';
+      //   }
+      // }
+    }
+
+  })(window, document);
+</script>
+
+
+  
+
+
+
+</body>
+</html>

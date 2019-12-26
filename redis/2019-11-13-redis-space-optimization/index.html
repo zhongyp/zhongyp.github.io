@@ -10,7 +10,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="google-site-verification" content="9GY-OrjvdT8TkXuLJFSJcJqolHfXKJ5NVYKRUv8mCRM">
   
-    <meta name="keywords" content="Redis,关于Redis 空间使用的思考">
+    <meta name="keywords" content="Redis,Redis空间优化">
   
 
   
@@ -19,7 +19,7 @@
   <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
   <link rel="icon" type="image/x-icon" href="/logo.png">
   
-    <title>关于Redis 空间使用的思考</title>
+    <title>Redis空间优化</title>
   
   
     <!-- stylesheets list from config.yml -->
@@ -82,7 +82,7 @@
       <article class="post" id="post">
   <header class="post-header text-center">
     <h1 class="title">
-      关于Redis 空间使用的思考
+      Redis空间优化
     </h1>
     
     <time class="time" datetime="2019-11-12T16:00:00.000Z">
@@ -94,7 +94,7 @@
     <hr>
   </header>
   <div class="post-content">
-    <h2 id="Redis的存储优化"><a href="#Redis的存储优化" class="headerlink" title="Redis的存储优化"></a>Redis的存储优化</h2><p>我们项目使用Redis越来越多，可是Redis毕竟是基于内存的数据库，所以对于Redis的空间使用如果不加注意，很容易导致内存溢出。这里对于Redis存储优化的考虑主要考虑Redis数据结构和基于Redis内存模型上的优化。</p>
+    <p>我们项目使用Redis越来越多，可是Redis毕竟是基于内存的数据库，所以对于Redis的空间使用如果不加注意，很容易导致内存溢出。</p>
 <h3 id="1-Redis数据结构"><a href="#1-Redis数据结构" class="headerlink" title="1. Redis数据结构"></a>1. Redis数据结构</h3><p>Redis使用了五种数据对象：字符串对象，列表对象，哈希对象，集合对象，有序集合对象。</p>
 <p>Redis基于这五种对象也给出了优化：</p>
 <h4 id="字符串对象"><a href="#字符串对象" class="headerlink" title="字符串对象"></a>字符串对象</h4><p>字符串中有int、embstr和raw（Simple Dynamic String）两种存储字符串的结构。如果只读且大小小于32字节，则使用embstr，否则使用raw，embstr只能转化为raw，raw不能转化为embstr。关于两者的区别详细了解<a href="/redis/2019-06-21-redis/#1-8-2-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%AF%B9%E8%B1%A1">Redis设计与实现</a></p>
@@ -149,13 +149,18 @@
       <div class="post-nav-item post-nav-next">
         
           <span>〈 </span>
-          <a href="/concurrency/2019-11-07-threadpool/" rel="next" title="线程池">
-          线程池
+          <a href="/redis/2019-11-18-redis-strike/" rel="next" title="布隆过滤器">
+          布隆过滤器
           </a>
         
       </div>
   
       <div class="post-nav-item post-nav-prev">
+        
+          <a href="/mysql/2019-12-05-database/" rel="prev" title="数据库系统概念">
+            数据库系统概念
+          </a>
+          <span>〉</span>
         
       </div>
     </div>
@@ -164,8 +169,8 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis的存储优化"><span class="toc-text">Redis的存储优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Redis数据结构"><span class="toc-text">1. Redis数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#字符串对象"><span class="toc-text">字符串对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#列表对象"><span class="toc-text">列表对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#哈希对象"><span class="toc-text">哈希对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#集合对象"><span class="toc-text">集合对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#有序集合对象"><span class="toc-text">有序集合对象</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Redis存储优化"><span class="toc-text">2. Redis存储优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
-  </div>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Redis数据结构"><span class="toc-text">1. Redis数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#字符串对象"><span class="toc-text">字符串对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#列表对象"><span class="toc-text">列表对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#哈希对象"><span class="toc-text">哈希对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#集合对象"><span class="toc-text">集合对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#有序集合对象"><span class="toc-text">有序集合对象</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Redis存储优化"><span class="toc-text">2. Redis存储优化</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a>
+  </li></div>
 
 
 

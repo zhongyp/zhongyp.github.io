@@ -2,9 +2,65 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zhongyp.me/java/2019-12-25-java8-stream/</loc>
+    
+    <lastmod>2019-12-26T08:53:30.703Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/interfaceview/2018-03-02-classic-interview-questions/</loc>
+    
+    <lastmod>2019-12-16T17:21:46.538Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/spring/2019-12-13-spring-boot-init/</loc>
+    
+    <lastmod>2019-12-14T11:59:06.614Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/mysql/2019-12-05-database/</loc>
+    
+    <lastmod>2019-12-08T02:51:07.125Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/mysql/2018-04-02-mysql/</loc>
+    
+    <lastmod>2019-11-26T12:45:20.592Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/redis/2019-11-18-redis-strike/</loc>
+    
+    <lastmod>2019-11-21T08:52:07.387Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/redis/2019-11-16-redis-queue/</loc>
+    
+    <lastmod>2019-11-18T06:35:04.356Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zhongyp.me/redis/2019-11-13-redis-space-optimization/</loc>
     
-    <lastmod>2019-11-13T13:43:10.898Z</lastmod>
+    <lastmod>2019-11-15T10:57:00.167Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/concurrency/2019-11-07-threadpool/</loc>
+    
+    <lastmod>2019-11-15T07:16:03.081Z</lastmod>
     
   </url>
   
@@ -19,13 +75,6 @@
     <loc>https://zhongyp.me/java/2019-10-04-cglib/</loc>
     
     <lastmod>2019-11-13T13:27:57.595Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/concurrency/2019-11-07-threadpool/</loc>
-    
-    <lastmod>2019-11-13T13:24:54.599Z</lastmod>
     
   </url>
   
@@ -51,13 +100,6 @@
   </url>
   
   <url>
-    <loc>https://zhongyp.me/utils/2019-11-02-docker-command/</loc>
-    
-    <lastmod>2019-11-12T06:32:13.574Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zhongyp.me/java/2018-01-10-pattern/</loc>
     
     <lastmod>2019-11-07T03:48:40.733Z</lastmod>
@@ -68,13 +110,6 @@
     <loc>https://zhongyp.me/transaction/2018-02-28-Transaction/</loc>
     
     <lastmod>2019-10-31T16:09:59.640Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/interfaceview/2018-03-02-classic-interview-questions/</loc>
-    
-    <lastmod>2019-10-28T11:30:50.444Z</lastmod>
     
   </url>
   
@@ -222,13 +257,6 @@
     <loc>https://zhongyp.me/life/2017-1-1-books/</loc>
     
     <lastmod>2019-06-26T03:04:52.610Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/mysql/2018-04-02-mysql/</loc>
-    
-    <lastmod>2019-06-26T02:51:55.692Z</lastmod>
     
   </url>
   
