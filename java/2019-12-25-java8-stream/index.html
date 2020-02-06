@@ -10,7 +10,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="google-site-verification" content="9GY-OrjvdT8TkXuLJFSJcJqolHfXKJ5NVYKRUv8mCRM">
   
-    <meta name="keywords" content="Java,笔记,Java 8 Stream笔记">
+    <meta name="keywords" content="Java,笔记,Java 8 Stream">
   
 
   
@@ -19,7 +19,7 @@
   <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
   <link rel="icon" type="image/x-icon" href="/logo.png">
   
-    <title>Java 8 Stream笔记</title>
+    <title>Java 8 Stream</title>
   
   
     <!-- stylesheets list from config.yml -->
@@ -49,6 +49,10 @@
         
           
             <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/photographer" class="pure-menu-link">摄影</a></li>
           
           
           
@@ -82,7 +86,7 @@
       <article class="post" id="post">
   <header class="post-header text-center">
     <h1 class="title">
-      Java 8 Stream笔记
+      Java 8 Stream
     </h1>
     
     <time class="time" datetime="2019-12-24T16:00:00.000Z">
@@ -112,8 +116,50 @@
 <li>从流中处理元素：聚集操作从流中处理元素，不是直接从集合中。因此，它们也称作流操作。</li>
 <li>他们支持行为作为参数：对于大多数聚集操作你可以指定lambda表达式作为参数，这允许你自定义一个特定的聚集操作的行为动作。</li>
 </ul>
+<h2 id="常用API"><a href="#常用API" class="headerlink" title="常用API"></a>常用API</h2><ul>
+<li><code>boolean    allMatch(Predicate&lt;? super T&gt; predicate)</code><br>Returns whether all elements of this stream match the provided predicate.</li>
+<li><code>boolean    anyMatch(Predicate&lt;? super T&gt; predicate)</code><br>Returns whether any elements of this stream match the provided predicate.</li>
+<li><code>static &lt;T&gt; Stream.Builder&lt;T&gt; builder()</code><br>Returns a builder for a Stream.</li>
+<li><code>&lt;R,A&gt; R    collect(Collector&lt;? super T,A,R&gt; collector)</code><br>Performs a mutable reduction operation on the elements of this stream using a Collector.</li>
+<li><code>&lt;R&gt; R    collect(Supplier&lt;R&gt; supplier, BiConsumer&lt;R,? super T&gt; accumulator, BiConsumer&lt;R,R&gt; combiner)</code><br>Performs a mutable reduction operation on the elements of this stream.</li>
+<li><code>static &lt;T&gt; Stream&lt;T&gt;    concat(Stream&lt;? extends T&gt; a, Stream&lt;? extends T&gt; b)</code><br>Creates a lazily concatenated stream whose elements are all the elements of the first stream followed by all the elements of the second stream.</li>
+<li><code>long    count()</code><br>Returns the count of elements in this stream.</li>
+<li><code>Stream&lt;T&gt;    distinct()</code><br>Returns a stream consisting of the distinct elements (according to Object.equals(Object)) of this stream.</li>
+<li><code>static &lt;T&gt; Stream&lt;T&gt;    empty()</code><br>Returns an empty sequential Stream.</li>
+<li><code>Stream&lt;T&gt;    filter(Predicate&lt;? super T&gt; predicate)</code><br>Returns a stream consisting of the elements of this stream that match the given predicate.</li>
+<li><code>Optional&lt;T&gt;    findAny()</code><br>Returns an Optional describing some element of the stream, or an empty Optional if the stream is empty.</li>
+<li><code>Optional&lt;T&gt;    findFirst()</code><br>Returns an Optional describing the first element of this stream, or an empty Optional if the stream is empty.</li>
+<li><code>&lt;R&gt; Stream&lt;R&gt;    flatMap(Function&lt;? super T,? extends Stream&lt;? extends R&gt;&gt; mapper)</code><br>Returns a stream consisting of the results of replacing each element of this stream with the contents of a mapped stream produced by applying the provided mapping function to each element.</li>
+<li><code>DoubleStream    flatMapToDouble(Function&lt;? super T,? extends DoubleStream&gt; mapper)</code><br>Returns an DoubleStream consisting of the results of replacing each element of this stream with the contents of a mapped stream produced by applying the provided mapping function to each element.</li>
+<li><code>IntStream    flatMapToInt(Function&lt;? super T,? extends IntStream&gt; mapper)</code><br>Returns an IntStream consisting of the results of replacing each element of this stream with the contents of a mapped stream produced by applying the provided mapping function to each element.</li>
+<li><code>LongStream    flatMapToLong(Function&lt;? super T,? extends LongStream&gt; mapper)</code><br>Returns an LongStream consisting of the results of replacing each element of this stream with the contents of a mapped stream produced by applying the provided mapping function to each element.</li>
+<li><code>void    forEach(Consumer&lt;? super T&gt; action)</code><br>Performs an action for each element of this stream.</li>
+<li><code>void    forEachOrdered(Consumer&lt;? super T&gt; action)</code><br>Performs an action for each element of this stream, in the encounter order of the stream if the stream has a defined encounter order.</li>
+<li><code>static &lt;T&gt; Stream&lt;T&gt;    generate(Supplier&lt;T&gt; s)</code><br>Returns an infinite sequential unordered stream where each element is generated by the provided Supplier.</li>
+<li><code>static &lt;T&gt; Stream&lt;T&gt;    iterate(T seed, UnaryOperator&lt;T&gt; f)</code><br>Returns an infinite sequential ordered Stream produced by iterative application of a function f to an initial element seed, producing a Stream consisting of seed, f(seed), f(f(seed)), etc.</li>
+<li><code>Stream&lt;T&gt;    limit(long maxSize)</code><br>Returns a stream consisting of the elements of this stream, truncated to be no longer than maxSize in length.</li>
+<li><code>&lt;R&gt; Stream&lt;R&gt;    map(Function&lt;? super T,? extends R&gt; mapper)</code><br>Returns a stream consisting of the results of applying the given function to the elements of this stream.</li>
+<li><code>DoubleStream    mapToDouble(ToDoubleFunction&lt;? super T&gt; mapper)</code><br>Returns a DoubleStream consisting of the results of applying the given function to the elements of this stream.</li>
+<li><code>IntStream    mapToInt(ToIntFunction&lt;? super T&gt; mapper)</code><br>Returns an IntStream consisting of the results of applying the given function to the elements of this stream.</li>
+<li><code>LongStream    mapToLong(ToLongFunction&lt;? super T&gt; mapper)</code><br>Returns a LongStream consisting of the results of applying the given function to the elements of this stream.</li>
+<li><code>Optional&lt;T&gt;    max(Comparator&lt;? super T&gt; comparator)</code><br>Returns the maximum element of this stream according to the provided Comparator.</li>
+<li><code>Optional&lt;T&gt;    min(Comparator&lt;? super T&gt; comparator)</code><br>Returns the minimum element of this stream according to the provided Comparator.</li>
+<li><code>boolean    noneMatch(Predicate&lt;? super T&gt; predicate)</code><br>Returns whether no elements of this stream match the provided predicate.</li>
+<li><code>static &lt;T&gt; Stream&lt;T&gt;    of(T... values)</code><br>Returns a sequential ordered stream whose elements are the specified values.</li>
+<li><code>static &lt;T&gt; Stream&lt;T&gt;    of(T t)</code><br>Returns a sequential Stream containing a single element.</li>
+<li><code>Stream&lt;T&gt;    peek(Consumer&lt;? super T&gt; action)</code><br>Returns a stream consisting of the elements of this stream, additionally performing the provided action on each element as elements are consumed from the resulting stream.</li>
+<li><code>Optional&lt;T&gt;    reduce(BinaryOperator&lt;T&gt; accumulator)</code><br>Performs a reduction on the elements of this stream, using an associative accumulation function, and returns an Optional describing the reduced value, if any.</li>
+<li><code>T reduce(T identity, BinaryOperator&lt;T&gt; accumulator)</code><br>Performs a reduction on the elements of this stream, using the provided identity value and an associative accumulation function, and returns the reduced value.</li>
+<li><code>&lt;U&gt; U    reduce(U identity, BiFunction&lt;U,? super T,U&gt; accumulator,BinaryOperator&lt;U&gt; combiner)</code><br>Performs a reduction on the elements of this stream, using the provided identity, accumulation and combining functions.</li>
+<li><code>Stream&lt;T&gt;    skip(long n)</code><br>Returns a stream consisting of the remaining elements of this stream after discarding the first n elements of the stream.</li>
+<li><code>Stream&lt;T&gt;    sorted()</code><br>Returns a stream consisting of the elements of this stream, sorted according to natural order.</li>
+<li><code>Stream&lt;T&gt;    sorted(Comparator&lt;? super T&gt; comparator)</code><br>Returns a stream consisting of the elements of this stream, sorted according to the provided Comparator.</li>
+<li><code>Object[]    toArray()</code><br>Returns an array containing the elements of this stream.</li>
+<li><code>&lt;A&gt; A[]    toArray(IntFunction&lt;A[]&gt; generator)</code><br>Returns an array containing the elements of this stream, using the provided generator function to allocate the returned array, as well as any additional arrays that might be required for a partitioned execution or for resizing.</li>
+</ul>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://www.ibm.com/developerworks/cn/java/j-lo-java8streamapi/index.html" target="_blank" rel="noopener">Java 8 中的 Streams API 详解-陈争云, 占宇剑, 和司磊</a></p>
 <p><a href="https://docs.oracle.com/javase/tutorial/collections/streams/index.html#pipelines" target="_blank" rel="noopener">Pipelines and Streams</a></p>
+<p><a href="https://docs.oracle.com/javase/10/index.html" target="_blank" rel="noopener">Java™ Platform Standard Ed. 8</a></p>
 
   </div>
   <div>
@@ -132,6 +178,30 @@
   <div class="post-tags">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/笔记/">笔记</a></li></ul>
   </div>
+  
+<section class="comments" id="comments">
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script src="/js/md5.min.js"></script>
+    <script>
+        var gitalk = new Gitalk({
+            clientID: "94db00fd8803b1da40de",
+            clientSecret: "34b513c63a3e941ea4b2df972635d9fa19cf3364",
+            accessToken: "a25c2320388186bc7accf5faff34062b18131873",
+            repo: "comment",
+            owner: "zhongyp",
+            admin: "zhongyp",
+            id: location.pathname,
+            perPage: 50,
+            distractionFreeMode: "false"
+        })
+
+        gitalk.render('gitalk-container')
+    </script>
+</section>
+
+
 </article>
   
     <div class="post-nav">
@@ -146,6 +216,11 @@
   
       <div class="post-nav-item post-nav-prev">
         
+          <a href="/concurrency/2019-12-26-java-lambda/" rel="prev" title="Lambda表达式的使用">
+            Lambda表达式的使用
+          </a>
+          <span>〉</span>
+        
       </div>
     </div>
   
@@ -153,7 +228,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是Java8-Stream"><span class="toc-text">什么是Java8 Stream</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聚集操作相比于Iterator的不同"><span class="toc-text">聚集操作相比于Iterator的不同</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是Java8-Stream"><span class="toc-text">什么是Java8 Stream</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聚集操作相比于Iterator的不同"><span class="toc-text">聚集操作相比于Iterator的不同</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用API"><span class="toc-text">常用API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
   </div>
 
 
@@ -182,7 +257,7 @@
   <footer class="footer text-center">
     <div id="bottom-inner">
 
-      <a href="http://programer.group" target="_blank">主站</a> |
+      <a href="https://tuchong.com/16028574/" target="_blank">我的摄影</a> |
       <a href="http://zhongyp.me">DO IT</a> |
       <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
       <a href="http://hexo.io" target="_blank">Hexo</a> |
@@ -194,6 +269,7 @@
   </footer>
 
   
+
 
 <script>
   (function(window, document, undefined) {

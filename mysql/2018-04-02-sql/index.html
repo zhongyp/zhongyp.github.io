@@ -52,6 +52,10 @@
           
           
           
+            <li class="pure-menu-item"><a href="/photographer" class="pure-menu-link">摄影</a></li>
+          
+          
+          
             <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
           
           
@@ -327,22 +331,46 @@
   <div class="post-tags">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li></ul>
   </div>
+  
+<section class="comments" id="comments">
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script src="/js/md5.min.js"></script>
+    <script>
+        var gitalk = new Gitalk({
+            clientID: "94db00fd8803b1da40de",
+            clientSecret: "34b513c63a3e941ea4b2df972635d9fa19cf3364",
+            accessToken: "a25c2320388186bc7accf5faff34062b18131873",
+            repo: "comment",
+            owner: "zhongyp",
+            admin: "zhongyp",
+            id: location.pathname,
+            perPage: 50,
+            distractionFreeMode: "false"
+        })
+
+        gitalk.render('gitalk-container')
+    </script>
+</section>
+
+
 </article>
   
     <div class="post-nav">
       <div class="post-nav-item post-nav-next">
         
           <span>〈 </span>
-          <a href="/mysql/2018-04-02-mysql/" rel="next" title="高性能MySQL -- 摘自《高性能MySQL第三版》">
-          高性能MySQL -- 摘自《高性能MySQL第三版》
+          <a href="/jvm/2018-03-27-jvm-runtime-data-area/" rel="next" title="Java虚拟机运行时数据区域">
+          Java虚拟机运行时数据区域
           </a>
         
       </div>
   
       <div class="post-nav-item post-nav-prev">
         
-          <a href="/jvm/2018-04-07-jvm-tools/" rel="prev" title="Java虚拟机问题排查工具">
-            Java虚拟机问题排查工具
+          <a href="/mysql/2018-04-02-mysql/" rel="prev" title="高性能MySQL -- 摘自《高性能MySQL第三版》">
+            高性能MySQL -- 摘自《高性能MySQL第三版》
           </a>
           <span>〉</span>
         
@@ -382,7 +410,7 @@
   <footer class="footer text-center">
     <div id="bottom-inner">
 
-      <a href="http://programer.group" target="_blank">主站</a> |
+      <a href="https://tuchong.com/16028574/" target="_blank">我的摄影</a> |
       <a href="http://zhongyp.me">DO IT</a> |
       <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
       <a href="http://hexo.io" target="_blank">Hexo</a> |
@@ -394,6 +422,7 @@
   </footer>
 
   
+
 
 <script>
   (function(window, document, undefined) {

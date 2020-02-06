@@ -2,9 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zhongyp.me/photographer/index.html</loc>
+    
+    <lastmod>2020-02-06T17:01:50.032Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/concurrency/2018-12-17-java-lock/</loc>
+    
+    <lastmod>2020-01-08T02:07:33.290Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/spring/2019-12-13-spring-boot-init/</loc>
+    
+    <lastmod>2020-01-07T13:21:59.677Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/concurrency/2020-01-07/</loc>
+    
+    <lastmod>2020-01-07T13:19:43.186Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zhongyp.me/java/2019-12-25-java8-stream/</loc>
     
-    <lastmod>2019-12-26T08:53:30.703Z</lastmod>
+    <lastmod>2020-01-07T13:18:10.152Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/concurrency/2019-12-26-java-lambda/</loc>
+    
+    <lastmod>2020-01-07T12:47:13.186Z</lastmod>
     
   </url>
   
@@ -12,13 +47,6 @@
     <loc>https://zhongyp.me/interfaceview/2018-03-02-classic-interview-questions/</loc>
     
     <lastmod>2019-12-16T17:21:46.538Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/spring/2019-12-13-spring-boot-init/</loc>
-    
-    <lastmod>2019-12-14T11:59:06.614Z</lastmod>
     
   </url>
   
@@ -89,13 +117,6 @@
     <loc>https://zhongyp.me/redis/2019-08-06-execute-executePipelined/</loc>
     
     <lastmod>2019-11-13T08:27:03.428Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/concurrency/2018-12-17-java-lock/</loc>
-    
-    <lastmod>2019-11-12T06:36:39.058Z</lastmod>
     
   </url>
   
@@ -334,13 +355,6 @@
     <loc>https://zhongyp.me/algorithm/2015-08-04-BubbleSort/</loc>
     
     <lastmod>2018-10-23T12:02:04.943Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/gallery/index.html</loc>
-    
-    <lastmod>2018-10-21T17:57:17.088Z</lastmod>
     
   </url>
   
