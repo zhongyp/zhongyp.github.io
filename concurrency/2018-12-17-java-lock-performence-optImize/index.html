@@ -1,0 +1,358 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="google-site-verification" content="9GY-OrjvdT8TkXuLJFSJcJqolHfXKJ5NVYKRUv8mCRM">
+  
+    <meta name="keywords" content="并发,sychronized锁优化">
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客,钟宇鹏,个人博客">
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  
+    <title>sychronized锁优化</title>
+  
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="/css/pure.min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <!-- <li class="pure-menu-item toc-menu pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li> -->
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+        <ul class="pure-menu-children">
+        
+          
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/photographer" class="pure-menu-link">摄影</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+          
+          
+      </ul>
+      </li>
+    
+  </ul>
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">zhongyp&#39;blog</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      sychronized锁优化
+    </h1>
+    
+    <time class="time" datetime="2019-01-07T16:00:00.000Z">
+      2019-01-08
+    </time>
+     |
+    <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+</span>
+    <hr>
+  </header>
+  <div class="post-content">
+    <p>自旋(Spinning)、适应性自旋(Adaptive Spinning)、锁消除(Lock Elimination)、锁粗化(Lock Coarsening)、轻量级锁(Lightweight Locking)、偏向锁(Biased Locking)等。</p>
+<h3 id="1-1-自旋锁与自适应性自旋"><a href="#1-1-自旋锁与自适应性自旋" class="headerlink" title="1.1 自旋锁与自适应性自旋"></a>1.1 自旋锁与自适应性自旋</h3><p>互斥同步对性能最大的影响是阻塞的实现，挂起和恢复线程的操作都需要转入内核态完成，这些操作给并发性能带来很大的压力。如果获取共享数据锁时仅需要等待很短的时间，为了很短的时间去挂起和恢复线程并不值得。如果处理器有一个以上的处理器，我们可以线程让请求锁的线程忙循环，不放弃处理器的执行时间，这项技术就是所谓的自旋锁。<br>自适应自旋锁意味着自旋的时间不再固定，根据前一次在同一个锁上的自旋时间及锁的拥有者的状态来决定。</p>
+<h3 id="1-2-锁消除"><a href="#1-2-锁消除" class="headerlink" title="1.2 锁消除"></a>1.2 锁消除</h3><p>锁消除是指虚拟机即时编译器在运行时，对一些代码要求同步，但是被检测到不可能存在共享数据竞争的锁进行消除。锁消除的主要判定依据来源于逃逸分析的数据支持，如果判断到一段代码中，在堆上的所有数据都不会逃逸出去被其他线程访问到，那就可以把它们当作栈上数据对待，认为是线程私有的，同步加锁自然无需执行。</p>
+<h3 id="1-3-锁粗化"><a href="#1-3-锁粗化" class="headerlink" title="1.3 锁粗化"></a>1.3 锁粗化</h3><p>如果一系列的连续操作都对同一个对象反复加锁解锁，甚至加锁操作出现在循环体中。如果虚拟机探测到有这样一串零碎的操作都对一个对象加锁，将会把加锁同步的范围扩展（粗化）到整个操作序列的外部，这样只加锁一次就可以。</p>
+<h3 id="1-4-偏向锁"><a href="#1-4-偏向锁" class="headerlink" title="1.4 偏向锁"></a>1.4 偏向锁</h3><p>偏向锁目的是消除数据在无竞争情况下的同步原语。<br>使用场景：锁不仅不存在多线程竞争，而且总是由同一线程多次获得。</p>
+<h4 id="1-4-1-偏向锁原理"><a href="#1-4-1-偏向锁原理" class="headerlink" title="1.4.1 偏向锁原理"></a>1.4.1 偏向锁原理</h4><p>当锁对象第一次被线程获取的时候，虚拟机将会把对象头中的标志位设为“01”，即偏向模式。同时使用CAS操作把获取到这个锁的线程的ID记录在对象的Mark Word之中，如果CAS操作成功，持有偏向锁的线程以后每次进入这个锁相关的同步时，虚拟机都可以不再进行任何同步操作，只需简单测试对象头的Mark Word是否存储着指向当前线程的偏向锁。如果测试成功，表示线程已经获得锁。如果测试失败，则需要在测试一下Mark Word中偏向锁的标识是否设置成”01”；如果没有设置，则使用CAS竞争锁，如果竞争成功，则将Mark Word中线程ID设置为当前线程ID，继续执行同步块；如果竞争失败，则进行偏向锁撤销。如果设置了则尝试使用CAS将对象头的偏向锁指向当前线程。</p>
+<h4 id="1-4-2-偏向锁撤销（Revoke-Bias）"><a href="#1-4-2-偏向锁撤销（Revoke-Bias）" class="headerlink" title="1.4.2 偏向锁撤销（Revoke Bias）"></a>1.4.2 偏向锁撤销（Revoke Bias）</h4><p>当有另外一个线程尝试去获取这个锁时，偏向模式结束。偏向锁的撤销，需要等待全局安全点（在这个时间点上没有正在执行的字节码）。在安全点时它首先暂停拥有偏向锁的线程，然后检查持有偏向锁的线程是否活着，如果不处于活动状态，则将对象头设置成无锁状态；如果线程还活着，拥有偏向锁的栈会被执行，在栈中创建锁记录，遍历偏向对象头（MarkWord）中的锁记录，将对象头中的锁记录拷贝到栈的锁记录中，修改锁标识为轻量级锁，唤醒持有原持有偏向锁的线程，从安全点继续执行。</p>
+<p>偏向锁初始化及撤销流程图：<br><img src="/media/article/bias-expand.png" alt="bias-expand"><br>图摘自<a href="#偏向锁">Java并发编程艺术 2.2小节</a></p>
+<p>上图只说明了一种情况，即安全点时检测线程是否存活，上图是线程已经执行完同步块，线程已经处于未活动状态（执行完了），所以撤销偏向锁是将锁置为无锁状态。如果代码未执行完成处于活动状态，则升级为轻量级所。</p>
+<h3 id="1-5-轻量级锁"><a href="#1-5-轻量级锁" class="headerlink" title="1.5 轻量级锁"></a>1.5 轻量级锁</h3><p>轻量级锁是JDK1.6 中加入的新型锁机制，轻量级是相对于使用操作系统互斥量来实现传统锁而言，因此传统锁机制被称为重量级锁。轻量级锁本意指在没有多线程竞争的前提下，减少传统的重量级锁使用操作系统互斥量产生的性能消耗。</p>
+<p>HotSpot虚拟机的对象头(Object Header)分为两部分，第一用于存储自身的运行时数据，这部分数据的长度在32位和64位的虚拟机分别是32个和64个bits，官网称它为”Mark Word”。另一部分用于存储指向方法区对象类型数据的指针，如果是数组对象的话，还有一个额外的部分用于存储数组长度。<br><img src="/media/article/object-header.png" alt="mark word"><br>表摘自<a href="#轻量级锁">Java并发编程艺术 2.2小节</a><br>对象头信息是与对象自身定义的数据无关的额外存储成本，考虑到虚拟机空间效率，Mark Word被设计成一个非固定的数据结构以便在极小的空间内存储尽量多的信息，根据对象的状态复用自己的存储空间。<br>HotSpot 虚拟机对象头Mark Word不同状态下存储内容表：<br><img src="/media/article/markword.png" alt="mark word"><br>表摘自<a href="#轻量级锁">深入理解Java虚拟机-JVM高级特性与实践 13.3小节</a><br>上表中存储内容列是Mark Word中除标志位外，其他的30bit空间的存储内容，状态列是指不同的锁状态，如：轻量级锁，重量级锁等等。具体内容存储占位如下图所示<br><img src="/media/article/markword-status.png" alt="mark word status"><br>表摘自<a href="#轻量级锁">Java并发编程艺术 2.2小节</a><br>轻量级锁的执行过程：在代码进入同步块的时候，如果此同步对象没有被锁定（锁标志位为“01”状态），虚拟机首先在当前线程的栈帧中建立一个名为锁记录（Lock Record）的空间，用于存储锁对象目前的Mark Word拷贝，如图：<br><img src="/media/article/markword-cas-before.png" alt="markword-cas-before"><br>图摘自<a href="#轻量级锁">深入理解Java虚拟机-JVM高级特性与实践 13.3小节</a><br>然后，虚拟机将使用CAS操作尝试将对象的Mark Word更新为指向Lock Record的指针。如果这个更新成功了，那么该线程就拥有了该对象的锁，并且对象Mark Word的锁标志位将转为“00”，即表示该对象处于轻量级锁定状态。<br><img src="/media/article/markword-cas-after.png" alt="markword-cas-after"><br>图摘自<a href="#轻量级锁">深入理解Java虚拟机-JVM高级特性与实践 13.3小节</a><br>如果更新失败，虚拟机首先会检查对象的Mark Word是否指向当前线程的栈帧，如果是，就说明当前线程已经拥有了该对象的锁，可直接进入同步代码块继续执行，否则说明这个锁对象被其他线程抢占了；如果否，则当前线程进入自旋，等待锁。如果此时有两条以上（包括两条）的线程（一条处于自旋，一条又来竞争）争用同一个锁，轻量级锁不再有效要膨胀为重量级锁，锁标志的状态值变为“10”，Mark Word中存储的就是指向重量级锁的指针，后面等待的线程也要进入阻塞状态。<br>轻量级锁初始化及膨胀流程图：<br><img src="/media/article/lightweight-expand.png" alt="lightweight"><br>图摘自<a href="#轻量级锁">Java并发编程艺术 2.2小节</a><br>解锁过程也是通过CAS操作来进行的，如果对象的Mark Word仍指向线程的锁记录，就用CAS操作把对象当前的Mark Word和线程中复制的Displaced Mark Word替换回来，如果替换成功，同步完成。替换失败，有其他线程尝试获取该锁，此时锁已经膨胀，就要在释放锁的同时，唤醒被挂起的线程。</p>
+<h3 id="1-6-重量级锁"><a href="#1-6-重量级锁" class="headerlink" title="1.6 重量级锁"></a>1.6 重量级锁</h3><h4 id="1-6-1-原理"><a href="#1-6-1-原理" class="headerlink" title="1.6.1 原理"></a>1.6.1 原理</h4><p>重量级锁的实现和JVM的对象监视器相关（Object-Monitor）。在Java虚拟机中每一个对象都和一个Monitor相关。ObjectMonitor的相关数据结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">ObjectMonitor() &#123;</span><br><span class="line">    _header       = NULL;</span><br><span class="line">    _count        = 0; // 记录个数</span><br><span class="line">    _waiters      = 0,</span><br><span class="line">    _recursions   = 0;</span><br><span class="line">    _object       = NULL;</span><br><span class="line">    _owner        = NULL;</span><br><span class="line">    _WaitSet      = NULL; // 处于wait状态的线程，会被加入到_WaitSet</span><br><span class="line">    _WaitSetLock  = 0 ;</span><br><span class="line">    _Responsible  = NULL ;</span><br><span class="line">    _succ         = NULL ;</span><br><span class="line">    _cxq          = NULL ;</span><br><span class="line">    FreeNext      = NULL ;</span><br><span class="line">    _EntryList    = NULL ; // 处于等待锁block状态的线程，会被加入到该列表</span><br><span class="line">    _SpinFreq     = 0 ;</span><br><span class="line">    _SpinClock    = 0 ;</span><br><span class="line">    OwnerIsThread = 0 ;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>轻量级锁升级为重量级锁时，会修改MarkWord中的锁标志为11，在MarkWord中存储指向Monitor的指针。多个线程访问同一个对象时，只有一个线程会进入_owner，其他的都在_EntryList等待，如果线程在持有_owner时，选择wait，则线程进入_WaitSet。_EntryList、_WaitSet中的线程在持有_owner的线程释放后，都会竞争_owner。</p>
+<p><img src="/media/article/heavylock.png" alt=""></p>
+<h3 id="1-7-轻量级锁、偏向锁、重量级锁对比"><a href="#1-7-轻量级锁、偏向锁、重量级锁对比" class="headerlink" title="1.7 轻量级锁、偏向锁、重量级锁对比"></a>1.7 轻量级锁、偏向锁、重量级锁对比</h3><p>偏向锁初始化及膨胀流程图：<br><img src="/media/article/lock-advantage-disadvantage.png" alt="lock"><br>图摘自<a href="#轻量级锁、偏向锁、重量级锁对比">Java并发编程艺术 2.2小节</a></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="">深入理解Java虚拟机-JVM高级特性与实践</a><br><a href="">Java并发编程实践</a><br><a href="">Java并发编程的艺术</a><br><a href="https://juejin.im/post/5b4eec7df265da0fa00a118f" target="_blank" rel="noopener">啃碎并发（七）：深入分析Synchronized原理-掘金</a><br><a href="https://www.zhihu.com/question/57774162/answer/154298044" target="_blank" rel="noopener">Java偏向锁是如何撤销的？</a><br><a href="https://www.oracle.com/technetwork/java/javase/tech/biasedlocking-oopsla2006-preso-150106.pdf" target="_blank" rel="noopener">Eliminating SynchronizationRelated Atomic Operations with Biased Locking and Bulk Rebiasing</a><br><a href="https://www.oracle.com/technetwork/java/biasedlocking-oopsla2006-wp-149958.pdf" target="_blank" rel="noopener">biasedlocking</a><br><a href="http://www.diva-portal.org/smash/get/diva2:754541/FULLTEXT01.pdf" target="_blank" rel="noopener">Evaluating and improving biased locking in the HotSpot virtual machine</a></p>
+
+  </div>
+  <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+            <strong>本文作者： </strong>zhongyp</li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="https://zhongyp.me/concurrency/2018-12-17-java-lock-performence-optImize/" title="使用simple主题并开始写作">https://zhongyp.me/concurrency/2018-12-17-java-lock-performence-optImize/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
+  </div>
+  
+<section class="comments" id="comments">
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script src="/js/md5.min.js"></script>
+    <script>
+        var gitalk = new Gitalk({
+            clientID: "94db00fd8803b1da40de",
+            clientSecret: "34b513c63a3e941ea4b2df972635d9fa19cf3364",
+            accessToken: "a25c2320388186bc7accf5faff34062b18131873",
+            repo: "comment",
+            owner: "zhongyp",
+            admin: "zhongyp",
+            id: location.pathname,
+            perPage: 50,
+            distractionFreeMode: "false"
+        })
+
+        gitalk.render('gitalk-container')
+    </script>
+</section>
+
+
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/concurrency/2018-12-06-thread-security/" rel="next" title="线程安全">
+          线程安全
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+          <a href="/transaction/2019-03-07-spring-transaction-management/" rel="prev" title="Spring Transaction Management">
+            Spring Transaction Management
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-自旋锁与自适应性自旋"><span class="toc-text">1.1 自旋锁与自适应性自旋</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-锁消除"><span class="toc-text">1.2 锁消除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-锁粗化"><span class="toc-text">1.3 锁粗化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-偏向锁"><span class="toc-text">1.4 偏向锁</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-1-偏向锁原理"><span class="toc-text">1.4.1 偏向锁原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-2-偏向锁撤销（Revoke-Bias）"><span class="toc-text">1.4.2 偏向锁撤销（Revoke Bias）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-轻量级锁"><span class="toc-text">1.5 轻量级锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-6-重量级锁"><span class="toc-text">1.6 重量级锁</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-6-1-原理"><span class="toc-text">1.6.1 原理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-7-轻量级锁、偏向锁、重量级锁对比"><span class="toc-text">1.7 轻量级锁、偏向锁、重量级锁对比</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a>
+  </li></div>
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+
+      <a href="https://tuchong.com/16028574/" target="_blank">我的摄影</a> |
+      <a href="http://zhongyp.me">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a> |
+      <a><span id="busuanzi_container_site_pv">本站访客数<span id="busuanzi_value_site_uv"></span>人次</span></a> |
+      <a><span id="busuanzi_container_site_pv">本站访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+    </div>
+  </footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     *
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      // var menu = document.getElementById('menu-main-post');
+      // if (menu) {
+      //   var toc = document.getElementById('toc');
+      //   if (toc) {
+      //     menu.onclick = function() {
+      //       if (toc) {
+      //         if (toc.style.display == 'block') {
+      //           toc.style.display = 'none';
+      //         } else {
+      //           toc.style.display = 'block';
+      //         }
+      //       }
+      //     };
+      //   } else {
+      //     menu.style.display = 'none';
+      //   }
+      // }
+    }
+
+  })(window, document);
+</script>
+
+
+  
+
+
+
+</body>
+</html>

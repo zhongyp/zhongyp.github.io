@@ -102,7 +102,7 @@
 <h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><p>可以在运行时动态的确定类型并创建实例，可以调用实例中的任意方法即是方法时private的。</p>
 <h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
 <li>相比于编译时确定类型的方式，运行时确定类型创建实例会带来一定的性能消耗。</li>
-<li>反射需要运行时的权限在安全管理器下运行时可能不存在。对于必须在受限的安全上下文（例如Applet）中运行的代码，这是一个重要的考虑因素。</li>
+<li>反射需要运行时的权限，这种权限可能在安全管理器下运行时可能不存在。对于必须在受限的安全上下文（例如Applet）中运行的代码，这是一个重要的考虑因素。</li>
 <li>由于反射允许代码执行非反射代码中非法的操作（例如访问私有字段和方法），因此使用反射可能会导致意外的副作用，这可能会使代码无法正常工作并可能破坏可移植性。反射代码破坏了抽象，因此可能会随着平台的升级而改变行为。</li>
 </ul>
 <h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><blockquote>
@@ -167,8 +167,8 @@
   
       <div class="post-nav-item post-nav-prev">
         
-          <a href="/java/2019-10-04-cglib/" rel="prev" title="CGLIB浅析">
-            CGLIB浅析
+          <a href="/java/2019-10-04-jdk-proxy/" rel="prev" title="JDK动态代理浅析">
+            JDK动态代理浅析
           </a>
           <span>〉</span>
         
