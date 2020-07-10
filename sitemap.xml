@@ -2,6 +2,55 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zhongyp.me/spring/2020-02-13-spring-amqp/</loc>
+    
+    <lastmod>2020-06-28T12:20:26.826Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/concurrency/2018-12-06-thread-communication/</loc>
+    
+    <lastmod>2020-06-25T14:37:34.521Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/spring/2018-03-17-spring-transaction/</loc>
+    
+    <lastmod>2020-06-25T14:34:16.818Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/jvm/2020-06-22/</loc>
+    
+    <lastmod>2020-06-25T14:30:12.470Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/java/2018-01-10-pattern/</loc>
+    
+    <lastmod>2020-06-25T14:27:43.084Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/mysql/2018-04-02-mysql/</loc>
+    
+    <lastmod>2020-06-18T06:43:20.235Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhongyp.me/mysql/2018-04-02-sql/</loc>
+    
+    <lastmod>2020-06-17T14:40:50.950Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zhongyp.me/about/index.html</loc>
     
     <lastmod>2020-06-04T12:45:01.351Z</lastmod>
@@ -19,13 +68,6 @@
     <loc>https://zhongyp.me/jvm/2020-05-20-g1/</loc>
     
     <lastmod>2020-06-03T10:49:19.062Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/interfaceview/2018-03-02-classic-interview-questions/</loc>
-    
-    <lastmod>2020-06-02T18:29:04.126Z</lastmod>
     
   </url>
   
@@ -61,13 +103,6 @@
     <loc>https://zhongyp.me/concurrency/2018-11-27-concurrency-structure/</loc>
     
     <lastmod>2020-05-21T14:33:56.250Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/concurrency/2018-12-06-thread-communication/</loc>
-    
-    <lastmod>2020-05-21T14:33:55.762Z</lastmod>
     
   </url>
   
@@ -177,13 +212,6 @@
   </url>
   
   <url>
-    <loc>https://zhongyp.me/mysql/2018-04-02-mysql/</loc>
-    
-    <lastmod>2020-05-21T14:33:43.915Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zhongyp.me/mysql/2019-12-05-database/</loc>
     
     <lastmod>2020-05-21T14:33:43.392Z</lastmod>
@@ -205,23 +233,9 @@
   </url>
   
   <url>
-    <loc>https://zhongyp.me/spring/2020-02-13-spring-amqp/</loc>
-    
-    <lastmod>2020-05-10T09:29:15.112Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zhongyp.me/concurrency/2018-12-06-thread-security/</loc>
     
     <lastmod>2020-04-24T07:20:11.156Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/java/2018-01-10-pattern/</loc>
-    
-    <lastmod>2020-03-27T02:23:37.307Z</lastmod>
     
   </url>
   
@@ -257,13 +271,6 @@
     <loc>https://zhongyp.me/redis/2019-11-13-redis-space-optimization/</loc>
     
     <lastmod>2019-11-15T10:57:00.167Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhongyp.me/algorithm/2018-03-07-redblacktree/</loc>
-    
-    <lastmod>2019-11-13T13:42:27.084Z</lastmod>
     
   </url>
   
@@ -345,13 +352,6 @@
   </url>
   
   <url>
-    <loc>https://zhongyp.me/tags/index.html</loc>
-    
-    <lastmod>2018-10-02T01:27:53.336Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zhongyp.me/search/index.html</loc>
     
     <lastmod>2018-10-02T01:27:53.336Z</lastmod>
@@ -359,9 +359,9 @@
   </url>
   
   <url>
-    <loc>https://zhongyp.me/mysql/2018-04-02-sql/</loc>
+    <loc>https://zhongyp.me/tags/index.html</loc>
     
-    <lastmod>2018-10-02T01:27:53.332Z</lastmod>
+    <lastmod>2018-10-02T01:27:53.336Z</lastmod>
     
   </url>
   
