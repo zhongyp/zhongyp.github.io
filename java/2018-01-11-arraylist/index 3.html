@@ -1,0 +1,355 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="google-site-verification" content="9GY-OrjvdT8TkXuLJFSJcJqolHfXKJ5NVYKRUv8mCRM">
+  
+    <meta name="keywords" content="Java,ArrayList">
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客,钟宇鹏,个人博客">
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  
+    <title>ArrayList</title>
+  
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="/css/pure.min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <!-- <li class="pure-menu-item toc-menu pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li> -->
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+        <ul class="pure-menu-children">
+        
+          
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/photographer" class="pure-menu-link">摄影</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+          
+          
+      </ul>
+      </li>
+    
+  </ul>
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">zhongyp&#39;blog</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      ArrayList
+    </h1>
+    
+    <time class="time" datetime="2018-01-09T16:00:00.000Z">
+      2018-01-10
+    </time>
+     |
+    <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+</span>
+    <hr>
+  </header>
+  <div class="post-content">
+    <h2 id="1-接口实现"><a href="#1-接口实现" class="headerlink" title="1. 接口实现"></a>1. 接口实现</h2><p><img src="/media/article/collection-arraylist.png" alt="arraylist"></p>
+<p>ArrayList继承AbstractList类，实现List，RandomAccess，Cloneable，Serializable接口。AbstractList提供 List 接口的骨干实现，从而最大限度地减少了实现由“随机访问”数据存储（如数组）支持的接口所需的工作。对于连续的访问数据（如链表），应优先使用AbstractSequentialList，而非此类。<br>AbstractCollection是集合类的抽象类，主要提供集合层面的一些操作。<br>RandomAccess是随机访问的接口标志，如果继承RandomAccess则说明当前类是支持随机访问的。</p>
+<h2 id="2-扩容"><a href="#2-扩容" class="headerlink" title="2. 扩容"></a>2. 扩容</h2><p>ArrayList默认构造方式有三种:</p>
+<p>第一种: 给定初始化大小；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public ArrayList(int initialCapacity) &#123;</span><br><span class="line">   if (initialCapacity &gt; 0) &#123;</span><br><span class="line">       this.elementData = new Object[initialCapacity];</span><br><span class="line">   &#125; else if (initialCapacity == 0) &#123;</span><br><span class="line">       this.elementData = EMPTY_ELEMENTDATA;</span><br><span class="line">   &#125; else &#123;</span><br><span class="line">       throw new IllegalArgumentException(&quot;Illegal Capacity: &quot;+</span><br><span class="line">                                          initialCapacity);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第二种: 默认初始化大小，默认初始化为10；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public ArrayList() &#123;</span><br><span class="line">   this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第三种: 集合大小<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public ArrayList(Collection&lt;? extends E&gt; c) &#123;</span><br><span class="line">   elementData = c.toArray();</span><br><span class="line">   if ((size = elementData.length) != 0) &#123;</span><br><span class="line">       // c.toArray might (incorrectly) not return Object[] (see 6260652)</span><br><span class="line">       if (elementData.getClass() != Object[].class)</span><br><span class="line">           elementData = Arrays.copyOf(elementData, size, Object[].class);</span><br><span class="line">   &#125; else &#123;</span><br><span class="line">       // replace with empty array.</span><br><span class="line">       this.elementData = EMPTY_ELEMENTDATA;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面我们看下add方法的扩容流程:</p>
+<p><strong>注意：为了方便看源码，我会将一些方法的源码组合到add方法中</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public boolean add(E e) &#123;</span><br><span class="line">    // 首先判断是否是默认初始化大小，如果是，比较默认的数组大小和当前数组大小size+1，相比，取较大的那个</span><br><span class="line">   int minCapacity = size + 1;</span><br><span class="line">   if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) &#123;</span><br><span class="line">       minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);</span><br><span class="line">   &#125;</span><br><span class="line">   // 记录数组的修改次数（这个参数可以在常见变量解释小结中说明）</span><br><span class="line">   modCount++;</span><br><span class="line">   // overflow-conscious code</span><br><span class="line">   // 判断当前的minCapacity是否大于当前数组的容量，进行扩容操作</span><br><span class="line">   if (minCapacity - elementData.length &gt; 0)&#123;</span><br><span class="line">       // overflow-conscious code</span><br><span class="line">        int oldCapacity = elementData.length;</span><br><span class="line">        // 新的数组大小为oldCapacity+1/2 * oldCapacity</span><br><span class="line">        int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1);</span><br><span class="line">        // 判断下新数组大小是否小于minCapacity</span><br><span class="line">        if (newCapacity - minCapacity &lt; 0)</span><br><span class="line">            newCapacity = minCapacity;</span><br><span class="line">        // 判断新的数组大小是否大于Integer.MAX - 8</span><br><span class="line">        if (newCapacity - MAX_ARRAY_SIZE &gt; 0)&#123;</span><br><span class="line">            if (minCapacity &lt; 0) // overflow</span><br><span class="line">                throw new OutOfMemoryError();</span><br><span class="line">            // 如果新容量大于Integer.MAX - 8，则新容量为Integer.MAX</span><br><span class="line">            newCapacity = (minCapacity &gt; MAX_ARRAY_SIZE) ? Integer.MAX_VALUE : MAX_ARRAY_SIZE;</span><br><span class="line">        &#125;   </span><br><span class="line">        // minCapacity is usually close to size, so this is a win:</span><br><span class="line">        elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">   &#125;</span><br><span class="line">   elementData[size++] = e;</span><br><span class="line">   return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ArrayList所有方法涉及扩容的原理都差不多，可以参考上述的代码注释了解。</p>
+<h2 id="3-参数"><a href="#3-参数" class="headerlink" title="3. 参数"></a>3. 参数</h2><p>modCount: modCount是一个AbstractList的一个成员变量，主要的作用是，子类的迭代器用于判断fail-fast的参数。具体可以详见<a href="https://zhongyp.me/faq/2018-07-30-foreach/">为什么不能在foreach中执行remove/add操作？</a>，虽然这篇博客只讲了一个问题，但是可以管中窥豹。</p>
+<p>size: size是ArrayList的元素数量，元素可以为null。</p>
+<p>MAX_ARRAY_SIZE: 为什么ArrayList数组的最大大小为Integer.MAX-8，原因是Some VMs reserve some header words in an array.Attempts to allocate larger arrays may result in OutOfMemoryError: Requested array size exceeds VM limit。</p>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><p><a href="https://zhongyp.me/faq/2018-07-30-foreach/">为什么不能在foreach中执行remove/add操作？</a></p>
+
+  </div>
+  <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+            <strong>本文作者： </strong>zhongyp</li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="https://zhongyp.me/java/2018-01-11-arraylist/" title="使用simple主题并开始写作">https://zhongyp.me/java/2018-01-11-arraylist/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+  </div>
+  
+<section class="comments" id="comments">
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script src="/js/md5.min.js"></script>
+    <script>
+        var gitalk = new Gitalk({
+            clientID: "94db00fd8803b1da40de",
+            clientSecret: "34b513c63a3e941ea4b2df972635d9fa19cf3364",
+            accessToken: "a25c2320388186bc7accf5faff34062b18131873",
+            repo: "comment",
+            owner: "zhongyp",
+            admin: "zhongyp",
+            id: location.pathname,
+            perPage: 50,
+            distractionFreeMode: "false"
+        })
+
+        gitalk.render('gitalk-container')
+    </script>
+</section>
+
+
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/java/2018-01-10-pattern/" rel="next" title="设计模式原理及应用场景">
+          设计模式原理及应用场景
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+          <a href="/java/2018-03-30-hashmap/" rel="prev" title="HashMap（1.8版本）">
+            HashMap（1.8版本）
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-接口实现"><span class="toc-text">1. 接口实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-扩容"><span class="toc-text">2. 扩容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-参数"><span class="toc-text">3. 参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FAQ"><span class="toc-text">FAQ</span></a></li></ol>
+  </div>
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+
+      <a href="https://tuchong.com/16028574/" target="_blank">我的摄影</a> |
+      <a href="http://zhongyp.me">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a> |
+      <a><span id="busuanzi_container_site_pv">本站访客数<span id="busuanzi_value_site_uv"></span>人次</span></a> |
+      <a><span id="busuanzi_container_site_pv">本站访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+    </div>
+  </footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     *
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      // var menu = document.getElementById('menu-main-post');
+      // if (menu) {
+      //   var toc = document.getElementById('toc');
+      //   if (toc) {
+      //     menu.onclick = function() {
+      //       if (toc) {
+      //         if (toc.style.display == 'block') {
+      //           toc.style.display = 'none';
+      //         } else {
+      //           toc.style.display = 'block';
+      //         }
+      //       }
+      //     };
+      //   } else {
+      //     menu.style.display = 'none';
+      //   }
+      // }
+    }
+
+  })(window, document);
+</script>
+
+
+  
+
+
+
+</body>
+</html>

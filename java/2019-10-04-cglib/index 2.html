@@ -1,0 +1,410 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="google-site-verification" content="9GY-OrjvdT8TkXuLJFSJcJqolHfXKJ5NVYKRUv8mCRM">
+  
+    <meta name="keywords" content="Java,CGLIB浅析">
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客,钟宇鹏,个人博客">
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  
+    <title>CGLIB浅析</title>
+  
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="/css/pure.min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <!-- <li class="pure-menu-item toc-menu pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li> -->
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+        <ul class="pure-menu-children">
+        
+          
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/photographer" class="pure-menu-link">摄影</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+          
+          
+      </ul>
+      </li>
+    
+  </ul>
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">zhongyp&#39;blog</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      CGLIB浅析
+    </h1>
+    
+    <time class="time" datetime="2019-10-03T16:00:00.000Z">
+      2019-10-04
+    </time>
+     |
+    <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+</span>
+    <hr>
+  </header>
+  <div class="post-content">
+    <p>本文承接自<a href="/java/2019-09-09-java-proxy/">动态代理浅析</a>这篇文章，对代理没有什么概念的同学建议先读下这篇文章。</p>
+<p>本文打算从这几个方面来理解CGLIB怎样生成动态代理类的：</p>
+<ol>
+<li><a href="#1-使用Cglib动态代理">怎样使用CGLIB？</a></li>
+<li><a href="#2-CGLIB原理解析">CGLIB怎样生成/缓存动态代理类实例的？</a></li>
+<li><a href="#3-CGLIB代理类调用方法原理解析">CGLIB生成的动态代理类怎样调用的，过程是怎样的，这样有什么好处？</a></li>
+<li>常见问题<a href="#FAQ">FAQ</a></li>
+</ol>
+<h2 id="1-使用Cglib动态代理"><a href="#1-使用Cglib动态代理" class="headerlink" title="1. 使用Cglib动态代理"></a>1. 使用Cglib动态代理</h2><p>CGLIB的使用和JDK Proxy类似，不同的是CGLIB既可以指定接口，也可以直接代理未实现接口的普通类。</p>
+<p>示例代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Enhancer enhancer = new Enhancer();</span><br><span class="line">LogInterceptor logInterceptor = new LogInterceptor();</span><br><span class="line">// 设置超类，cglib是通过继承来实现的</span><br><span class="line">enhancer.setSuperclass(UserDao.class);</span><br><span class="line">enhancer.setCallback(logInterceptor);</span><br><span class="line">/**</span><br><span class="line"> * 如果是实现指定接口，可以使用setInterfaces方法设置接口</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">// enhancer.setInterfaces(new Class[]&#123;Dao.class&#125;);</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 如果使用createClass方法返回值为代理类的Class对象，需要设置CallbackType参数；当使用create方法时，CallbackType和callback都不为空时，两者类型必须相等。</span><br><span class="line"> * create方法返回的是代理类实例</span><br><span class="line"> * enhancer.setCallbackType(LogInterceptor.class);</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">// 创建代理类</span><br><span class="line">Dao dao = (Dao)enhancer.create();</span><br><span class="line">dao.select();</span><br></pre></td></tr></table></figure></p>
+<p>// 方法拦截器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class LogInterceptor implements MethodInterceptor &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public Object intercept(Object object, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable &#123;</span><br><span class="line">//        before();</span><br><span class="line">        Object result = methodProxy.invokeSuper(object, objects);</span><br><span class="line">//        after();</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void before()&#123;</span><br><span class="line">        System.out.println(&quot;before&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    private void after()&#123;</span><br><span class="line">        System.out.println(&quot;after&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>// 实现类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class UserDao implements Dao &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void select() &#123;</span><br><span class="line">        System.out.println(&quot;UserDao 查询 selectById&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public void update() &#123;</span><br><span class="line">        System.out.println(&quot;UserDao 更新 update&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-CGLIB生成动态代理类的原理解析"><a href="#2-CGLIB生成动态代理类的原理解析" class="headerlink" title="2. CGLIB生成动态代理类的原理解析"></a>2. CGLIB生成动态代理类的原理解析</h2><p>CGLIB，JDK proxy生成过程上大同小异，都是使用弱引用缓存已生成的Class对象，如果缓存中没有，则使用字节码技术生成动态代理类字节码和Class对象，只不过使用的字节码技术不太一样罢了。<br>下图是CGLIB动态代理生成代理类Class对象的流程：<a href="/media/article/cglib-processor.png">点击看大图</a></p>
+<p><img src="/media/article/cglib-processor.png"></p>
+<p>CGLIB动态代理基于ASM技术，使用<a href="/java/2019-10-06-asm/">ASM</a>技术的部分就是图中标红的模块。</p>
+<p>CGLIB动态代理如果没有特殊设置也会缓存已生成的动态代理类的Class对象。</p>
+<p><img src="/media/article/cglib-cache.png" alt="cglib-cache"></p>
+<p>上图是CGLIB缓存动态代理类的Class对象的结构。</p>
+<p>CGLIB第一次生成动态代理类Class对象的方法调用流程：</p>
+<p><img src="/media/article/cglib-method.png" alt="cglib-method"></p>
+<h2 id="3-CGLIB代理类调用方法原理解析"><a href="#3-CGLIB代理类调用方法原理解析" class="headerlink" title="3. CGLIB代理类调用方法原理解析"></a>3. CGLIB代理类调用方法原理解析</h2><blockquote>
+<p>使用<code>System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, &quot;./&quot;)</code>可以输出生成的代理类的class文件。这里由于篇幅问题，只展示文章需要的内容，想看完整的代理类的字节码文件可以自己输出查看。</p>
+</blockquote>
+<p>CGLIB针对一个目标类一般会生成3个动态代理类，1个<code>UserDao$$EnhancerByCGLIB$$c00e2e9b extends UserDao implements Factory</code>，还有2个和调用有关的FastClass代理类<code>UserDao$$EnhancerByCGLIB$$c00e2e9b$$FastClassByCGLIB$$ff71decc extends FastClass</code>，<code>UserDao$$FastClassByCGLIB$$890e5f18 extends FastClass</code></p>
+<p>UserDao$$EnhancerByCGLIB$$c00e2e9b类的静态初始化块：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 当前线程的缓存</span><br><span class="line">CGLIB$THREAD_CALLBACKS = new ThreadLocal();</span><br><span class="line">// 空参数对象</span><br><span class="line">CGLIB$emptyArgs = new Object[0];</span><br><span class="line">// 动态代理类的Class对象</span><br><span class="line">Class var0 = Class.forName(&quot;com.zhongyp.advanced.proxy.cglib.UserDao$$EnhancerByCGLIB$$c00e2e9b&quot;);</span><br><span class="line">Class var1;</span><br><span class="line">// 只获取update和select的方法对象</span><br><span class="line">Method[] var10000 = ReflectUtils.findMethods(new String[]&#123;&quot;update&quot;, &quot;()V&quot;, &quot;select&quot;, &quot;()V&quot;&#125;, (var1 = Class.forName(&quot;com.zhongyp.advanced.proxy.cglib.UserDao&quot;)).getDeclaredMethods());</span><br><span class="line">CGLIB$update$0$Method = var10000[0];</span><br><span class="line">// 记住这里，后续我们会细聊这一块MethodProxy.create</span><br><span class="line">CGLIB$update$0$Proxy = MethodProxy.create(var1, var0, &quot;()V&quot;, &quot;update&quot;, &quot;CGLIB$update$0&quot;);</span><br><span class="line">CGLIB$select$1$Method = var10000[1];</span><br><span class="line">// 记住这里，后续我们会细聊这一块MethodProxy.create</span><br><span class="line">CGLIB$select$1$Proxy = MethodProxy.create(var1, var0, &quot;()V&quot;, &quot;select&quot;, &quot;CGLIB$select$1&quot;);</span><br></pre></td></tr></table></figure>
+<p>当动态代理类调用update()方法（update是DAO接口内的方法）时，首先调用下面这个动态生成的方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line">  * cglib使用Class对象创建对象实例(Enhancer.nextNewInstance())的时候，会反射调用CGLIB$SET_THREAD_CALLBACKS方法，将MethodInterceptor实例缓存在CGLIB$THREAD_CALLBACKS这个代理类的的ThreadLocal中，然后初始化动态代理类实例时，调用CGLIB$BIND_CALLBACKS方法将MethodInterceptor赋值给CGLIB$CALLBACK_0。</span><br><span class="line">  */</span><br><span class="line"></span><br><span class="line">public final void update() &#123;</span><br><span class="line">   // 初始化动态代理类实例时，已经将MethodInterceptor赋值给了CGLIB$CALLBACK_0</span><br><span class="line">   MethodInterceptor var10000 = this.CGLIB$CALLBACK_0;</span><br><span class="line">   if (this.CGLIB$CALLBACK_0 == null) &#123;</span><br><span class="line">       CGLIB$BIND_CALLBACKS(this);</span><br><span class="line">       var10000 = this.CGLIB$CALLBACK_0;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   if (var10000 != null) &#123;</span><br><span class="line">       var10000.intercept(this, CGLIB$update$0$Method, CGLIB$emptyArgs, CGLIB$update$0$Proxy);</span><br><span class="line">   &#125; else &#123;</span><br><span class="line">       super.update();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>CGLIB$BIND_CALLBACKS方法将MethodInterceptor赋值给CGLIB$CALLBACK_0。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">private static final void CGLIB$BIND_CALLBACKS(Object var0) &#123;</span><br><span class="line">   UserDao$$EnhancerByCGLIB$$c00e2e9b var1 = (UserDao$$EnhancerByCGLIB$$c00e2e9b)var0;</span><br><span class="line">   if (!var1.CGLIB$BOUND) &#123;</span><br><span class="line">       var1.CGLIB$BOUND = true;</span><br><span class="line">       Object var10000 = CGLIB$THREAD_CALLBACKS.get();</span><br><span class="line">       if (var10000 == null) &#123;</span><br><span class="line">           var10000 = CGLIB$STATIC_CALLBACKS;</span><br><span class="line">           if (CGLIB$STATIC_CALLBACKS == null) &#123;</span><br><span class="line">               return;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       // 也就是说，初始化动态代理类实例时，最后如果var1.CGLIB$BOUND = true，则说明已经将MethodInterceptor赋值给了CGLIB$CALLBACK_0</span><br><span class="line">       var1.CGLIB$CALLBACK_0 = (MethodInterceptor)((Callback[])var10000)[0];</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在调用到了MethodInterceptor的intercept方法了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public Object intercept(Object object, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable &#123;</span><br><span class="line">   // methodProxy.invokeSuper</span><br><span class="line">   Object result = methodProxy.invokeSuper(object, objects);</span><br><span class="line">   return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>methodProxy，还记得动态代理类的static代码块么，在那时就已经初始化好了methodProxy:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public static MethodProxy create(Class c1, Class c2, String desc, String name1, String name2) &#123;</span><br><span class="line">   MethodProxy proxy = new MethodProxy();</span><br><span class="line">   // 使用Signature对象封装方法名和返回值</span><br><span class="line">   proxy.sig1 = new Signature(name1, desc);</span><br><span class="line">   proxy.sig2 = new Signature(name2, desc);</span><br><span class="line">   // 将UserDAO和UserDAO的动态代理类的Class文件放入CreateInfo对象</span><br><span class="line">   proxy.createInfo = new MethodProxy.CreateInfo(c1, c2);</span><br><span class="line">   return proxy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>好了知道methodProxy怎么来的，继续往下走，invokeSuper():</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">public Object invokeSuper(Object obj, Object[] args) throws Throwable &#123;</span><br><span class="line">   try &#123;</span><br><span class="line">       this.init();</span><br><span class="line">       MethodProxy.FastClassInfo fci = this.fastClassInfo;</span><br><span class="line">       // 这里调用的实际是FastClass代理类中的invoke方法</span><br><span class="line">       return fci.f2.invoke(fci.i2, obj, args);</span><br><span class="line">   &#125; catch (InvocationTargetException var4) &#123;</span><br><span class="line">       throw var4.getTargetException();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">private void init() &#123;</span><br><span class="line">   if (this.fastClassInfo == null) &#123;</span><br><span class="line">       Object var1 = this.initLock;</span><br><span class="line">       synchronized(this.initLock) &#123;</span><br><span class="line">           if (this.fastClassInfo == null) &#123;</span><br><span class="line">               MethodProxy.CreateInfo ci = this.createInfo;</span><br><span class="line">               MethodProxy.FastClassInfo fci = new MethodProxy.FastClassInfo();</span><br><span class="line">               // UserDAO和UserDAO的代理类分别有自己的FastClassInfo，分别使用个字的ClassInfo生成FastClass代理类</span><br><span class="line">               // 生成UserDAO的FastClass代理类</span><br><span class="line">               fci.f1 = helper(ci, ci.c1);</span><br><span class="line">               // 生成UserDAO代理类的FastClass代理类</span><br><span class="line">               fci.f2 = helper(ci, ci.c2);</span><br><span class="line">               // 生成方法索引</span><br><span class="line">               fci.i1 = fci.f1.getIndex(this.sig1);</span><br><span class="line">               fci.i2 = fci.f2.getIndex(this.sig2);</span><br><span class="line">               this.fastClassInfo = fci;</span><br><span class="line">               this.createInfo = null;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据索引调用方法，fci.i2的值为12，调用索引12的方法。<br>UserDao$$EnhancerByCGLIB$$c00e2e9b$$FastClassByCGLIB$$ff71decc动态代理类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">public Object invoke(int var1, Object var2, Object[] var3) throws InvocationTargetException &#123;</span><br><span class="line">   c00e2e9b var10000 = (c00e2e9b)var2;</span><br><span class="line">   int var10001 = var1;</span><br><span class="line"></span><br><span class="line">   try &#123;</span><br><span class="line">       switch(var10001) &#123;</span><br><span class="line">       case 0:</span><br><span class="line">           return new Boolean(var10000.equals(var3[0]));</span><br><span class="line">       case 1:</span><br><span class="line">           return var10000.toString();</span><br><span class="line">       case 2:</span><br><span class="line">           return new Integer(var10000.hashCode());</span><br><span class="line">       case 3:</span><br><span class="line">           return var10000.clone();</span><br><span class="line">       case 4:</span><br><span class="line">           var10000.update();</span><br><span class="line">           return null;</span><br><span class="line">       case 5:</span><br><span class="line">           return var10000.newInstance((Class[])var3[0], (Object[])var3[1], (Callback[])var3[2]);</span><br><span class="line">       case 6:</span><br><span class="line">           return var10000.newInstance((Callback)var3[0]);</span><br><span class="line">       case 7:</span><br><span class="line">           return var10000.newInstance((Callback[])var3[0]);</span><br><span class="line">       case 8:</span><br><span class="line">           var10000.select();</span><br><span class="line">           return null;</span><br><span class="line">       case 9:</span><br><span class="line">           var10000.setCallback(((Number)var3[0]).intValue(), (Callback)var3[1]);</span><br><span class="line">           return null;</span><br><span class="line">       case 10:</span><br><span class="line">           return c00e2e9b.CGLIB$findMethodProxy((Signature)var3[0]);</span><br><span class="line">       case 11:</span><br><span class="line">           c00e2e9b.CGLIB$STATICHOOK1();</span><br><span class="line">           return null;</span><br><span class="line">       case 12:</span><br><span class="line">           var10000.CGLIB$update$0();</span><br><span class="line">           return null;</span><br><span class="line">       case 13:</span><br><span class="line">           var10000.CGLIB$select$1();</span><br><span class="line">           return null;</span><br><span class="line">       case 14:</span><br><span class="line">           return new Boolean(var10000.CGLIB$equals$2(var3[0]));</span><br><span class="line">       case 15:</span><br><span class="line">           return var10000.CGLIB$toString$3();</span><br><span class="line">       case 16:</span><br><span class="line">           return new Integer(var10000.CGLIB$hashCode$4());</span><br><span class="line">       case 17:</span><br><span class="line">           return var10000.CGLIB$clone$5();</span><br><span class="line">       case 18:</span><br><span class="line">           var10000.setCallbacks((Callback[])var3[0]);</span><br><span class="line">           return null;</span><br><span class="line">       case 19:</span><br><span class="line">           c00e2e9b.CGLIB$SET_STATIC_CALLBACKS((Callback[])var3[0]);</span><br><span class="line">           return null;</span><br><span class="line">       case 20:</span><br><span class="line">           c00e2e9b.CGLIB$SET_THREAD_CALLBACKS((Callback[])var3[0]);</span><br><span class="line">           return null;</span><br><span class="line">       case 21:</span><br><span class="line">           return var10000.getCallback(((Number)var3[0]).intValue());</span><br><span class="line">       case 22:</span><br><span class="line">           return var10000.getCallbacks();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125; catch (Throwable var4) &#123;</span><br><span class="line">       throw new InvocationTargetException(var4);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   throw new IllegalArgumentException(&quot;Cannot find matching method/constructor&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>访问流程图：</p>
+<p><img src="/media/article/cglib-invoke.png" alt="cglib-invoke"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>无论是CGLIB还是JDK proxy都是为了控制对象的访问，但是怎样控制访问是CGLIB和JDK proxy思想上的最大区别，JDK proxy通过接口得到method对象后使用反射直接调用目标方法，CGLIB则是更复杂的多，CGLIB先是继承目标类，然后通过字节码技术生成代理方法（CGLIB$update$0）和update（上述例子中的方法，这里用来举例），然后通过方法代理（MethodProxy）和FastClass访问机制（通过方法名和返回值生成索引，调用时直接索引至目标方法）回调目标方法。</p>
+<blockquote>
+<p>TIPS:其实这里还有很多想说的，但是总也感觉表达的总是不是那么的到位，所以暂且先这样了，等着后续再继续完善。</p>
+</blockquote>
+<p>优点：</p>
+<ul>
+<li>有的时候调用目标可能不便实现额外接口，从某种角度看，限定调用者实现接口是有些侵入性的实践，类似CGLIB动态代理就没有这种限制。</li>
+<li>只操作我们关心的类，不必为其他相关类增加工作量。</li>
+<li>高性能，高性能体现方法的调用上，CGLIB的方法调用为FastClass机制，JDK Proxy为反射调用。</li>
+</ul>
+<h2 id="4-一些源码"><a href="#4-一些源码" class="headerlink" title="4. 一些源码"></a>4. 一些源码</h2><p>下面是一些比较核心的一些代码解析：</p>
+<p>入口，AbstractGenerator中的create(key)方法，参数key=KeyFactory.newInstance()。KeyFactory也是CGLIB动态生成的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">// 参数key是Enhancer.KeyFactory(superclassname)的实例，这个KeyFactory类也是cglib动态生成的，当你new Enhancer()时，Enhancer会动态的生成该实例对象，superclassname就是上面的UserDAO。</span><br><span class="line">protected Object create(Object key) &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        ClassLoader loader = this.getClassLoader();</span><br><span class="line">        // CACHE时WeakHashMap 第一层缓存的容器</span><br><span class="line">        Map&lt;ClassLoader, AbstractClassGenerator.ClassLoaderData&gt; cache = CACHE;</span><br><span class="line">        // 第一层缓存 key是classLoader</span><br><span class="line">        AbstractClassGenerator.ClassLoaderData data = (AbstractClassGenerator.ClassLoaderData)cache.get(loader);</span><br><span class="line">        if (data == null) &#123;</span><br><span class="line">            Class var5 = AbstractClassGenerator.class;</span><br><span class="line">            // 加锁意义在于CACHE时静态变量，属于该类，不是该实例对象，所以线程安全需要加锁。</span><br><span class="line">            synchronized(AbstractClassGenerator.class) &#123;</span><br><span class="line">                cache = CACHE;</span><br><span class="line">                data = (AbstractClassGenerator.ClassLoaderData)cache.get(loader);</span><br><span class="line">                if (data == null) &#123;</span><br><span class="line">                    Map&lt;ClassLoader, AbstractClassGenerator.ClassLoaderData&gt; newCache = new WeakHashMap(cache);</span><br><span class="line">                    // 创建第二层缓存容器</span><br><span class="line">                    data = new AbstractClassGenerator.ClassLoaderData(loader);</span><br><span class="line">                    // 将第二层缓存容器放入第一层容器内，key为classloader</span><br><span class="line">                    newCache.put(loader, data);</span><br><span class="line">                    CACHE = newCache;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        this.key = key;</span><br><span class="line">        // 使用ClassLoaderData data获取Enhancer.EnhancerFactoryData对象，Enhancer.EnhancerFactoryData对象中是代理类的Class对象，也可以直接获取KeyFactory的Class对象</span><br><span class="line">        Object obj = data.get(this, this.getUseCache());</span><br><span class="line">        // firstInstance主要是针对KeyFactory生成的Class对象，例如接口方法生成的MethodWraper的代理类Class对象，nextInstance针对Enhancer实例生成的Enhancer.EnhancerFactoryData实例，实例中存储着真正的代理类的Class对象，如果生成的代理类中有接口方法，生成代理类时，会生成接口方法的MethodWrapper的代理类实例。</span><br><span class="line">        return obj instanceof Class ? this.firstInstance((Class)obj) : this.nextInstance(obj);</span><br><span class="line">    &#125; catch (Error | RuntimeException var9) &#123;</span><br><span class="line">        throw var9;</span><br><span class="line">    &#125; catch (Exception var10) &#123;</span><br><span class="line">        throw new CodeGenerationException(var10);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>一级缓存中的value，ClassLoaderData的构造方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public ClassLoaderData(ClassLoader classLoader) &#123;</span><br><span class="line">  if (classLoader == null) &#123;</span><br><span class="line">      throw new IllegalArgumentException(&quot;classLoader == null is not yet supported&quot;);</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">      // 首先用弱引用封装classLoader，垃圾回收时可以直接回收</span><br><span class="line">      this.classLoader = new WeakReference(classLoader);</span><br><span class="line">      Function&lt;AbstractClassGenerator, Object&gt; load = new Function&lt;AbstractClassGenerator, Object&gt;() &#123;</span><br><span class="line">          public Object apply(AbstractClassGenerator gen) &#123;</span><br><span class="line">              Class klass = gen.generate(ClassLoaderData.this);</span><br><span class="line">              // 这里需要注意gen是Enhancer实例，还是KeyFactory$Genertor实例，两者的wrapCachedClass完全不一样，使用的数据结构也不一样。Enhancer使用的数据结构是EnhancerFactoryData，KeyFactory$Genertor使用LoadingCache</span><br><span class="line">              return gen.wrapCachedClass(klass);</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;;</span><br><span class="line">      // this.generatedClasses的key是KeyFactory根据superclassName生成的key实例，将load放入LoadingCache，等下如果LoadingCache的map获取代理类为null，需要回调这个load重新生成代理类</span><br><span class="line">      this.generatedClasses = new LoadingCache(GET_KEY, load);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>二级缓存的对象LoadingCache中的核心方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">// key是Enhancer实例，或者是KeyFactory$Generator实例</span><br><span class="line">public V get(K key) &#123;</span><br><span class="line">   KK cacheKey = this.keyMapper.apply(key);</span><br><span class="line">   Object v = this.map.get(cacheKey);</span><br><span class="line">   return v != null &amp;&amp; !(v instanceof FutureTask) ? v : this.createEntry(key, cacheKey, v);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">protected V createEntry(final K key, KK cacheKey, Object v) &#123;</span><br><span class="line">   boolean creator = false;</span><br><span class="line">   FutureTask task;</span><br><span class="line">   Object result;</span><br><span class="line">   if (v != null) &#123;</span><br><span class="line">       task = (FutureTask)v;</span><br><span class="line">   &#125; else &#123;</span><br><span class="line">       task = new FutureTask(new Callable&lt;V&gt;() &#123;</span><br><span class="line">           public V call() throws Exception &#123;</span><br><span class="line">               // 回调AbstractGenerator.ClassLoaderData构造器中的load</span><br><span class="line">               return LoadingCache.this.loader.apply(key);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br><span class="line">       // 获取map中的value，如果是Enhancer.EnhancerFactoryData就直接返回，如果不是，继续往下获取Class对象</span><br><span class="line">       result = this.map.putIfAbsent(cacheKey, task);</span><br><span class="line">       // 如果等于null，需要重新生成</span><br><span class="line">       if (result == null) &#123;</span><br><span class="line">           creator = true;</span><br><span class="line">           task.run();</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           if (!(result instanceof FutureTask)) &#123;</span><br><span class="line">               return result;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           task = (FutureTask)result;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   try &#123;</span><br><span class="line">       result = task.get();</span><br><span class="line">   &#125; catch (InterruptedException var9) &#123;</span><br><span class="line">       throw new IllegalStateException(&quot;Interrupted while loading cache item&quot;, var9);</span><br><span class="line">   &#125; catch (ExecutionException var10) &#123;</span><br><span class="line">       Throwable cause = var10.getCause();</span><br><span class="line">       if (cause instanceof RuntimeException) &#123;</span><br><span class="line">           throw (RuntimeException)cause;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       throw new IllegalStateException(&quot;Unable to load cache item&quot;, cause);</span><br><span class="line">   &#125;</span><br><span class="line">   // 新建的Class对象或者Enhancer.EnhancerFactoryData需要存起来</span><br><span class="line">   if (creator) &#123;</span><br><span class="line">       this.map.put(cacheKey, result);</span><br><span class="line">   &#125;</span><br><span class="line">   return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Enhancer中生成动态代理类的逻辑，使用了ASM技术：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">public void generateClass(ClassVisitor v) throws Exception &#123;</span><br><span class="line">   Class sc = this.superclass == null ? Object.class : this.superclass;</span><br><span class="line">   if (TypeUtils.isFinal(sc.getModifiers())) &#123;</span><br><span class="line">       throw new IllegalArgumentException(&quot;Cannot subclass final class &quot; + sc.getName());</span><br><span class="line">   &#125; else &#123;</span><br><span class="line">       List constructors = new ArrayList(Arrays.asList(sc.getDeclaredConstructors()));</span><br><span class="line">       this.filterConstructors(sc, constructors);</span><br><span class="line">       List actualMethods = new ArrayList();</span><br><span class="line">       List interfaceMethods = new ArrayList();</span><br><span class="line">       final Set forcePublic = new HashSet();</span><br><span class="line">       // 将接口中的方法获取放入到forcePublic中，获取的其实是KeyFactory生成的MethodWrapper实例 select,&#125;, void</span><br><span class="line">       // actualMethods是一个包含所有方法的数组，值类似public void com.zhongyp.advanced.proxy.cglib.UserDao.update()</span><br><span class="line">       getMethods(sc, this.interfaces, actualMethods, interfaceMethods, forcePublic);</span><br><span class="line">       // 获取到所有的方法及访问标识</span><br><span class="line">       List methods = CollectionUtils.transform(actualMethods, new Transformer() &#123;</span><br><span class="line">           public Object transform(Object value) &#123;</span><br><span class="line">               Method method = (Method)value;</span><br><span class="line">               int modifiers = 16 | method.getModifiers() &amp; -1025 &amp; -257 &amp; -33;</span><br><span class="line">               if (forcePublic.contains(MethodWrapper.create(method))) &#123;</span><br><span class="line">                   // 如果接口中有相同的方法，</span><br><span class="line">                   modifiers = modifiers &amp; -5 | 1;</span><br><span class="line">               &#125;</span><br><span class="line">               return ReflectUtils.getMethodInfo(method, modifiers);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br><span class="line">       // 下面就是ASM的操作逻辑了</span><br><span class="line">       // 参数v是ClassVisitor</span><br><span class="line">       ClassEmitter e = new ClassEmitter(v);</span><br><span class="line">       if (this.currentData == null) &#123;</span><br><span class="line">           e.begin_class(46, 1, this.getClassName(), Type.getType(sc), this.useFactory ? TypeUtils.add(TypeUtils.getTypes(this.interfaces), FACTORY) : TypeUtils.getTypes(this.interfaces), &quot;&lt;generated&gt;&quot;);</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           e.begin_class(46, 1, this.getClassName(), (Type)null, new Type[]&#123;FACTORY&#125;, &quot;&lt;generated&gt;&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       // 构造器信息</span><br><span class="line">       List constructorInfo = CollectionUtils.transform(constructors, MethodInfoTransformer.getInstance());</span><br><span class="line">       e.declare_field(2, &quot;CGLIB$BOUND&quot;, Type.BOOLEAN_TYPE, (Object)null);</span><br><span class="line">       e.declare_field(9, &quot;CGLIB$FACTORY_DATA&quot;, OBJECT_TYPE, (Object)null);</span><br><span class="line">       if (!this.interceptDuringConstruction) &#123;</span><br><span class="line">           e.declare_field(2, &quot;CGLIB$CONSTRUCTED&quot;, Type.BOOLEAN_TYPE, (Object)null);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       e.declare_field(26, &quot;CGLIB$THREAD_CALLBACKS&quot;, THREAD_LOCAL, (Object)null);</span><br><span class="line">       e.declare_field(26, &quot;CGLIB$STATIC_CALLBACKS&quot;, CALLBACK_ARRAY, (Object)null);</span><br><span class="line">       if (this.serialVersionUID != null) &#123;</span><br><span class="line">           e.declare_field(26, &quot;serialVersionUID&quot;, Type.LONG_TYPE, this.serialVersionUID);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       for(int i = 0; i &lt; this.callbackTypes.length; ++i) &#123;</span><br><span class="line">           e.declare_field(2, getCallbackField(i), this.callbackTypes[i], (Object)null);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       e.declare_field(10, &quot;CGLIB$CALLBACK_FILTER&quot;, OBJECT_TYPE, (Object)null);</span><br><span class="line">       if (this.currentData == null) &#123;</span><br><span class="line">           this.emitMethods(e, methods, actualMethods);</span><br><span class="line">           this.emitConstructors(e, constructorInfo);</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           this.emitDefaultConstructor(e);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       this.emitSetThreadCallbacks(e);</span><br><span class="line">       this.emitSetStaticCallbacks(e);</span><br><span class="line">       this.emitBindCallbacks(e);</span><br><span class="line">       if (this.useFactory || this.currentData != null) &#123;</span><br><span class="line">           int[] keys = this.getCallbackKeys();</span><br><span class="line">           this.emitNewInstanceCallbacks(e);</span><br><span class="line">           this.emitNewInstanceCallback(e);</span><br><span class="line">           this.emitNewInstanceMultiarg(e, constructorInfo);</span><br><span class="line">           this.emitGetCallback(e, keys);</span><br><span class="line">           this.emitSetCallback(e, keys);</span><br><span class="line">           this.emitGetCallbacks(e);</span><br><span class="line">           this.emitSetCallbacks(e);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       e.end_class();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><ol>
+<li>CGLIB针对final方法怎么处理的呢？</li>
+</ol>
+<p>不处理，因为继承了目标类，所以动态代理类实例可以直接调用目标类的final方法。</p>
+<ol start="2">
+<li>CGLIB动态代理是通过字节码底层继承要代理类来实现，如果被代理类被final关键字所修饰，那么代理会失败么？</li>
+</ol>
+<p>代理不会失败，只会直接调用目标类的final方法。如update方法是final的，代理类不会做其他的处理，会直接调用UserDAO的update方法。   </p>
+<ol start="3">
+<li>CGLIB到底比JDk Proxy快在哪里？</li>
+</ol>
+<p>测试环境JDK1.8，平台macOS Catalina。</p>
+<p>一般意义上认为CGLIB在创建动态代理类比JDK Proxy慢，但是在方法调用上CGLIB比JDK Proxy快。<br>但是通过个人的测试，CGLIB在创建动态代理类确实比JDK Proxy慢一点，基本上CGLIB创建一个动态代理类实例需要30ms，JDK Proxy基本上也就10ms。<br>方法调用上100w次JDK proxy用时33233ms，CGLIB用时34259ms。两者差距并不是很明显。</p>
+<ol start="4">
+<li>为什么CGLIB要使用fastclass机制？</li>
+</ol>
+<p>JDK之前的版本对于反射调用优化不是特别好，反射方法调用很慢，所以为了避免反射带来的性能消耗，采用fastclass机制，fastclass其实就是把需要需要调用的目标方法进行封装，获取到每个方法的索引值，调用时，通过调用方法获取索引值，直接调用到封装的目标方法。这种调用和直接调用性能差别不大。</p>
+
+  </div>
+  <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+            <strong>本文作者： </strong>zhongyp</li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="https://zhongyp.me/java/2019-10-04-cglib/" title="使用simple主题并开始写作">https://zhongyp.me/java/2019-10-04-cglib/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+  </div>
+  
+<section class="comments" id="comments">
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script src="/js/md5.min.js"></script>
+    <script>
+        var gitalk = new Gitalk({
+            clientID: "94db00fd8803b1da40de",
+            clientSecret: "34b513c63a3e941ea4b2df972635d9fa19cf3364",
+            accessToken: "a25c2320388186bc7accf5faff34062b18131873",
+            repo: "comment",
+            owner: "zhongyp",
+            admin: "zhongyp",
+            id: location.pathname,
+            perPage: 50,
+            distractionFreeMode: "false"
+        })
+
+        gitalk.render('gitalk-container')
+    </script>
+</section>
+
+
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/java/2019-09-29-knowledge-structure/" rel="next" title="知识结构图">
+          知识结构图
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+          <a href="/java/2019-10-04-aspectj/" rel="prev" title="AspectJ">
+            AspectJ
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-使用Cglib动态代理"><span class="toc-text">1. 使用Cglib动态代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-CGLIB生成动态代理类的原理解析"><span class="toc-text">2. CGLIB生成动态代理类的原理解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-CGLIB代理类调用方法原理解析"><span class="toc-text">3. CGLIB代理类调用方法原理解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-一些源码"><span class="toc-text">4. 一些源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FAQ"><span class="toc-text">FAQ</span></a></li></ol>
+  </div>
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+
+      <a href="https://tuchong.com/16028574/" target="_blank">我的摄影</a> |
+      <a href="http://zhongyp.me">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a> |
+      <a><span id="busuanzi_container_site_pv">本站访客数<span id="busuanzi_value_site_uv"></span>人次</span></a> |
+      <a><span id="busuanzi_container_site_pv">本站访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+    </div>
+  </footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     *
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      // var menu = document.getElementById('menu-main-post');
+      // if (menu) {
+      //   var toc = document.getElementById('toc');
+      //   if (toc) {
+      //     menu.onclick = function() {
+      //       if (toc) {
+      //         if (toc.style.display == 'block') {
+      //           toc.style.display = 'none';
+      //         } else {
+      //           toc.style.display = 'block';
+      //         }
+      //       }
+      //     };
+      //   } else {
+      //     menu.style.display = 'none';
+      //   }
+      // }
+    }
+
+  })(window, document);
+</script>
+
+
+  
+
+
+
+</body>
+</html>

@@ -1,0 +1,439 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="google-site-verification" content="9GY-OrjvdT8TkXuLJFSJcJqolHfXKJ5NVYKRUv8mCRM">
+  
+    <meta name="keywords" content="JVM,翻译,Java Performance Companion">
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客,钟宇鹏,个人博客">
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  
+    <title>Java Performance Companion</title>
+  
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="/css/pure.min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <!-- <li class="pure-menu-item toc-menu pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li> -->
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+        <ul class="pure-menu-children">
+        
+          
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/photographer" class="pure-menu-link">摄影</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+          
+          
+      </ul>
+      </li>
+    
+  </ul>
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">zhongyp&#39;blog</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      Java Performance Companion
+    </h1>
+    
+    <time class="time" datetime="2020-05-19T16:00:00.000Z">
+      2020-05-20
+    </time>
+     |
+    <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+</span>
+    <hr>
+  </header>
+  <div class="post-content">
+    <blockquote>
+<p>翻译自<a href="https://www.oreilly.com/library/view/java-performance-companion/9780133796896/" target="_blank" rel="noopener">Charlie H, Monica B, Poonam P, Bengt R. Java Performance Companion</a></p>
+</blockquote>
+<h2 id="G1概览"><a href="#G1概览" class="headerlink" title="G1概览"></a>G1概览</h2><p>G1 GC在回收暂停期间回收其大部分堆region。唯一的例外是多阶段并行标记周期的清理阶段。在清理阶段，如果G1 GC遇到全是垃圾的的region，它可以立即回收这些region并将它们返回到空闲region的列表；因此，释放这些region不必等待下一个垃圾回收 pause。</p>
+<p>G1 GC具有三种主要类型的垃圾回收周期：年轻代的回收周期，多阶段并发标记周期和混合的回收周期。还有一个单线程的回退暂停，称为“完全”垃圾回收 pause，这是G1 GC的故障安全机制，以防GC遇到疏散失败的情况。</p>
+<blockquote>
+<p>疏散失败也被称为升迁失败，空间耗尽甚至空间溢出。失败通常发生在没有更多的可用空间来升级对象时。面对这种情况，所有Java HotSpot VM GC都会尝试扩展其堆。但是，如果堆已经达到最大，则GC会尝试保留成功复制对象的region并更新其引用。对于G1 GC，将无法复制的对象保留在位。然后，所有GC的引用都将自动转发。这些自我转发的引用在垃圾回收周期结束时被删除。</p>
+</blockquote>
+<p>在年轻代回收期间，G1 GC会 pause应用程序线程，以将活动对象从年轻region移动到survivor region，或者将它们提升到old region，或者两者同时进行。对于Mixed GC，G1 GC还将存活对象从最“efficient”的old region移动到free region，这些region成为老年代的一部分。</p>
+<blockquote>
+<p>“ GC efficient”实际上是指要回收的空间与回收该region的GC耗时之比。由于缺乏更好的术语，在本书中，我们将使用堆region排序来确定候选region，计算“ GC efficient”。使用相同术语的原因是，GC efficient评估回收region的成本与回收region的收益。而且，我们在这里所指的“efficient”完全取决于活跃度的计算，因此仅是回收region的成本。例如，与其他耗时更多的old region相比，回收耗时较少的old region被视为efficient高的region。efficient最高的region将是region排序数组中的第一个region。</p>
+</blockquote>
+<h2 id="G1年轻代"><a href="#G1年轻代" class="headerlink" title="G1年轻代"></a>G1年轻代</h2><p>G1 GC是由年轻一代和老一代组成的世代GC。大多数分配，除了少数例外，例如对象太大而无法放入线程的本地分配缓冲区（也称为TLAB），但被认为小于是“庞大”的对象，当然还包括等于“庞大”对象本身（请参见部分中的“ Humongous Regions”部分），将由任意特定线程放入该线程的TLAB。由于拥有的Java线程能够以无锁方式进行分配，因此TLAB可使分配速度更快。这些TLAB来自G1 regions，已成为年轻代的一部分。除非在命令行上明确指定，否则当前的年轻代大小是根据初始和最大的年轻代大小边界计算的（从JDK 8u45开始，默认值为初始年轻代大小的Java堆总数的5％（-XX：G1NewSizePercent ）和Java堆总数的60％（最大年轻代大小）（-XX：G1MaxNewSizePercent）和应用程序的最大 pause时间（-XX：MaxGCPauseMillis）。</p>
+<blockquote>
+<p>如果未在命令行上设置-XX：MaxGCPauseMillis，则G1 GC将选择默认的200ms。如果用户设置-Xmn或相关的年轻代大小调整命令行选项（例如-XX：NewRatio），则G1 GC可能无法基于 pause时间目标来调整年轻代大小，因此应用程序的最大 pause时间可能会变成无意义配置。</p>
+</blockquote>
+<p>根据Java应用程序的对象分配率，根据需要将新的空闲region添加到年轻代中，直到满足所需的年轻代大小为止。堆region大小是在JVM启动时确定的。堆region大小必须为2的幂，范围可以从1MB到32MB。 JVM分为大约2048个region，并相应地设置堆region大小（堆region大小=堆大小/ 2048）。对齐并调整堆region的大小，使其落在1MB至32MB的范围内，边界必须为2的幂。通过使用-XX：G1HeapRegionSize = n设置，可以在命令行上覆盖堆region大小的自适应选择。第3章，“垃圾优先的垃圾回收器性能调整”，包含有关何时覆盖JVM自动大小调整的更多信息。</p>
+<h2 id="年轻代垃圾回收暂停"><a href="#年轻代垃圾回收暂停" class="headerlink" title="年轻代垃圾回收暂停"></a>年轻代垃圾回收暂停</h2><p>年轻的代由指定为eden region的G1 GC region和指定为survivor region G1 GC region 组成。当JVM无法分配到eden region时，即eden满了时，将触发年轻代垃圾回收。然后，GC介入以释放一些空间。年轻代第一次垃圾回收将把所有存活对象从eden region转移到survivor region。这就是所谓的“幸存者副本”。从那时起，任何年轻垃圾回收都将把整个年轻一代（即eden和survivor region）的存活对象复制到新的region，这些region现在是新的survivor region。当年轻代垃圾回收达到一个预定的提升阀值，它们偶尔还会将一些对象提升到老一代之外的地区。这称为“aging”存活对象。将存活对象从年轻代提升到老年代的过程称为“tenuring”对象，因此年龄阈值称为“tenuring阈值”。将对象提升到survivor region或升级到老年代时，发生在Promoting GC线程的本地分配的缓冲区（也称为Promotion Lab，简称PLAB）中。对于survivor和老年代来说，每个GC线程都有PLAB。</p>
+<p>在每个年轻代垃圾回收 pause期间，G1 GC根据执行当前操作所需的总时间来计算要对当前年轻代大小执行的扩展或收缩（即，G1 GC决定添加或删除free region） 回收；Remembered Sets或RSets的大小（有关详细信息，请参阅本章后面的“Remembered Sets及其重要性”部分）；当前，最大和最小的年轻代容量；和 pause时间目标。因此，在垃圾回收 pause结束时调整了年轻代的大小。可以通过查看-XX：+ PrintGCDetails的输出来观察和计算年轻代的上一个和下一个大小。让我们看一个例子。 （请注意，在整本书中，所有输出行都进行了包装，以适合本书的页面。）</p>
+<h2 id="对象老化与老年代"><a href="#对象老化与老年代" class="headerlink" title="对象老化与老年代"></a>对象老化与老年代</h2><p>正如上一节“年轻代垃圾回收 pause”中简要介绍的那样，在每个年轻代垃圾回收期间，G1 GC都会维护每个对象的年龄字段。当前年轻代 回收的任何特定对象幸存的总数称为该对象的“年龄”。 GC在称为“age table”的表中维护年龄信息以及已提升为该年龄的对象的总大小。根据age table，survivor region对象存活比率，幸存者年龄阀值（由-XX：TargetSurvivorRatio（默认值= 50）确定）和-XX：MaxTenuringThreshold（默认值= 15），JVM会为所有存活对象自适应地设置最大tenuring阈值。一旦这些对象超过了最大tenuring阈值，它们就会被提升/tenured到老一代region。当这些保留对象在老年代中死亡时，可以通过混合 回收或在清理过程中释放它们的空间（但前提是可以回收整个region），作为最后的选择，或者在完全垃圾 回收时 回收。</p>
+<h2 id="Humongous-Regions"><a href="#Humongous-Regions" class="headerlink" title="Humongous Regions"></a>Humongous Regions</h2><p>对于G1 GC， 回收单位是一个region。因此，堆region大小（-XX：G1HeapRegionSize）是重要的参数，因为它确定对象可以放入region的大小。堆region的大小还确定了哪些对象被称为“巨大”。巨大的对象是非常大的物体，占G1 GC region的50％或更多。这样的对象并没有遵循通常的快速分配方式，而是直接从老年代中分配出来。标记为Humongous region的region。</p>
+<p>在JDK 8u40之前，如果任何巨大的region都是完全空闲的，则只能在并发 回收周期的清理 pause期间 回收它。为了优化短期生存的大型对象的 回收，JDK 8u40进行了值得注意的更改，使得如果确定大型region没有传入的引用，则可以在年轻代的 回收期间将其回收并返回到空闲region列表中。完整的垃圾 回收 pause还将 回收完全空闲的大型region。</p>
+<blockquote>
+<p>这里需要强调一个重要的潜在问题或困惑。假设当前的G1region大小为2MB。并说一个字节数组的长度对齐为1MB。此字节数组仍将被认为是一个庞大的对象，因此需要进行分配，因为1MB的数组长度不包括该数组的对象标头大小。</p>
+</blockquote>
+<h2 id="混合垃圾回收暂停"><a href="#混合垃圾回收暂停" class="headerlink" title="混合垃圾回收暂停"></a>混合垃圾回收暂停</h2><p>随着越来越多的对象被提升到老年代中，或者当庞大的对象被分配到庞大的region中时，老年代的占用率因此增加了Java堆的总占用量。为了避免堆空间用完，JVM进程需要启动垃圾回收，该垃圾回收不仅覆盖年轻代的region，而且还向混合region添加一些old region。请参阅上一节中关于hummongousregion的内容，以了解有关hummongous对象的特殊处理（分配和回收）的信息。<br>为了识别出垃圾最多的old region，G1 GC启动了一个并发标记周期，这有助于标记根并最终标识所有存活对象，并计算每个region的活动因子。在分配和提升的速率以及此标记周期的触发之间必须达到微妙的平衡，以使JVM进程不会耗尽Java堆空间。因此，在JVM进程开始时设置了占用阈值。至少在JDK 8u45之前，此占用阈值是不自适应的，可以通过命令行选项-XX：InitiatingHeapOccupancyPercent（我称其为IHOP）来设置。</p>
+<blockquote>
+<p>在G1中，IHOP阈值默认为Java总堆的45％。重要的是要注意，此堆占用百分比适用于整个Java堆，这与CMS GC所使用的堆占用命令行选项不同，后者仅适用于旧版本。在G1 GC中，没有物理上分离的老年代-只有一个空闲region池，可以将其分配为eden，survivor，老年代或humongous。同样，分配的region数量（例如eden）可以随时间变化。因此，老年代的百分比并没有多大意义。</p>
+</blockquote>
+<p>-当老一代占用率达到（或超过）IHOP阈值时，将启动并发标记周期。在标记即将结束时，G1 GC计算每个旧region的活动物体数量。另外，在清理阶段，G1 GC根据旧region的“ GC效率”对旧region进行排名。现在可以进行混合 回收了！在混合 回收 pause期间，G1 GC不仅 回收年轻一代中的所有region，而且还 回收一些候选的旧region，以便回收垃圾最多的旧region。</p>
+<blockquote>
+<p>比较CMS和G1日志时要记住的重要一点是，G1中的多阶段并发周期比CMS中的多阶段并发周期要少。</p>
+</blockquote>
+<p>单个混合垃圾回收器类似于年轻代垃圾回收期 pause，并通过复制实现存活对象的压缩。唯一的区别是，在混合垃圾回收期间，垃圾回收还包含一些efficient的old region。根据一些参数（如本章稍后所述），可能会有一个以上的mixed Collection pause。这称为“mixed Collection周期”。只有在超过标记/ IHOP阈值之后以及完成并行标记周期之后，才可能发生mixed Collection周期。<br>有两个重要的参数可帮助确定混合回收周期中混合回收的次数和什么时候结束mixed gc：-XX：G1MixedGCCountTarget和-XX：G1HeapWastePercent。<br>-XX：G1MixedGCCountTarget（默认值为8（JDK 8u45））是混合GC计数目标参数，其目的是对标记周期完成后将出现的mixed Collection的region数量进行物理限制。 G1 GC将可回收的候选old region总数除以-XX：G1MixedGCCountTarget，并将其设置为每个mixed Collection pause要回收的最小old region数。这可以表示为以下等式：<br>每个mixed Collection pause 回收的最小old CSet = 在一个mixed Collection周期中所有的候选old region总数/ G1MixedGCCountTarget。<br>-XX：G1HeapWastePercent缺省为Java总堆的5％（JDK 8u45），它是控制mixed Collection周期中要回收的旧region数量的重要参数。对于每个mixed Collection pause，G1 GC都会根据可以回收的死对象空间来标识可回收堆的数量。一旦G1 GC达到此堆G1HeapWastePercent，G1 GC就会停止启动mixed Collection pause，从而达到混合 回收周期的终点。设置堆G1HeapWastePercent基本上可以帮助限制你设置允许浪费的堆大小，以有效地加快mixed Collection周期。<br>因此，每个mixed Collection周期的mixed Collection数量可以通过每个mixed Collection pause回收的最小 old CSet和G1HeapWastePercent来控制。</p>
+<h2 id="Collection-Sets-与-它的重要性"><a href="#Collection-Sets-与-它的重要性" class="headerlink" title="Collection Sets 与 它的重要性"></a>Collection Sets 与 它的重要性</h2><p>在任何垃圾回收pause期间，将释放CSet中的所有region。 CSet是在垃圾回收pause期间要回收的一组region。这些候选region中的所有存活对象将在回收过程中复制转移，这些region将返回到空闲region列表中。在年轻代回收期间，CSet只能包含要回收的年轻代region。另一方面，混合垃圾回收不仅会在其CSet中添加所有年轻代region，还会添加一些old regions（基于它们的GC效率）。<br>有两个重要的参数有助于选择混合垃圾回收的CSet的候选old region：-XX：G1MixedGCLiveThresholdPercent和-XX：G1OldCSetRegionThresholdPercent。<br><strong><em>-XX：G1MixedGCLiveThresholdPercent（默认值为G1 GCregion的85％（JDK 8u45））是活动阈值，是一个设置限制，用于从混合垃圾回收的CSet中排除最耗时的old region。 G1 GC设置了一个限制，以使任何低于此活动性阈值的old region都包含在混合集合的CSet中。</em></strong><br>-XX：G1OldCSetRegionThresholdPercent，默认为Java堆总数的10％（JDK 8u45），它设置了每个混合垃圾回收pause可回收的old region数的最大限制。该阈值取决于JVM进程可用的Java总堆，并表示为Java总堆的百分比。</p>
+<h2 id="Remembered-Sets与它的重要性"><a href="#Remembered-Sets与它的重要性" class="headerlink" title="Remembered Sets与它的重要性"></a>Remembered Sets与它的重要性</h2><p>分代垃圾回收器根据对象的使用期限将对象隔离在堆中的不同region中。堆中的这些不同region称为世代。然后，分代垃圾回收器可以将其大部分垃圾回收工作集中在最近分配的对象上，因为它希望发现大多数对象早早的死掉。堆中的这些世代可以独立回收。独立回收有助于降低响应时间，因为GC不必扫描整个堆，而且（例如，在复制世代回收器的情况下）不必来回复制较旧的长期存在的对象，从而减少了复制和引用更新的开销。</p>
+<p> 为了促进垃圾回收的独立性，许多垃圾回收器为它们的代维护RSets。 RSet是一种数据结构，可帮助维护和跟踪对其自身的引用（在G1 GC的情况下是一个region），从而无需扫描整个堆以获取此类信息。当G1 GC执行STW垃圾回收（年轻或混合）时，它将扫描其CSet中包含的region的RSet。一旦移动了该region中的存活对象，它们的传入引用就会更新。<br>使用G1 GC，在任何年轻或混合垃圾回收期间，始终会完整垃圾回收年轻代，从而无需跟踪其包含对象驻留在年轻代中的引用。这减少了RSet开销。因此，G1 GC仅需要在以下两种情况下维护RSets：</p>
+<ul>
+<li>老年代到年轻代的引用-G1 GC维护从老年代region到年轻代region的指针。年轻代region被称为“属于” RSet，因此该region被称为“拥有” region 的Rset。</li>
+<li>老年代到老年代的引用-来自老年代中不同region的指针将保留在“own”老年代region的RSet中。</li>
+</ul>
+<p><img src="/media/article/g1-rset.png" alt="g1-rset"></p>
+<p> 在图2.3中，我们可以看到一个young region（x region）和两个old region（y region和z region）。region x具有来自region z的传入引用。在region x的RSet中记录了此参考。我们还观察到，region z有两个传入引用，一个来自region x，另一个来自region y。region Z的RSet只需要记下来自region y的传入参考，而不必记住来自region x的参考，因为如前所述，年轻代总是被完整地垃圾回收。最后，对于region y，我们看到来自region x的传入引用，这在region y的RSet中未注明，因为region x是young region。<br>如图2.3所示，每个region只有一个RSet。根据应用程序的不同，可能是某个特定region（因此它的RSet）是“popular”，因此在同一region甚至在同一位置可能会有许多更新。这在Java应用程序中并不罕见。<br>G1 GC具有处理此类popular需求的方式；它通过更改RSets的密度来实现。 RSets的密度遵循三个级别的粒度，即稀疏，细粒度和粗粒度。对于一般region，RSet可能会被粗化以容纳来自其他各个region的指针。这将反映在这些region的RSet扫描时间中。 这三种粒度级别中的每一种都有一个针对任何特定RSet的PRT(per-region-table, PRT)抽象容器。由于G1 GC region在内部进一步划分为块，在G1 GC region级别中，可实现的最低粒度是512字节堆块，称为“card”（请参见图2.4）。全局卡表维护所有卡。</p>
+<p>当指针引用RSet的所属region时，在PRT中会记录包含该指针的card。稀疏的PRT本质上是那些card索引的哈希表。这种简单的实现可加快垃圾回收器的扫描速度。另一方面，细粒度的PRT和粗粒度的bit map以不同的方式处理。对于细粒度的PRT，其开放哈希表中的每个entry都对应一个region（具有对所属region的引用），该region中的卡片索引存储在bit map中。细粒度的PRT有一个最大限制，当超过该值时，会在粗粒度bit map中设置一个位（称为“粗粒度位”）。设置了粗粒度位后，将删除细粒度PRT中的相应entry。粗粒度的bit map就是一个bit map，每个region有一个位，这样一个设置位就意味着相应的region可能包含对所属region的引用。因此，必须扫描与设置位关联的整个region以找到引用。因此，将Remembered set粗化为粗粒度bit map对于扫描垃圾回收器而言是最慢的。</p>
+<p>在任何回收周期中，当扫描Remembered set并因此扫描PRT中的card时，G1 GC都会在全局卡表中标记相应的entry，以避免重新扫描该card。在回收周期结束时，此卡表被清除；这在GC输出（用-XX：+ PrintGCDetails打印）中显示为Clear CT，并且紧接在GC线程完成的并行工作之后（例如，外部根扫描，更新和扫描Remembered set，对象复制，和终止协议）。还有其他顺序活动，例如选择和释放CSet以及引用处理和排队。这是使用JDK 8u45构建的-XX：+ UseG1GC -XX：PrintGCDetails -XX：PrintGCTimeStamps的示例输出。 RSet和card表活动突出显示。</p>
+<h2 id="并发优化线程与屏障"><a href="#并发优化线程与屏障" class="headerlink" title="并发优化线程与屏障"></a>并发优化线程与屏障</h2><p>高级的RSet结构以写入障碍和并发“细化”线程的形式带来了其自身的维护成本。<br>屏障是在托管运行中执行某些语句时执行的native代码段。垃圾回收算法中使用屏障的方法已经很成熟，由于本机指令路径长度增加，执行屏障代码的相关成本也相应的增加。<br>OpenJDK HotSpot的Parallel Old和CMS GC使用写屏障，该屏障在HotSpot JVM执行对象引用写操作时执行：</p>
+<p><code>object.field = some_other_object;</code></p>
+<p>屏障更新了卡片表类型的结构[2]，以跟踪跨代引用。在minor垃圾回收期间将扫描卡表。写屏障算法基于UrsHölzle的快速写屏障[3]，可将屏障开销减少中只有两条额外的编译后的代码指令。<br>G1 GC采用pre-write和post-write屏障。前者在实际应用程序分配之前执行，并在并发标记部分中进行了详细介绍，而后者在分配之后执行，并在此处进行了详细描述。</p>
+<p>每当引用更新时，G1 GC都会发出写屏障。例如，考虑以下伪代码中的更新：</p>
+<p><code>object.field = some_other_object;</code></p>
+<p>该分配将触发屏障代码。由于屏障是在写入任何引用之后发出的，因此称为“post-write”屏障。写障碍指令顺序会变得非常昂贵，并且应用程序的吞吐量将与屏障代码的复杂性成比例地下降；因此，由于需要在拥有region的RSet中捕获跨region引用更新，因此G1 GC会进行最少的工作量来确定引用更新是否为跨region更新。对于G1 GC，屏障代码包括一种过滤技术，该过滤技术在“Older-First Garbage Collection in Practice”中[4]进行了简要讨论，该技术涉及一个简单的检查，当更新在同一region时，该检查的结果为零。以下伪代码说明了G1 GC的写障碍：</p>
+<p><code>(&amp;object.field XOR &amp;some_other_object) &gt;&gt; RegionSize</code></p>
+<p>每当进行跨region更新时，G1 GC都会将相应的card排入称为“更新日志缓冲区”或“dirty card队列”的缓冲区中。在我们的更新示例中，包含card的对象记录在更新日志缓冲区中。</p>
+<p>并发优化线程是专用于通过以下方式维护线程的线程：通过扫描已填充日志缓冲区中的已记录卡，然后为那些region更新remembered sets来维护remembered sets。优化线程的最大数量由–XX：G1ConcRefinementThreads确定。从JDK 8u45开始，如果未在命令行上设置–XX：G1ConcRefinementThreads，则按照人体工程学将其设置为与–XX：ParallelGCThreads相同。</p>
+<p>一旦更新日志缓冲区达到其容纳容量，它将被淘汰，并分配一个新的日志缓冲区。然后，card入队在此新缓冲区中发生。retired的缓冲区放置在全局列表中。一旦优化线程在全局列表中找到entry，它们就会开始并发处理retired的缓冲区。优化线程始终处于活动状态，尽管最初只有几个可用。 G1 GC以分层的方式处理并发优化线程的部署，添加了更多线程以跟上已填充的日志缓冲区的数量。激活阈值由以下标志设置：-XX：G1ConcRefinementGreenZone，-XX：G1ConcRefinementYellowZone和-XX：G1ConcRefinementRedZone。如果并发的优化线程无法跟上已填充缓冲区的数量，请向mutator线程寻求帮助。此时，mutator线程将停止其工作，并帮助并发的优化线程完成对已填充日志缓冲区的处理。 GC术语中的mutator线程是Java应用程序线程。因此，当并发​​优化​​线程无法满足已填充缓冲区的数量时，Java应用程序将被暂停，直到处理已填充日志缓冲区为止。因此，应采取措施避免这种情况。</p>
+<blockquote>
+<p>不应要求用户手动调整三个优化region中的任何一个。有时很少需要调整–XX：G1ConcRefinementThreads或–XX：ParallelGCThreads。</p>
+</blockquote>
+<h2 id="G1-GC的并发标记"><a href="#G1-GC的并发标记" class="headerlink" title="G1 GC的并发标记"></a>G1 GC的并发标记</h2><p>随着G1 GC region的引入和每个region的活跃度统计，很明显，需要一种增量且完整的并发标记算法。 Taiichi Yuasa提出了一种增量标记和扫描GC的算法，其中他采用了“snapshot-at-the-beginning”（SATB）标记算法[5]。</p>
+<p>Yuasa的SATB标记优化集中在mark-sweep GC的并发标记阶段。 SATB标记算法非常适合G1 GC的region化堆结构，并解决了有关HotSpot JVM的CMS GC算法的主要抱怨，即潜在的长时间注释暂停。</p>
+<p>G1 GC建立了标记阈值，该阈值表示为Java总堆的百分比，默认为45％。超过此阈值时，可以使用-XX：InitiatingHeapOccupancyPercent（IHOP）选项在命令行中设置该阈值，将启动并发标记周期。标记任务被划分为多个块，以使大多数工作在mutator线程处于活动状态时同时完成。目标是在整个Java堆达到其最大容量之前对其进行标记。</p>
+<p>SATB算法仅创建一个对象图，该对象图是堆的逻辑“snapshot”。 SATB标记可确保快照将识别并发标记阶段开始时存在的所有垃圾对象。<strong><em>在并发标记阶段分配的对象将被视为存活对象，但不会跟踪它们，从而减少了标记开销。</em></strong> 该技术确保在标记阶段开始时仍处于活动状态的所有存活对象被标记和跟踪，并且在标记周期内由并发的mutator线程进行的任何新分配都被标记为存活，因此不会被收集。</p>
+<p>标记数据结构仅包含两个bitmap：previous和next。previous bitmap保存最后的完整标记信息。当前标记周期创建并更新next bitmap。随着时间的流逝，先前的标记信息变得越来越陈旧。最终，next bitmap将在标记周期完成时替换previous bitmap。</p>
+<p>对应于next bitmap和previous bitmap，每个G1 GC堆region都有两个标记开始（TAMS）字段，分别称为previous TAMS（或PTAMS）和 next TAMS（或NTAMS）。 TAMS字段可用于标识在标记周期内分配的对象。</p>
+<p><img src="/media/article/g1-marking.png" alt="g1-marking"></p>
+<p>在标记周期开始时，NTAMS字段设置为每个region的当前顶部，如图2.5所示。自标记周期开始以来已分配（或已死亡）的对象位于相应的TAMS值之上，并被认为是隐式存在的。 TAMS下的存活对象需要明确标记。让我们来看一个例子：</p>
+<p><img src="/media/article/g1-marking2.png" alt="g1-marking2"></p>
+<p>在图2.6中，我们看到了并发标记，如图所示，带有“previous bitmap”，“next bitmap”，“ PTAMS”，“ NTAMS”和“Top”。 PTAMS与堆的Bottom（在图中表示为“Bottom”）之间的活动对象均已标记并保留在先前的位图中，如图2.7所示。如图2.8所示，PTAMS与堆区顶部之间的所有对象都是隐式活动的（相对于以前的位图）。这些包括在并发标记期间分配的对象，因此被分配在NTAMS上方，并且相对于next bitmap隐式存在，如图2.10所示。标记暂停后，PTAMS上方和NTAMS下方的所有活动对象都被完全标记，如图2.9所示。如前所述，在并发标记周期中分配的对象将分配给NTAMS之上，并被视为相对于next bitmap隐式存在（请参见图2.10）。</p>
+<p><img src="/media/article/g1-marking3.png" alt="g1-marking3"></p>
+<h2 id="并发标记阶段"><a href="#并发标记阶段" class="headerlink" title="并发标记阶段"></a>并发标记阶段</h2><p>标记任务块几乎同时执行。在短暂的STW期间，一些任务已完成。现在让我们谈谈这些任务的重要性。</p>
+<h3 id="Initial-Mark-Stop-the-World-Event"><a href="#Initial-Mark-Stop-the-World-Event" class="headerlink" title="Initial Mark(Stop the World Event)"></a>Initial Mark(Stop the World Event)</h3><p>在初始标记期间，mutator线程将停止，以便于标记Java堆中所有可由GC Roots直接访问的对象（也称为根对象）。</p>
+<blockquote>
+<p>根对象是可以从Java堆外部访问的对象。本机堆栈对象和JNI（Java本机接口）本地或全局对象是一些示例。</p>
+</blockquote>
+<p>由于mutator线程已停止，因此初始标记阶段是“STW”阶段。另外，由于年轻代也可以追溯到roots，因此可以与常规的年轻代同时进行初始标记（方便且省时）。这也称为“piggybacking”。在初始标记暂停期间，每个region的NTAMS值将设置为该region的当前Top（请参见图2.5）。重复进行此操作，直到处理完堆的所有region为止。</p>
+<p><img src="/media/article/g1-marking.png" alt="g1-marking"></p>
+<h3 id="Root-region-Scanning"><a href="#Root-region-Scanning" class="headerlink" title="Root region Scanning"></a>Root region Scanning</h3><p>在为每个区域设置TAMS之后，重新启动mutator线程，并且G1 GC现在与mutator线程并发工作。为确保标记算法的正确性，在Initial-Mark年轻代垃圾回收期间需要扫描复制到survivor region的对象，并将其视为marking roots。因此，G1 GC开始扫描survivor region。从survivor region引用的任何对象都被标记。因此，将以此方式扫描的survivor region称为“root regions”。<br>root region扫描阶段必须在下一个垃圾回收暂停之前完成，因为从survivor region引用的所有对象都必须被识别并标记，然后才能扫描整个堆中的活动对象。</p>
+<h3 id="Concurrent-Marking"><a href="#Concurrent-Marking" class="headerlink" title="Concurrent Marking"></a>Concurrent Marking</h3><p>并发标记阶段是并发和多线程的。设置要使用的并发线程数的命令行选项是-XX：ConcGCThreads。默认情况下，G1 GC将线程总数设置为并行线程(-XX:ParallelGCThreads)的四分之一，并行GC线程是在VM启动时由JVM计算的。并发线程一次扫描一个region，并使用“finger”指针优化来标识该region。这种“finger”指针优化类似于CMS GC的“finger”优化，可以在[2]中进行研究。<br>如“ RSets及其重要性”部分所述，G1 GC还使用pre-write屏障来执行SATB并发标记算法所需的操作。当应用程序更改其对象图时，在标记开始时可到达的对象和快照的一部分可能会被<strong>标记线程发现和跟踪之前</strong>被覆盖。因此，SATB标记保证要求修改变量线程在SATB日志队列/缓冲区中记录需要修改的指针的先前值。这被称为“并发标记/ SATB pre-write屏障”，因为屏障代码是在更新之前执行的。pre-write屏障可以记录对象引用字段的previous value，以便并发标记可以通过值被覆盖的对象进行标记。</p>
+<p>marking_is_active条件是对thread-local标志的简单检查，该标志在 initial-mark pause期间在标记开始时设置为true。通过此检查来保护其余的屏障前代码，可减少标记未激活时执行屏障代码其余部分的开销。由于该标志是线程本地的，并且其值可能会多次加载，因此任何单个检查都可能会命中缓存，从而进一步减少了屏障的开销。<br>satb_enqueue（）首先尝试将先前的值放入线程本地缓冲区（称为SATB缓冲区）中。 SATB缓冲区的初始大小为256个entries，并且每个应用程序线程都有一个SATB缓冲区。如果没有空间将pre_val放置在SATB缓冲区中，则会调用JVM runtime。该线程的当前SATB缓冲区将retired，并放置在已填充SATB缓冲区的全局列表中，为该线程分配一个新的SATB缓冲区，并记录pre_val。并发标记线程的工作是定期检查和处理已填充的缓冲区，以启用对已记录对象的标记。<br>通过遍历每个缓冲区并通过设置来标记每个记录的对象，从全局列表中处理（在标记阶段）已填充的SATB缓冲区标记bitmap中的相应位（如果对象位于finger后面，则将对象推到本地标记堆栈上）。标记然后遍历标记bitmap的一部分中的设置位，跟踪标记对象的字段引用，在标记bitmap中设置更多位，并根据需要推送对象。<br>实时数据记帐在标记操作中进行。因此，每次标记一个对象时，该对象也会被计数（即，其字节将添加到该region的总数中）。仅标记和计数NTAMS以下的对象。在此阶段结束时，将清除next标记bitmap，以便在下一个标记周期开始时准备就绪。这是与mutator线程同时完成的。</p>
+<blockquote>
+<p>JDK 8u40引入了一个新的命令行选项-XX：+ ClassUnloadingWithConcurrentMark，默认情况下，它启用带有并发标记的类卸载。因此，并发标记可以跟踪类并计算其活跃度。在备注阶段，可以卸载不可达的类。</p>
+</blockquote>
+<p><img src="/media/article/concurrent-marking.png" alt=""></p>
+<h3 id="Remark-Stop-the-World-Event"><a href="#Remark-Stop-the-World-Event" class="headerlink" title="Remark(Stop the World Event)"></a>Remark(Stop the World Event)</h3><p>Remark阶段是最后的标记阶段。在这个STW的阶段，G1 GC完全耗尽了所有剩余的SATB日志缓冲区并处理了所有更新。 G1 GC还可以遍历所有未访问的活动对象。从JDK 8u40开始，备注阶段是STW，因为更改程序线程负责更新SATB日志缓冲区，并因此“own”了这些缓冲区。因此，最终的STW是必要的，以覆盖所有实时数据并安全地完成实时数据记帐。为了减少在此暂停中花费的时间，使用多个GC线程并行处理日志缓冲区。 -XX：ParallelGCThreads帮助设置任何GC暂停期间可用的GC线程数。引用处理也是备注阶段的一部分。</p>
+<blockquote>
+<p>任何大量使用引用对象（弱引用，软引用，虚引用或强引用）的应用程序都可能由于引用处理开销而导致较高的remark时间。我们将在第3章中了解更多信息。</p>
+</blockquote>
+<p><img src="/media/article/remark-phase.png" alt=""></p>
+<h3 id="Cleanup-Stop-the-World-Event-and-Concurrent"><a href="#Cleanup-Stop-the-World-Event-and-Concurrent" class="headerlink" title="Cleanup(Stop the World Event and Concurrent)"></a>Cleanup(Stop the World Event and Concurrent)</h3><p>在清理暂停期间，两个标记bitmap会互换角色：next bitmap成为previous bitmap（假定当前标记周期已完成，并且previous bitmap现在具有一致的标记信息），并且previous bitmap将成为next bitmap（将在下一个循环中用作当前标记bitmap）。同样，PTAMS和NTAMS也会互换角色。清理暂停的三个主要作用是识别完全空闲的region，对堆region进行排序以识别用于混合垃圾回收的有效旧region以及RSet清理。当前的启发式排名根据活动性对region进行排序（具有大量活动对象的region的收集确实非常耗时，因为复制是一项耗时的操作）和Remembered Set的大小（同样，具有大Remembered Set的region因region‘s popularity 回收而非常耗时）。目标是首先回收/疏散被认为耗时较少（存活较少，较低的popular）的候选region。<br>识别每个region中存活对象的一个​​优势是，遇到完全空闲的region（即没有存活对象的region）时，可以不必等待回收（混合）垃圾器回收暂停，清除其Remembered Set，并且可以立即回收该region并将其返回到空闲region列表中，而不是将其放置在GC-efficient的已排序数组中。 RSet清理还有助于检测过时的引用。例如，如果标记发现某个特定card上的所有对象均已失效，则该特定card的entry将从“owning” RSet中清除。</p>
+<p><img src="/media/article/clean-up.png" alt=""></p>
+<h2 id="Copying-Stop-the-World-Event"><a href="#Copying-Stop-the-World-Event" class="headerlink" title="(*) Copying(Stop the World Event)"></a>(*) Copying(Stop the World Event)</h2><p>These are the stop the world pauses to evacuate or copy live objects to new unused regions. This can be done with young generation regions which are logged as [GC pause (young)]. Or both young and old generation regions which are logged as [GC Pause (mixed)].</p>
+<p>疏散或者复制存活对象到新的未使用regions。这个可以发生在年轻代regions，被标记为<code>[GC pause(young)]</code>。或者年轻代和老年代regions都发生，被标记为<code>[GC Pause (mixed)]</code>。</p>
+<p><img src="/media/article/copying-phase.png" alt=""></p>
+<h2 id="疏散失败和全部回收"><a href="#疏散失败和全部回收" class="headerlink" title="疏散失败和全部回收"></a>疏散失败和全部回收</h2><p>有时，G1 GC在尝试从young region复制存活对象时或在从old region撤离期间尝试复制存活对象时找不到空闲region。此类故障在GC日志中报告为空间耗尽故障，并且故障持续时间在日志中进一步显示为疏散故障时间（在以下示例中为331.5ms）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">111.912: [GC pause (G1 Evacuation Pause) (young) (to-space exhausted), 0.6773162 secs]</span><br><span class="line">&lt;snip&gt;</span><br><span class="line">[Evacuation Failure: 331.5 ms]</span><br></pre></td></tr></table></figure>
+<p>有时，大型分配可能无法在老年代中找到用于分配大型对象的连续region。<br>此时，G1 GC将尝试增加其对Java堆的使用。如果无法成功扩展Java堆空间，则G1 GC触发其故障保护机制，并退回到serial（单线程）full gc。</p>
+<p>在full gc期间，单个线程在整个堆上运行，并做标记，清除和压缩构成世代的所有region（昂贵或其他）。回收完成之后，生成的堆现在由存活对象组成，并且所有世代都已完全压缩。</p>
+<blockquote>
+<p>在JDK 8u40之前，只能在full gc中卸载类。</p>
+</blockquote>
+<p>serial full gc的单线程性质以及该集合跨越整个堆的事实会使它成为非常耗时的垃圾回收操作，尤其是在堆大小相当大的情况下。因此，强烈建议在这样的情况下进行非常规的调优测试，在这种情况下，经常发生full gc。</p>
+<p>选项和默认值：<br>-XX：+ UseG1GC    使用G1垃圾回收器<br>-XX：MaxGCPauseMillis = n    设置最大GC pause时间的目标。这是一个软目标，JVM将尽最大的努力来实现它。<br>-XX：InitiatingHeapOccupancyPercent = n    启动并发GC周期的（整个）堆占用百分比。GC使用它来触发GC，该GC基于整个堆的占用来触发并发GC周期，而不仅仅是世代之一（例如，G1）。值为0表示“进行恒定的GC循环”。默认值为45。<br>-XX：NewRatio = n    年轻代/老年代内存占比。预设值为2。<br>-XX：SurvivorRatio = n     eden/survior空间大小之比。预设值为8。<br>-XX：MaxTenuringThreshold = n 年轻代升级阀值。预设值为15。<br>-XX：ParallelGCThreads = n    设置在垃圾回收器的并行阶段使用的线程数。缺省值随运行JVM的平台而异。<br>-XX：ConcGCThreads = n    并发垃圾 回收器将使用的线程数。缺省值随运行JVM的平台而异。<br>-XX：G1ReservePercent = n    保留空间，虚拟机至少保证晋升时有这么多的空间可以使用，默认10%<br>-XX：G1HeapregionSize = n    使用G1，Java堆可细分为大小一致的region。这将设置各个细分的大小。该参数的默认值是根据堆大小按人机工程学确定的。最小值为1Mb，最大值为32Mb。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="">深入理解Java虚拟机-JVM高级特性与最佳实践</a><br><a href="https://www.oracle.com/webfolder/technetwork/tutorials/obe/java/G1GettingStarted/index.html" target="_blank" rel="noopener">Getting Started with the G1 Garbage Collector</a><br><a href="https://www.jianshu.com/p/aef0f4765098" target="_blank" rel="noopener">G1垃圾回收器详解  </a><br><a href="https://cloud.tencent.com/developer/article/1459638" target="_blank" rel="noopener">详解 JVM Garbage First(G1) 垃圾 回收器</a><br><a href="">Charlie H, Monica B, Poonam P, Bengt R. Java Performance Companion</a></p>
+
+  </div>
+  <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+            <strong>本文作者： </strong>zhongyp</li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="https://zhongyp.me/jvm/2020-05-20-g1/" title="使用simple主题并开始写作">https://zhongyp.me/jvm/2020-05-20-g1/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/翻译/">翻译</a></li></ul>
+  </div>
+  
+<section class="comments" id="comments">
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script src="/js/md5.min.js"></script>
+    <script>
+        var gitalk = new Gitalk({
+            clientID: "94db00fd8803b1da40de",
+            clientSecret: "34b513c63a3e941ea4b2df972635d9fa19cf3364",
+            accessToken: "a25c2320388186bc7accf5faff34062b18131873",
+            repo: "comment",
+            owner: "zhongyp",
+            admin: "zhongyp",
+            id: location.pathname,
+            perPage: 50,
+            distractionFreeMode: "false"
+        })
+
+        gitalk.render('gitalk-container')
+    </script>
+</section>
+
+
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/spring/2020-02-13-spring-amqp/" rel="next" title="Spring AMQP">
+          Spring AMQP
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+      </div>
+    </div>
+  
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#G1概览"><span class="toc-text">G1概览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#G1年轻代"><span class="toc-text">G1年轻代</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#年轻代垃圾回收暂停"><span class="toc-text">年轻代垃圾回收暂停</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对象老化与老年代"><span class="toc-text">对象老化与老年代</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Humongous-Regions"><span class="toc-text">Humongous Regions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#混合垃圾回收暂停"><span class="toc-text">混合垃圾回收暂停</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Collection-Sets-与-它的重要性"><span class="toc-text">Collection Sets 与 它的重要性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Remembered-Sets与它的重要性"><span class="toc-text">Remembered Sets与它的重要性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并发优化线程与屏障"><span class="toc-text">并发优化线程与屏障</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#G1-GC的并发标记"><span class="toc-text">G1 GC的并发标记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并发标记阶段"><span class="toc-text">并发标记阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Initial-Mark-Stop-the-World-Event"><span class="toc-text">Initial Mark(Stop the World Event)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Root-region-Scanning"><span class="toc-text">Root region Scanning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Concurrent-Marking"><span class="toc-text">Concurrent Marking</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Remark-Stop-the-World-Event"><span class="toc-text">Remark(Stop the World Event)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cleanup-Stop-the-World-Event-and-Concurrent"><span class="toc-text">Cleanup(Stop the World Event and Concurrent)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copying-Stop-the-World-Event"><span class="toc-text">(*) Copying(Stop the World Event)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#疏散失败和全部回收"><span class="toc-text">疏散失败和全部回收</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+  </div>
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+
+      <a href="https://tuchong.com/16028574/" target="_blank">我的摄影</a> |
+      <a href="http://zhongyp.me">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a> |
+      <a><span id="busuanzi_container_site_pv">本站访客数<span id="busuanzi_value_site_uv"></span>人次</span></a> |
+      <a><span id="busuanzi_container_site_pv">本站访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+    </div>
+  </footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     *
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      // var menu = document.getElementById('menu-main-post');
+      // if (menu) {
+      //   var toc = document.getElementById('toc');
+      //   if (toc) {
+      //     menu.onclick = function() {
+      //       if (toc) {
+      //         if (toc.style.display == 'block') {
+      //           toc.style.display = 'none';
+      //         } else {
+      //           toc.style.display = 'block';
+      //         }
+      //       }
+      //     };
+      //   } else {
+      //     menu.style.display = 'none';
+      //   }
+      // }
+    }
+
+  })(window, document);
+</script>
+
+
+  
+
+
+
+</body>
+</html>

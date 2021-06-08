@@ -1,0 +1,380 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="google-site-verification" content="9GY-OrjvdT8TkXuLJFSJcJqolHfXKJ5NVYKRUv8mCRM">
+  
+    <meta name="keywords" content="JVM,笔记,Java Class文件结构">
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客,钟宇鹏,个人博客">
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  
+    <title>Java Class文件结构</title>
+  
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="/css/pure.min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <!-- <li class="pure-menu-item toc-menu pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li> -->
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+        <ul class="pure-menu-children">
+        
+          
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/photographer" class="pure-menu-link">摄影</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+          
+          
+      </ul>
+      </li>
+    
+  </ul>
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">zhongyp&#39;blog</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      Java Class文件结构
+    </h1>
+    
+    <time class="time" datetime="2018-11-21T16:00:00.000Z">
+      2018-11-22
+    </time>
+     |
+    <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+</span>
+    <hr>
+  </header>
+  <div class="post-content">
+    <h2 id="class结构"><a href="#class结构" class="headerlink" title="class结构"></a>class结构</h2><blockquote>
+<p>翻译自<a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html" target="_blank" rel="noopener">Chapter 4.The class File Format</a></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">ClassFile &#123;</span><br><span class="line">    u4             magic;</span><br><span class="line">    u2             minor_version;</span><br><span class="line">    u2             major_version;</span><br><span class="line">    u2             constant_pool_count;</span><br><span class="line">    cp_info        constant_pool[constant_pool_count-1];</span><br><span class="line">    u2             access_flags;</span><br><span class="line">    u2             this_class;</span><br><span class="line">    u2             super_class;</span><br><span class="line">    u2             interfaces_count;</span><br><span class="line">    u2             interfaces[interfaces_count];</span><br><span class="line">    u2             fields_count;</span><br><span class="line">    field_info     fields[fields_count];</span><br><span class="line">    u2             methods_count;</span><br><span class="line">    method_info    methods[methods_count];</span><br><span class="line">    u2             attributes_count;</span><br><span class="line">    attribute_info attributes[attributes_count];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="magic"><a href="#magic" class="headerlink" title="magic"></a>magic</h3><p>用来识别class文件，固定值：0xCAFEBABE。关于0xCAFEBABE还有一个故事<a href="https://leokongwq.github.io/2016/12/31/java-magic-0xCAFEBABE.html" target="_blank" rel="noopener">java魔法之0xCAFEBABE</a></p>
+<h3 id="minor-version-major-version"><a href="#minor-version-major-version" class="headerlink" title="minor_version, major_version"></a>minor_version, major_version</h3><p>minor_version和major_version项的值是此类文件的次要版本号和主要版本号。主要版本号和次要版本号一起确定类文件格式的版本。如果类文件具有主版本号M和次版本号m，则我们将其类文件格式的版本表示为M.m.因此，类文件格式版本可以按字典顺序排序，例如，1.5 &lt;2.0 &lt;2.1。</p>
+<p>当且仅当v位于某个连续范围Mi.0≤v≤Mj.m时，Java虚拟机实现可以支持版本v的类文件格式。 Java SE平台的发行版级负责确定Java虚拟机实现符合的范围。</p>
+<p>JDK 1.0.2版中的Oracle Java虚拟机实现支持包含45.0到45.3类的类文件格式。 JDK发布的1.1.*支持类文件格式版本范围为45.0到45.65535（含）。对于k≥2，JDK版本1.k支持45.0到44 + k.0范围内的类文件格式版本。</p>
+<h3 id="constant-pool-count"><a href="#constant-pool-count" class="headerlink" title="constant_pool_count"></a>constant_pool_count</h3><p>constant_pool_count项的值等于constant_pool表中的条目数加1。如果constant_pool索引大于零且小于constant_pool_count，则认为它是有效的，§4.4.5中注明了long和double类型的常量。</p>
+<h3 id="constant-pool"><a href="#constant-pool" class="headerlink" title="constant_pool[]"></a>constant_pool[]</h3><p>constant_pool是一个存储各种字符串常量、类和接口名称、字段名称以及在Class文件结构和子结构中引用的其他常量的结构表。每个constant_pool表的条目的格式由它的第一个‘tag’字节指出。<br>constant_pool表的索引从1到constant_pool_count-1。</p>
+<h3 id="access-flags"><a href="#access-flags" class="headerlink" title="access_flags"></a>access_flags</h3><p>access_flags项的值是用来表示访问权限和类或者接口的属性的标志的掩码。设置时，每个标志的解释如表4.1所示。</p>
+<p>Table 4.1. 类访问和属性修饰符</p>
+<p>Flag Name    Value    Interpretation</p>
+<p>ACC_PUBLIC    0x0001    Declared public; 可以被外部包访问。<br>ACC_FINAL    0x0010    Declared final; 不允许有子类。<br>ACC_SUPER    0x0020    在invokespecial指令调用时特别处理超类方法。<br>ACC_INTERFACE    0x0200    标识接口类。<br>ACC_ABSTRACT    0x0400    Declared abstract; 不能被实例化。<br>ACC_SYNTHETIC    0x1000    Declared synthetic; 不再源代码中体现。<br>ACC_ANNOTATION    0x2000    Declared as an annotation type.<br>ACC_ENUM    0x4000    Declared as an enum type.</p>
+<p>可以用ACC_SYNTHETIC标志标记类，以指示它是由编译器生成的，并且不出现在源代码中。</p>
+<p>ACC_ENUM 标志指示这个类或者它的父类是被定义为枚举类型。</p>
+<p>一个接口的特征是被设置ACC_INTERFACE标志。如果没有设置ACC_INTERFACE标志，这个类文件定义的是一个类而不是一个接口。</p>
+<p>如果这个类设置了ACC_INTERFACE标志，它的ACC_ABSTRACT也一定被设置了(JLS §9.1.1.1)。这样的类文件不能设置其ACC_FINAL，ACC_SUPER或ACC_ENUM标志。</p>
+<p>注解类型必须设置ACC_ANNOTATION标志。如果设置了ACC_ANNOTATION标志，则也必须设置ACC_INTERFACE标志。如果这个类文件没有设置ACC_INTERFACE标志，它可以设置Table 4.1中除ACC_ANNOTATION之外的任何其他标志。但是，这个类不能同时设置ACC_FINAL和ACC_ABSTRACT标志(JLS §8.1.1.2)。</p>
+<p>ACC_SUPER标志指示如果它出现在此类中，则由invokespecial指令（§invokespecial）表示两个备用语义中的哪一个。 Java虚拟机指令集的编译器应设置ACC_SUPER标志。</p>
+<p>ACC_SUPER标志的存在是为了与旧编译器为Java编程语言编译的代码向后兼容。在版本1.0.2之前的Oracle JDK中，编译器生成了ClassFile access_flags，其中现在表示ACC_SUPER的标志没有指定含义，并且Oracle的Java虚拟机实现忽略了该标志（如果已设置）。</p>
+<p>表4.1中未分配的access_flags项的所有位都保留供将来使用。它们应该在生成的类文件中设置为零，并且应该被Java虚拟机的实现忽略。</p>
+<h3 id="this-class"><a href="#this-class" class="headerlink" title="this_class"></a>this_class</h3><p>this_class项的值必须是一个在constant_pool表中的有效索引。constant_pool索引index处的条目必须是一个在此类文件中定义的类或者接口的CONSTANT_Class_info结构。</p>
+<h3 id="super-class"><a href="#super-class" class="headerlink" title="super_class"></a>super_class</h3><p>对于一个类，父类项的值要么是0，要么是一个在常量池表中的有效索引。如果父类项的值非0，则在常量池表索引index位置上的条目一定是CONSTANT_Class_info结构(§4.4.1)，指示class文件中定义的类的直接父类。直接父类或者任何其他父类都不会在它的Class文件结构的access_flags项上设置ACC_FINAL标志。</p>
+<p>如果父类项的值是0，则这个类文件必须是Object类，唯一个没有直接父类的类或者接口。</p>
+<p>对于一个接口，父类项的值必须总是一个在常量池表中的有效索引。在此索引上的常量池条目必须是一个CONSTANT_Class_info结构指示Object类。</p>
+<h3 id="interfaces-count"><a href="#interfaces-count" class="headerlink" title="interfaces_count"></a>interfaces_count</h3><p>interfaces_count项的值是这个类或者接口类型的直接父接口的数量。</p>
+<h3 id="interfaces"><a href="#interfaces" class="headerlink" title="interfaces[]"></a>interfaces[]</h3><p>接口数组中的每个值都必须是一个在常量池表中的有效索引。在常量池表中索引是interfaces[i]（0&lt;=i&lt;interfaces_count）的值上的每个条目必须是表示一个接口的CONSTANT_Class_info 结构 (§4.4.1)，这个接口是这个类或者这个接口类型的父接口，在类型的来源中给出的从左到右的顺序。</p>
+<h3 id="fields-count"><a href="#fields-count" class="headerlink" title="fields_count"></a>fields_count</h3><p>fields_count项的值是字段表中field_info结构的数量。field_info结构指示所有字段，包括在这个类或者接口类型中的类变量和实例变量。</p>
+<h3 id="fields"><a href="#fields" class="headerlink" title="fields[]"></a>fields[]</h3><p>字段表中的每个值都必须是一个给出在这个类或者接口中的字段的完整描述的field_info(§4.5)结构。字段表仅仅包含在这个类或者接口中定义的那些字段。不包含从父类或者父接口中继承的字段。</p>
+<h3 id="methods-count"><a href="#methods-count" class="headerlink" title="methods_count"></a>methods_count</h3><p>methods_count的值给出了方法表中的methods_info结构的数量。</p>
+<h3 id="methods"><a href="#methods" class="headerlink" title="methods[]"></a>methods[]</h3><p>方法表中的每个值都必须是一个给出一个在这个类或者接口中方法的完整描述的method_info结构。如果一个method_info结构的access_flags项未设置ACC_NATIVE和ACC_ABSTRACT标志，Java虚拟机也提供了实现这个方法的指令。</p>
+<p>method_info结构指示了所有在这个类或者接口类型中定义的方法，包括实例方法，类方法，实力初始化方法以及任何类或者接口初始化方法(§2.9)。方法表不包含继承自父类或者父接口的方法。</p>
+<h3 id="attributes-count"><a href="#attributes-count" class="headerlink" title="attributes_count"></a>attributes_count</h3><p>attributes_count项的值给出了在这个类的属性表中的属性数量。</p>
+<h3 id="attributes"><a href="#attributes" class="headerlink" title="attributes[]"></a>attributes[]</h3><p>属性表的每个值都必须是一个attribute_info(§4.7)结构。</p>
+<p>本规范定义的属性出现在ClassFile结构的属性表中的是InnerClasses（§4.7.6），EnclosingMethod（§4.7.7），Synthetic（§4.7.8），Signature（§4.7.9）， SourceFile（§4.7.10），SourceDebugExtension（§4.7.11），不推荐使用（§4.7.15），RuntimeVisibleAnnotations（§4.7.16），RuntimeInvisibleAnnotations（§4.7.17）和BootstrapMethods（§4.7.21）属性。</p>
+<p>如果一个Java虚拟机的实现实现识别出class文件的版本在49.0版本以上，它必须识别和正确的读取在49.0或者更高版本class文件的文件结构的属性表中找到的签名(§4.7.9)，RuntimeVisibleAnnotations (§4.7.16)和 RuntimeInvisibleAnnotations (§4.7.17) 属性。</p>
+<p>如果Java虚拟机实现识别出51.0或更高版本的class文件，它必须识别和正确的读取在51.0或更高版本的class文件的文件结构的属性表中找到的BootstrapMethods (§4.7.21) 属性。</p>
+<p>一个Java虚拟机的实现需要静默忽略它无法识别的ClassFile结构的属性表中的任何或所有属性。不允许在本规范中定义的属性影响类文件的语义，但仅允许提供其他描述性信息（第4.7.1节）。</p>
+
+  </div>
+  <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+            <strong>本文作者： </strong>zhongyp</li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="https://zhongyp.me/jvm/2018-11-22-class-structure/" title="使用simple主题并开始写作">https://zhongyp.me/jvm/2018-11-22-class-structure/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/笔记/">笔记</a></li></ul>
+  </div>
+  
+<section class="comments" id="comments">
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script src="/js/md5.min.js"></script>
+    <script>
+        var gitalk = new Gitalk({
+            clientID: "94db00fd8803b1da40de",
+            clientSecret: "34b513c63a3e941ea4b2df972635d9fa19cf3364",
+            accessToken: "a25c2320388186bc7accf5faff34062b18131873",
+            repo: "comment",
+            owner: "zhongyp",
+            admin: "zhongyp",
+            id: location.pathname,
+            perPage: 50,
+            distractionFreeMode: "false"
+        })
+
+        gitalk.render('gitalk-container')
+    </script>
+</section>
+
+
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/concurrency/2018-11-27-concurrency-structure/" rel="next" title="并发知识架构">
+          并发知识架构
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+          <a href="/concurrency/2018-12-04-thread-start-end/" rel="prev" title="线程启动与终止">
+            线程启动与终止
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#class结构"><span class="toc-text">class结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#magic"><span class="toc-text">magic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#minor-version-major-version"><span class="toc-text">minor_version, major_version</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#constant-pool-count"><span class="toc-text">constant_pool_count</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#constant-pool"><span class="toc-text">constant_pool[]</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#access-flags"><span class="toc-text">access_flags</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#this-class"><span class="toc-text">this_class</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#super-class"><span class="toc-text">super_class</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#interfaces-count"><span class="toc-text">interfaces_count</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#interfaces"><span class="toc-text">interfaces[]</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fields-count"><span class="toc-text">fields_count</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fields"><span class="toc-text">fields[]</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#methods-count"><span class="toc-text">methods_count</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#methods"><span class="toc-text">methods[]</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#attributes-count"><span class="toc-text">attributes_count</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#attributes"><span class="toc-text">attributes[]</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+
+      <a href="https://tuchong.com/16028574/" target="_blank">我的摄影</a> |
+      <a href="http://zhongyp.me">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a> |
+      <a><span id="busuanzi_container_site_pv">本站访客数<span id="busuanzi_value_site_uv"></span>人次</span></a> |
+      <a><span id="busuanzi_container_site_pv">本站访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+    </div>
+  </footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     *
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      // var menu = document.getElementById('menu-main-post');
+      // if (menu) {
+      //   var toc = document.getElementById('toc');
+      //   if (toc) {
+      //     menu.onclick = function() {
+      //       if (toc) {
+      //         if (toc.style.display == 'block') {
+      //           toc.style.display = 'none';
+      //         } else {
+      //           toc.style.display = 'block';
+      //         }
+      //       }
+      //     };
+      //   } else {
+      //     menu.style.display = 'none';
+      //   }
+      // }
+    }
+
+  })(window, document);
+</script>
+
+
+  
+
+
+
+</body>
+</html>
