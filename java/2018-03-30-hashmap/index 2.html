@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="google-site-verification" content="9GY-OrjvdT8TkXuLJFSJcJqolHfXKJ5NVYKRUv8mCRM">
+  
+    <meta name="keywords" content="Java,HashMap（1.8版本）">
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客,钟宇鹏,个人博客">
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  
+    <title>HashMap（1.8版本）</title>
+  
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="/css/pure.min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <!-- <li class="pure-menu-item toc-menu pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li> -->
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+        <ul class="pure-menu-children">
+        
+          
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/photographer" class="pure-menu-link">摄影</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+          
+          
+      </ul>
+      </li>
+    
+  </ul>
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">zhongyp&#39;blog</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      HashMap（1.8版本）
+    </h1>
+    
+    <time class="time" datetime="2018-01-25T16:00:00.000Z">
+      2018-01-26
+    </time>
+     |
+    <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+</span>
+    <hr>
+  </header>
+  <div class="post-content">
+    <h2 id="HashMap的存储结构"><a href="#HashMap的存储结构" class="headerlink" title="HashMap的存储结构"></a>HashMap的存储结构</h2><p>HashMap存储默认初始化一个16大小的Node数组，如果存在冲突，则在以链表的方式存储，如果链表长度达到临界值，则使用红黑树存储。如下：</p>
+<p><img src="/media/article/hashmap.png" alt="hashmap结构"></p>
+<h2 id="HashMap-扩容"><a href="#HashMap-扩容" class="headerlink" title="HashMap 扩容"></a>HashMap 扩容</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">final V putVal(int hash, K key, V value, boolean onlyIfAbsent,</span><br><span class="line">                   boolean evict) &#123;</span><br><span class="line">   Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;</span><br><span class="line">   // 如果为空则重新创建一个Node数组，数组即HashMap</span><br><span class="line">   if ((tab = table) == null || (n = tab.length) == 0)</span><br><span class="line">       n = (tab = resize()).length;</span><br><span class="line">   // 如果hash值对应的Node数组中的Node为空，则直接将key，value放入Node </span><br><span class="line">   if ((p = tab[i = (n - 1) &amp; hash]) == null)</span><br><span class="line">       tab[i] = newNode(hash, key, value, null);</span><br><span class="line">   else &#123;</span><br><span class="line">       Node&lt;K,V&gt; e; K k;</span><br><span class="line">       // 判断下key是否相同，如果相同获取此Node</span><br><span class="line">       if (p.hash == hash &amp;&amp;</span><br><span class="line">           ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))</span><br><span class="line">           e = p;</span><br><span class="line">       // 如果key不相同，判断下Node数组中的对应Node是否是树结构，树结构直接新增树节点</span><br><span class="line">       else if (p instanceof TreeNode)</span><br><span class="line">           e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);</span><br><span class="line">       else &#123;</span><br><span class="line">           // 遍历Node数组对应位置Node的链表，将新增一个节点放入链表末尾。</span><br><span class="line">           for (int binCount = 0; ; ++binCount) &#123;</span><br><span class="line">               if ((e = p.next) == null) &#123;</span><br><span class="line">                   p.next = newNode(hash, key, value, null);</span><br><span class="line">                   // 如果增加后链表到达临界值，则转为树结构。</span><br><span class="line">                   if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st</span><br><span class="line">                       treeifyBin(tab, hash);</span><br><span class="line">                   break;</span><br><span class="line">               &#125;</span><br><span class="line">               // 如果链表中存在相同的key，则获取此节点，返回Node</span><br><span class="line">               if (e.hash == hash &amp;&amp;</span><br><span class="line">                   ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))</span><br><span class="line">                   break;</span><br><span class="line">               p = e;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       // 如果存在key相同的Node，则获取旧值，</span><br><span class="line">       if (e != null) &#123; // existing mapping for key</span><br><span class="line">           V oldValue = e.value;</span><br><span class="line">           // 只有允许修改标识为true或者旧值为null时可以替换旧值</span><br><span class="line">           if (!onlyIfAbsent || oldValue == null)</span><br><span class="line">               e.value = value;</span><br><span class="line">           // 移动node至尾部</span><br><span class="line">           afterNodeAccess(e);</span><br><span class="line">           return oldValue;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   ++modCount;</span><br><span class="line">   // 超过了阀值，重新扩展HashMap Node数组的大小</span><br><span class="line">   if (++size &gt; threshold)</span><br><span class="line">       resize();</span><br><span class="line">   afterNodeInsertion(evict);</span><br><span class="line">   return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">final Node&lt;K,V&gt;[] resize() &#123;</span><br><span class="line">   Node&lt;K,V&gt;[] oldTab = table;</span><br><span class="line">   // 未扩展前 HashMap Node数组大小（容量）</span><br><span class="line">   int oldCap = (oldTab == null) ? 0 : oldTab.length;</span><br><span class="line">   // 旧阀值</span><br><span class="line">   int oldThr = threshold;</span><br><span class="line">   int newCap, newThr = 0;</span><br><span class="line">   // 如果未扩展前 HashMap Node数组大小大于0且大小大于等于最大容量值，则调整阀值到整数上线，然后返回旧Node数组，即HashMap，否则将旧阀值扩大一倍。</span><br><span class="line">   if (oldCap &gt; 0) &#123;</span><br><span class="line">       if (oldCap &gt;= MAXIMUM_CAPACITY) &#123;</span><br><span class="line">           threshold = Integer.MAX_VALUE;</span><br><span class="line">           return oldTab;</span><br><span class="line">       &#125;</span><br><span class="line">       else if ((newCap = oldCap &lt;&lt; 1) &lt; MAXIMUM_CAPACITY &amp;&amp;</span><br><span class="line">                oldCap &gt;= DEFAULT_INITIAL_CAPACITY)</span><br><span class="line">           newThr = oldThr &lt;&lt; 1; // double threshold</span><br><span class="line">   &#125;</span><br><span class="line">   // 旧容量为0，且旧阀值大于0，则将新容量设置为旧阀值</span><br><span class="line">   else if (oldThr &gt; 0) // initial capacity was placed in threshold</span><br><span class="line">       newCap = oldThr;</span><br><span class="line">   // 如果旧阀值且旧容量为0，则使用默认的容量大小和阀值因子</span><br><span class="line">   else &#123;               // zero initial threshold signifies using defaults</span><br><span class="line">       newCap = DEFAULT_INITIAL_CAPACITY;</span><br><span class="line">       newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);</span><br><span class="line">   &#125;</span><br><span class="line">   // 新阀值如果为0，则使用新的容量和阀值因子计算。</span><br><span class="line">   if (newThr == 0) &#123;</span><br><span class="line">       float ft = (float)newCap * loadFactor;</span><br><span class="line">       newThr = (newCap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; (float)MAXIMUM_CAPACITY ?</span><br><span class="line">                 (int)ft : Integer.MAX_VALUE);</span><br><span class="line">   &#125;</span><br><span class="line">   threshold = newThr;</span><br><span class="line">   @SuppressWarnings(&#123;&quot;rawtypes&quot;,&quot;unchecked&quot;&#125;)</span><br><span class="line">       Node&lt;K,V&gt;[] newTab = (Node&lt;K,V&gt;[])new Node[newCap];</span><br><span class="line">   table = newTab;</span><br><span class="line">   if (oldTab != null) &#123;</span><br><span class="line">       // 遍历旧Node数组</span><br><span class="line">       for (int j = 0; j &lt; oldCap; ++j) &#123;</span><br><span class="line">           Node&lt;K,V&gt; e;</span><br><span class="line">           if ((e = oldTab[j]) != null) &#123;</span><br><span class="line">               oldTab[j] = null;</span><br><span class="line">               if (e.next == null)</span><br><span class="line">                   newTab[e.hash &amp; (newCap - 1)] = e;</span><br><span class="line">               else if (e instanceof TreeNode)</span><br><span class="line">                   ((TreeNode&lt;K,V&gt;)e).split(this, newTab, j, oldCap);</span><br><span class="line">               else &#123; // preserve order</span><br><span class="line">                   Node&lt;K,V&gt; loHead = null, loTail = null;</span><br><span class="line">                   Node&lt;K,V&gt; hiHead = null, hiTail = null;</span><br><span class="line">                   Node&lt;K,V&gt; next;</span><br><span class="line">                   do &#123;</span><br><span class="line">                       //遍历旧的链表</span><br><span class="line">                       next = e.next;</span><br><span class="line">                       // 这里的意思说，例如原来容量为16，现在扩展到32</span><br><span class="line">                       // 容量为16时，使用15&amp;hash获取key在Node数组中的位置，即1111&amp;hash</span><br><span class="line">                       // 容量为32时，使用31&amp;hash获取key在Node数组中的位置，即11111&amp;hash</span><br><span class="line">                       // 看出来区别没有，如果hash值得第5位不为1，则位置不变，否则的话，位置为 16+原来的位置。</span><br><span class="line">                       if ((e.hash &amp; oldCap) == 0) &#123;</span><br><span class="line">                           if (loTail == null)</span><br><span class="line">                               loHead = e;</span><br><span class="line">                           else</span><br><span class="line">                               loTail.next = e;</span><br><span class="line">                           loTail = e;</span><br><span class="line">                       &#125;</span><br><span class="line">                       else &#123;</span><br><span class="line">                           if (hiTail == null)</span><br><span class="line">                               hiHead = e;</span><br><span class="line">                           else</span><br><span class="line">                               hiTail.next = e;</span><br><span class="line">                           hiTail = e;</span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125; while ((e = next) != null);</span><br><span class="line">                   if (loTail != null) &#123;</span><br><span class="line">                       loTail.next = null;</span><br><span class="line">                       newTab[j] = loHead;</span><br><span class="line">                   &#125;</span><br><span class="line">                   if (hiTail != null) &#123;</span><br><span class="line">                       hiTail.next = null;</span><br><span class="line">                       newTab[j + oldCap] = hiHead;</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   return newTab;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><ol>
+<li>HashMap并发下死循环问题？</li>
+</ol>
+<p>该问题在JDK1.8中已经修复了。不过还是不推荐并发情况下使用，容易造成数据丢失。</p>
+
+  </div>
+  <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+            <strong>本文作者： </strong>zhongyp</li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="https://zhongyp.me/java/2018-03-30-hashmap/" title="使用simple主题并开始写作">https://zhongyp.me/java/2018-03-30-hashmap/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+  </div>
+  
+<section class="comments" id="comments">
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script src="/js/md5.min.js"></script>
+    <script>
+        var gitalk = new Gitalk({
+            clientID: "94db00fd8803b1da40de",
+            clientSecret: "34b513c63a3e941ea4b2df972635d9fa19cf3364",
+            accessToken: "a25c2320388186bc7accf5faff34062b18131873",
+            repo: "comment",
+            owner: "zhongyp",
+            admin: "zhongyp",
+            id: location.pathname,
+            perPage: 50,
+            distractionFreeMode: "false"
+        })
+
+        gitalk.render('gitalk-container')
+    </script>
+</section>
+
+
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/java/2018-01-10-pattern/" rel="next" title="设计模式原理及应用场景">
+          设计模式原理及应用场景
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+          <a href="/concurrency/2017-03-16-thread-brief/" rel="prev" title="线程简介">
+            线程简介
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HashMap的存储结构"><span class="toc-text">HashMap的存储结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HashMap-扩容"><span class="toc-text">HashMap 扩容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FAQ"><span class="toc-text">FAQ</span></a></li></ol>
+  </div>
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+
+      <a href="https://tuchong.com/16028574/" target="_blank">我的摄影</a> |
+      <a href="http://zhongyp.me">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a> |
+      <a><span id="busuanzi_container_site_pv">本站访客数<span id="busuanzi_value_site_uv"></span>人次</span></a> |
+      <a><span id="busuanzi_container_site_pv">本站访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+    </div>
+  </footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     *
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      // var menu = document.getElementById('menu-main-post');
+      // if (menu) {
+      //   var toc = document.getElementById('toc');
+      //   if (toc) {
+      //     menu.onclick = function() {
+      //       if (toc) {
+      //         if (toc.style.display == 'block') {
+      //           toc.style.display = 'none';
+      //         } else {
+      //           toc.style.display = 'block';
+      //         }
+      //       }
+      //     };
+      //   } else {
+      //     menu.style.display = 'none';
+      //   }
+      // }
+    }
+
+  })(window, document);
+</script>
+
+
+  
+
+
+
+</body>
+</html>

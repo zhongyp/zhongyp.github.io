@@ -1,0 +1,459 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#202020">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="google-site-verification" content="9GY-OrjvdT8TkXuLJFSJcJqolHfXKJ5NVYKRUv8mCRM">
+  
+    <meta name="keywords" content="笔记,中间件,RabbitMQ,RabbitMQ 学习随笔">
+  
+
+  
+    <meta name="description" content="钟宇鹏的博客,钟宇鹏,个人博客">
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  
+    <title>RabbitMQ 学习随笔</title>
+  
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="/css/pure.min.css">
+    
+      <link rel="stylesheet" href="/css/simple.css">
+    
+  
+</head>
+
+
+<body>
+  <nav class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+  <ul class="pure-menu-list float-r clearfix">
+    
+      <!-- <li class="pure-menu-item toc-menu pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main-post" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+      </li> -->
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <a id="menu-main" class="pure-menu-link" href="javascript:;">
+          <img class="menu-icon" src="/logo.png" alt="MENU">
+        </a>
+        <ul class="pure-menu-children">
+        
+          
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/photographer" class="pure-menu-link">摄影</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/search" class="pure-menu-link">搜索</a></li>
+          
+          
+          
+            <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+          
+          
+      </ul>
+      </li>
+    
+  </ul>
+  <a class="pure-menu-heading" href="/">
+      <h1 class="title">zhongyp&#39;blog</h1>
+      <!-- <span>钟宇鹏的博客</span> -->
+  </a>
+  <!-- 
+  <img class="logo" id="logo" src="/logo.png" alt="logo">
+   -->
+</nav>
+
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <article class="post" id="post">
+  <header class="post-header text-center">
+    <h1 class="title">
+      RabbitMQ 学习随笔
+    </h1>
+    
+    <time class="time" datetime="2020-02-20T16:00:00.000Z">
+      2020-02-21
+    </time>
+     |
+    <span id="busuanzi_container_page_pv">本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+</span>
+    <hr>
+  </header>
+  <div class="post-content">
+    <h2 id="1-关于RabbitMQ的Connection"><a href="#1-关于RabbitMQ的Connection" class="headerlink" title="1. 关于RabbitMQ的Connection"></a>1. 关于RabbitMQ的Connection</h2><p>Connection可以用来创建多个Channel实例，但是Channel实例不能在线程间共享。某些情况下Channel的操作可以并发运行，但是在其他情况下会导致网络上出现错误的通信帧交错，同时也会影响发送方确认(publisher confirm)机制的运行，所以多线程间共享Channel是非线程安全的。</p>
+<p>应用程序应该为每一个线程开辟一个Channel。</p>
+<h2 id="2-慎用方法"><a href="#2-慎用方法" class="headerlink" title="2. 慎用方法"></a>2. 慎用方法</h2><ul>
+<li>isOpen，这个方法返回值依赖shutdownCause，会引起锁竞争。</li>
+</ul>
+<h2 id="3-交换器声明参数说明"><a href="#3-交换器声明参数说明" class="headerlink" title="3. 交换器声明参数说明"></a>3. 交换器声明参数说明</h2><p><code>exchangeDeclare(String exchange, String type, boolean durable, boolean autoDelete, boolean internal, Map&lt;String, Object&gt; args) throws IOException;</code></p>
+<ul>
+<li>exchange: 交换器名称。</li>
+<li>type: 交换器名称，四种: direct、fanout、topic、headers。</li>
+<li>durable: 设置是否持久化。durable设置为true表示持久化，反之是非持久化。</li>
+<li>autoDelete: 设置是否自动删除，设置为true表示自动删除，自动删除的前提是: 至少有一个队列或者交换器与这个交换器绑定，之后所有与这个交换器绑定的队列或者交换器都与此解绑。</li>
+<li>internal: 设置是否是内置的，设置为true表示是内置的交换器，客户端程序无法直接发送消息到这个交换器中，只能通过交换器路由到这个交换器这种方式。</li>
+<li>argument: 其他的一些结构化参数。alternate-exchange。</li>
+</ul>
+<p>其他重载方法参数说明：</p>
+<p><code>exchangeDeclareNoWait(String exchange, String type, boolean durable, boolean autoDelete, boolean internal, Map&lt;String, Object&gt; args) throws IOException;</code></p>
+<p>nowait 参数指AMQP中定义队列不需要服务器返回，返回值为void。<strong><em>不建议使用</em></strong></p>
+<p><code>exechangeDeclarePassive(String name)</code>这个方法主要用来检测交换器是否存在，存在正常返回，不存在抛出异常。</p>
+<p>ifUnused: 设置是否在交换器没有被使用情况下删除。否则任何情况下都可以删除。</p>
+<h2 id="4-队列参数说明"><a href="#4-队列参数说明" class="headerlink" title="4. 队列参数说明"></a>4. 队列参数说明</h2><p><code>queueDeclare(String queue, boolean durable, boolean execlusive, boolean autoDelete, Map&lt;String, Object arguments) throws IOException;</code></p>
+<ul>
+<li>queue: 队列名称。</li>
+<li>durable: 设置是否持久化。为true则设置队列持久化。</li>
+<li>exclusive: 设置是否排他。如果设置为排他，则仅对首次声明它的连接可见，并在连接断开时（即使设置了持久化）自动删除。排他队列是基于连接(Connection)可见的，同一个连接断开时自动删除。排他是基于连接的，同一个连接的不同信道是可以同时访问同一连接创建的排他队列。</li>
+<li>autoDelete: 设置是否自动删除，自动删除的前提是: 至少有一个消费者连接到这个队列，之后所有与这个队列连接的消费者都断开时，才会自动删除。</li>
+<li>arguments: 设置队列的其他参数。x-message-ttl、x-expires、x-max-length、x-max-length-bytes、x-dead-letter-exchange、x-dead-letter-routing-key、x-max-priority等。</li>
+</ul>
+<p>消费者在信道上订阅了另一个队列，就无法再声明队列了。必须先取消订阅，将信道设置为“传输”。</p>
+<p>ifEmpty: 设置为true,表示在队列为空的情况下才能删除。</p>
+<h2 id="5-发送消息参数说明"><a href="#5-发送消息参数说明" class="headerlink" title="5. 发送消息参数说明"></a>5. 发送消息参数说明</h2><p><code>void basicPublish(String exchange, String routingKey, boolean mandatory, boolean immediate, BasicProperties props, byte[] body) throws IOException;</code></p>
+<ul>
+<li>exchange: 交换器名称，如果设置为空，则消息会发送到默认交换器中。</li>
+<li>routingKey: 路由健， 交换器根据路由健将消息存储到相应的队列中。</li>
+<li>props: 消息的基本属性集: 其中包含属性成员，分别有contentType、contentEncoding、headers(Map&lt;String, Object&gt;)、deliverMode、priority、correlationId、replyTo、expriation、messageId、timestamp、type、userId、appId、clusterId。</li>
+<li>byte[] body: 消息体。</li>
+<li>mandatory: 设置为true时，交换器无法根据自身的类型和路由键找到一个符合条件的队列，那么RabbitMQ会调用Basic.return命令将消息返回给生产者。否则消息直接被丢弃。</li>
+<li>immediate: 设置为true时， 如果交换器在将消息路由到队列都没有消费者时，该消息会通过Basic.Return返回至生产者。</li>
+</ul>
+<h2 id="6-使用mandatory参数时如何获取没有被正确路由到合适队列的消息"><a href="#6-使用mandatory参数时如何获取没有被正确路由到合适队列的消息" class="headerlink" title="6. 使用mandatory参数时如何获取没有被正确路由到合适队列的消息"></a>6. 使用mandatory参数时如何获取没有被正确路由到合适队列的消息</h2><p>可以通过调用channel.addReturnListener来添加ReturnListener监听器实现。</p>
+<h2 id="7-消费消息参数说明"><a href="#7-消费消息参数说明" class="headerlink" title="7. 消费消息参数说明"></a>7. 消费消息参数说明</h2><p><code>String basicConsume(String queue, boolean actoAck, String consumerTag, boolean noLocal, boolean exclusive, Map&lt;String, Object&gt; arguments, Consumer callback) throws IOException;</code></p>
+<ul>
+<li>queue: 队列的名称。</li>
+<li>autoAck: 设置是否自动确认。</li>
+<li>consumerTag: 消费者标签，用来区分多个消费者。</li>
+<li>noLocal: 设置true表示不能将同一个Connection中生产者发送的消息传送给这个Connection中的消费者。</li>
+<li>exclusive: 设置是否排他。只允许当前连接消费。</li>
+<li>argument: 设置消费者的其他参数。</li>
+<li>callback: 设置消费者的回调函数。</li>
+</ul>
+<h2 id="8-确认消息参数说明"><a href="#8-确认消息参数说明" class="headerlink" title="8. 确认消息参数说明"></a>8. 确认消息参数说明</h2><p><code>void basicAck(long deliveryTag, boolean multiple) throws IOException;</code></p>
+<ul>
+<li>deliveryTag: 当一个消费者向RabbitMQ注册后，RabbitMQ会用 basic.deliver方法向消费者推送消息，这个方法携带了一个delivery tag，它在一个channel中唯一代表了一次投递。delivery tag的唯一标识范围限于channel（待验证）。delivery tag是单调递增的正整数，客户端获取投递的方法用dellivery tag作为一个参数。</li>
+<li>mutiple: ack unack 的mutiple参数设置为true，则可以一次性应答delivery_tag小于等于传入值的所有应答。</li>
+</ul>
+<h2 id="9-备份交换器"><a href="#9-备份交换器" class="headerlink" title="9. 备份交换器"></a>9. 备份交换器</h2><p>如果不设置mandatory参数，那么在消息在未被路由的情况下将会丢失，设置了mandatory参数，那么需要添加ReturnListener的编程逻辑，生产者代码将变的复杂。</p>
+<p>如果不想采取上述措施取确保消息发送成功，可以通过声明备份交换器，声明交换器时使用alternate-exchange参数实现，也可以通过Policy方式实现。</p>
+<p>备份交换器如下特殊情况：</p>
+<ul>
+<li>如果设置的备份交换器不存在，则不会有异常出现，消息丢失。</li>
+<li>如果设置的备份交换器未绑定任何队列，则不会有异常出现，消息丢失。</li>
+<li>如果设置的备份交换器未匹配任何队列，则不会有异常出现，消息丢失。</li>
+<li>如果备份交换器和mandatory一起使用，则mandatory失效。</li>
+</ul>
+<h2 id="10-消息过期时间"><a href="#10-消息过期时间" class="headerlink" title="10. 消息过期时间"></a>10. 消息过期时间</h2><p>目前有两种方式设置消息的过期时间：</p>
+<ol>
+<li><p>通过队列属性设置，所有消息都有相同的过期时间。设置队列属性x-message-ttl或者通过Policy设置。也可以通过HTTP API。消息过期会被立即删除。</p>
+</li>
+<li><p>通过对消息本身单独设置。在basicPulish方法中添加expiration的属性参数。也可以通过HTTP API。消息过期不会被立即删除，只有当消费者消费消息时判定消息是否过期。</p>
+</li>
+</ol>
+<p>如果两种方式一块使用，则以过期时间较小的为准。</p>
+<p>消息一旦到达过期时间，就会变成死信。</p>
+<p>如果不设置ttl，则消息不会过期；如果ttl设置为0，此时除非将消息直接投递给消费者，否则该消息会被立即丢弃。</p>
+<p>设置消息队列x-expires参数可以控制自动删除前处于未使用状态的时间。未使用的意思是队列上没有任何消费者，队列也没有被重新声明，并且在过期时间段内也未调用过Basic.Get命令。</p>
+<h2 id="11-死信队列、死信交换器（Dead-Letter-Exchange）"><a href="#11-死信队列、死信交换器（Dead-Letter-Exchange）" class="headerlink" title="11. 死信队列、死信交换器（Dead-Letter-Exchange）"></a>11. 死信队列、死信交换器（Dead-Letter-Exchange）</h2><p>当一个消息在一个队列中变成死信时，它可以被重新发送到另一个交换器(DLX)中，绑定DLX的就被称为私信队列。</p>
+<h2 id="12-延迟队列"><a href="#12-延迟队列" class="headerlink" title="12. 延迟队列"></a>12. 延迟队列</h2><p>延迟队列存储的对象时对应的延迟消息。延迟消息指消息被发送后（生产者？），并不想让消费者立即拿到这个消息，而是等待特定时间后，消费者才能拿这个消息消费。</p>
+<h2 id="13-优先级队列"><a href="#13-优先级队列" class="headerlink" title="13. 优先级队列"></a>13. 优先级队列</h2><p>具有高优先级的队列具有高的被优先消费的特权。设置x-max-priority参数实现。</p>
+<h2 id="14-RPC"><a href="#14-RPC" class="headerlink" title="14. RPC"></a>14. RPC</h2><p>时序图：</p>
+<p><img src="/media/article/rabbitmq-rpc-seq.png" alt="rabbitmq-rpc-seq"></p>
+<p>流程图：<br><img src="/media/article/rabbitmq-rpc-logic.png" alt="rabbitmq-rpc-logic"></p>
+<h2 id="15-持久化"><a href="#15-持久化" class="headerlink" title="15. 持久化"></a>15. 持久化</h2><p>RabbitMQ持久化分为3个部分：交换器、队列、消息持久化。</p>
+<p>交换器和队列通过durable设置持久化；消息持久化通过投递模式(deliveryMode)设置为2实现。</p>
+<p>注意：<strong><em>持久化消息正确存入RabbitMQ时，还需要一定时间才能存入磁盘。</em></strong>为了解决这个问题，可以引入RabbitMQ的队列镜像机制，如果主节点挂掉，可以自动切换到从节点，这样就保证了队列的可靠性。</p>
+<h2 id="16-生产者确认"><a href="#16-生产者确认" class="headerlink" title="16. 生产者确认"></a>16. 生产者确认</h2><p>为了保证消息正确存入RabbitMQ，有两种解决方式：</p>
+<ul>
+<li>事务方式: 虽然保证了数据的正确性，但是损耗RabbitMQ性能非常大（每次多一次命令帧的交互）。</li>
+<li>通过发送方确认实现: 消息被发送到匹配队列后，RabbitMQ就会发送一个Basic.Ack给生产者。如果消息和队列是可持久化的，那么消息被写入磁盘后，才会发出ack确认。</li>
+</ul>
+<p>发送方确认有4种方式: 事务和普通confirm，批量和异步confirm。</p>
+<p>批量confirm: 发送一批数据后，调用waitForConfirms方法，等待服务器确认返回。缺点是，如果存在一条NACK，则全部需要重新发送，容易造成重复数据。<br>异步confirm: 提供一个回调方法，服务端确认了一条或者多条消息后客户端会回调这个方法处理。</p>
+<p>事务机制和发送确认机制是互斥的。</p>
+<p>事务机制和发送确认机制确保消息能够正确的发至RabbitMQ，这里的发至指正确的发往至RabbitMQ的交换器，如果此时交换器没有绑定队列，消息丢失。</p>
+<h2 id="17-消费消息"><a href="#17-消费消息" class="headerlink" title="17. 消费消息"></a>17. 消费消息</h2><p>消费消息需要注意：</p>
+<ul>
+<li>消息分发: 轮询的方式。</li>
+<li>消息的顺序性: 消费者消息的消息和发布消息的顺序是一致的。RabbitMQ的顺序保障是从消息存入队列开始的。</li>
+<li>弃用QueueingConsumer</li>
+</ul>
+<p><code>basicQos(int prefetchCount, int PrefetchSize,  boolean global)</code>参数说明：</p>
+<ul>
+<li>prefetchCount: 设置为0表示消息数量没有上限。</li>
+<li>prefetchSize: 表示消费者所能接收为确认的总体大小上限，单位为B，设置为0表示没有上限。</li>
+<li>global: true表示信道上所有的消费者都要遵从prefetchCount的限定值；false表示信道上新的消费者需要遵循prefetchCount的限定值。</li>
+</ul>
+<p>如果需要保证消息的顺序性，可以在消息体内加入序列来保持消息消费的有序性。</p>
+<p>QueueingConsumer存在的问题:</p>
+<ul>
+<li>消费者内存溢出，导致服务宕机，队列堆积。</li>
+<li>拖累同一个Connection的所有信道，使其性能降低。</li>
+<li>同步递归调用QueueingConsumer会导致死锁。</li>
+<li>RabbitMQ的自动连接恢复机制不支持QueueingConsumer。</li>
+<li>QueueingConsumer不是事件驱动的。</li>
+</ul>
+<p>建议尽量使用继承DefaultConsumer的方式。</p>
+<h2 id="18-消息传输保障"><a href="#18-消息传输保障" class="headerlink" title="18. 消息传输保障"></a>18. 消息传输保障</h2><p>At most once: 最多一次。可能丢失，但不重复。</p>
+<p>At least once: 最少一次。不会丢失，可能重复。</p>
+<p>Exactly once: 恰好一次。不会丢失，不会重复。此方式RabbitMQ无法保证。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://book.douban.com/subject/27591386/" target="_blank" rel="noopener">RabbitMQ实战指南</a></p>
+
+  </div>
+  <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+            <strong>本文作者： </strong>zhongyp</li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="https://zhongyp.me/middleware/2020-02-21-rabbitmq/" title="使用simple主题并开始写作">https://zhongyp.me/middleware/2020-02-21-rabbitmq/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+        </ul>
+
+  </div>
+  <div class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RabbitMQ/">RabbitMQ</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/中间件/">中间件</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/笔记/">笔记</a></li></ul>
+  </div>
+  
+<section class="comments" id="comments">
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script src="/js/md5.min.js"></script>
+    <script>
+        var gitalk = new Gitalk({
+            clientID: "94db00fd8803b1da40de",
+            clientSecret: "34b513c63a3e941ea4b2df972635d9fa19cf3364",
+            accessToken: "a25c2320388186bc7accf5faff34062b18131873",
+            repo: "comment",
+            owner: "zhongyp",
+            admin: "zhongyp",
+            id: location.pathname,
+            perPage: 50,
+            distractionFreeMode: "false"
+        })
+
+        gitalk.render('gitalk-container')
+    </script>
+</section>
+
+
+</article>
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/spring/2020-02-13-spring-amqp/" rel="next" title="Spring AMQP">
+          Spring AMQP
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+        
+          <a href="/jvm/2020-05-20-g1/" rel="prev" title="Java Performance Companion">
+            Java Performance Companion
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-关于RabbitMQ的Connection"><span class="toc-text">1. 关于RabbitMQ的Connection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-慎用方法"><span class="toc-text">2. 慎用方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-交换器声明参数说明"><span class="toc-text">3. 交换器声明参数说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-队列参数说明"><span class="toc-text">4. 队列参数说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-发送消息参数说明"><span class="toc-text">5. 发送消息参数说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-使用mandatory参数时如何获取没有被正确路由到合适队列的消息"><span class="toc-text">6. 使用mandatory参数时如何获取没有被正确路由到合适队列的消息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-消费消息参数说明"><span class="toc-text">7. 消费消息参数说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-确认消息参数说明"><span class="toc-text">8. 确认消息参数说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-备份交换器"><span class="toc-text">9. 备份交换器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-消息过期时间"><span class="toc-text">10. 消息过期时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-死信队列、死信交换器（Dead-Letter-Exchange）"><span class="toc-text">11. 死信队列、死信交换器（Dead-Letter-Exchange）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-延迟队列"><span class="toc-text">12. 延迟队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-优先级队列"><span class="toc-text">13. 优先级队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-RPC"><span class="toc-text">14. RPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-持久化"><span class="toc-text">15. 持久化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#16-生产者确认"><span class="toc-text">16. 生产者确认</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#17-消费消息"><span class="toc-text">17. 消费消息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#18-消息传输保障"><span class="toc-text">18. 消息传输保障</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+  </div>
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+    </div>
+
+    
+
+  </div>
+
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+
+      <a href="https://tuchong.com/16028574/" target="_blank">我的摄影</a> |
+      <a href="http://zhongyp.me">DO IT</a> |
+      <a href="https://github.com/zhongyp" target="_blank">GitHub</a> |
+      <a href="http://hexo.io" target="_blank">Hexo</a> |
+      <a href="https://github.com/zhongyp/hexo-theme-simple" target="_blank">Theme simple</a> |
+      <a href="https://github.com/microacup/hexo-theme-micorb" target="_blank">Base on theme microb</a> |
+      <a><span id="busuanzi_container_site_pv">本站访客数<span id="busuanzi_value_site_uv"></span>人次</span></a> |
+      <a><span id="busuanzi_container_site_pv">本站访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+    </div>
+  </footer>
+
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     *
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      // var menu = document.getElementById('menu-main-post');
+      // if (menu) {
+      //   var toc = document.getElementById('toc');
+      //   if (toc) {
+      //     menu.onclick = function() {
+      //       if (toc) {
+      //         if (toc.style.display == 'block') {
+      //           toc.style.display = 'none';
+      //         } else {
+      //           toc.style.display = 'block';
+      //         }
+      //       }
+      //     };
+      //   } else {
+      //     menu.style.display = 'none';
+      //   }
+      // }
+    }
+
+  })(window, document);
+</script>
+
+
+  
+
+
+
+</body>
+</html>
