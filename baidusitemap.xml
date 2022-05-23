@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://zhongyp.me/mysql/2018-04-02-mysql/</loc>
+    <lastmod>2021-10-26T03:01:38.953Z</lastmod>
+  </url>  <url>
     <loc>https://zhongyp.me/career/2020-07-14-time-manage/</loc>
     <lastmod>2021-06-08T15:52:30.165Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/career/try-my-best/</loc>
     <lastmod>2021-06-08T15:51:56.322Z</lastmod>
+  </url>  <url>
+    <loc>https://zhongyp.me/spring/2020-02-13-spring-amqp/</loc>
+    <lastmod>2021-05-19T07:57:28.743Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/jvm/2019-09-08-jvm-structure/</loc>
     <lastmod>2020-11-14T09:13:32.184Z</lastmod>
@@ -22,9 +28,6 @@
     <loc>https://zhongyp.me/jvm/2020-05-20-g1/</loc>
     <lastmod>2020-11-14T09:06:18.031Z</lastmod>
   </url>  <url>
-    <loc>https://zhongyp.me/spring/2020-02-13-spring-amqp/</loc>
-    <lastmod>2020-06-28T12:20:26.826Z</lastmod>
-  </url>  <url>
     <loc>https://zhongyp.me/concurrency/2018-12-06-thread-communication/</loc>
     <lastmod>2020-06-25T14:37:34.521Z</lastmod>
   </url>  <url>
@@ -36,9 +39,6 @@
   </url>  <url>
     <loc>https://zhongyp.me/java/2018-01-10-pattern/</loc>
     <lastmod>2020-06-25T14:27:43.084Z</lastmod>
-  </url>  <url>
-    <loc>https://zhongyp.me/mysql/2018-04-02-mysql/</loc>
-    <lastmod>2020-06-18T06:43:20.235Z</lastmod>
   </url>  <url>
     <loc>https://zhongyp.me/mysql/2018-04-02-sql/</loc>
     <lastmod>2020-06-17T14:40:50.950Z</lastmod>

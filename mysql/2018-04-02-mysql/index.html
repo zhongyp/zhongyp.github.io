@@ -274,7 +274,7 @@
 <ul>
 <li>当服务器对多个索引做相交操作时（通常多个and），通常意味着需要一个包含所有相关列的多列索引，而不是多个独立的单列索引。</li>
 <li>当服务器对多个索引做联合操作时（通常多个or），通常需要耗费大量CPU和内存资源在算法的缓存、排序、合并操作上。</li>
-<li>优化器不会把这些计算到查询成本中，优化器只关心随机页面读取，这会是的查询的成本被低估，到时该执行计划还不如直接走全表扫描。</li>
+<li>优化器不会把这些计算到查询成本中，优化器只关心随机页面读取，这会使得查询的成本被低估，到时该执行计划还不如直接走全表扫描。</li>
 </ul>
 <h4 id="选择合适的索引顺序"><a href="#选择合适的索引顺序" class="headerlink" title="选择合适的索引顺序"></a>选择合适的索引顺序</h4><p>当不考虑排序和分组时，选择性最高的列放到索引最前列。这时候索引的作用只是用于优化where条件的查找。</p>
 <h4 id="聚簇索引"><a href="#聚簇索引" class="headerlink" title="聚簇索引"></a>聚簇索引</h4><p>聚簇索引并不是一种单独的索引类型，而是一种数据存储方式。</p>
@@ -734,16 +734,16 @@
       <div class="post-nav-item post-nav-next">
         
           <span>〈 </span>
-          <a href="/jvm/2018-03-27-jvm-memory/" rel="next" title="JVM垃圾收集器">
-          JVM垃圾收集器
+          <a href="/mysql/2018-04-02-sql/" rel="next" title="SQL优化">
+          SQL优化
           </a>
         
       </div>
   
       <div class="post-nav-item post-nav-prev">
         
-          <a href="/mysql/2018-04-02-sql/" rel="prev" title="SQL优化">
-            SQL优化
+          <a href="/jvm/2018-04-07-jvm-tools/" rel="prev" title="Java虚拟机问题排查工具">
+            Java虚拟机问题排查工具
           </a>
           <span>〉</span>
         
