@@ -82,9 +82,9 @@
     </summary>
     
     
-      <category term="JVM" scheme="https://zhongyp.me/tags/JVM/"/>
-    
       <category term="笔记" scheme="https://zhongyp.me/tags/%E7%AC%94%E8%AE%B0/"/>
+    
+      <category term="JVM" scheme="https://zhongyp.me/tags/JVM/"/>
     
   </entry>
   
@@ -187,9 +187,9 @@
     </summary>
     
     
-      <category term="笔记" scheme="https://zhongyp.me/tags/%E7%AC%94%E8%AE%B0/"/>
-    
       <category term="Java" scheme="https://zhongyp.me/tags/Java/"/>
+    
+      <category term="笔记" scheme="https://zhongyp.me/tags/%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
