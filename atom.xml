@@ -5,9 +5,9 @@
   <subtitle>钟宇鹏的博客</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="https://zhongyp.me/"/>
+  <link href="http://blog.programer.group/"/>
   <updated>2021-06-08T15:51:56.322Z</updated>
-  <id>https://zhongyp.me/</id>
+  <id>http://blog.programer.group/</id>
   
   <author>
     <name>zhongyp</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>程序员的自我修养</title>
-    <link href="https://zhongyp.me/career/try-my-best/"/>
-    <id>https://zhongyp.me/career/try-my-best/</id>
+    <link href="http://blog.programer.group/career/try-my-best/"/>
+    <id>http://blog.programer.group/career/try-my-best/</id>
     <published>2020-11-16T16:00:00.000Z</published>
     <updated>2021-06-08T15:51:56.322Z</updated>
     
@@ -35,14 +35,14 @@
     </summary>
     
     
-      <category term="mocker" scheme="https://zhongyp.me/tags/mocker/"/>
+      <category term="mocker" scheme="http://blog.programer.group/tags/mocker/"/>
     
   </entry>
   
   <entry>
     <title>时间管理</title>
-    <link href="https://zhongyp.me/career/2020-07-14-time-manage/"/>
-    <id>https://zhongyp.me/career/2020-07-14-time-manage/</id>
+    <link href="http://blog.programer.group/career/2020-07-14-time-manage/"/>
+    <id>http://blog.programer.group/career/2020-07-14-time-manage/</id>
     <published>2020-07-03T16:00:00.000Z</published>
     <updated>2021-06-08T15:52:30.165Z</updated>
     
@@ -58,14 +58,14 @@
     </summary>
     
     
-      <category term="mocker" scheme="https://zhongyp.me/tags/mocker/"/>
+      <category term="mocker" scheme="http://blog.programer.group/tags/mocker/"/>
     
   </entry>
   
   <entry>
     <title>Java对象创建</title>
-    <link href="https://zhongyp.me/jvm/2020-06-22/"/>
-    <id>https://zhongyp.me/jvm/2020-06-22/</id>
+    <link href="http://blog.programer.group/jvm/2020-06-22/"/>
+    <id>http://blog.programer.group/jvm/2020-06-22/</id>
     <published>2020-06-21T16:00:00.000Z</published>
     <updated>2020-06-25T14:30:12.470Z</updated>
     
@@ -82,16 +82,16 @@
     </summary>
     
     
-      <category term="笔记" scheme="https://zhongyp.me/tags/%E7%AC%94%E8%AE%B0/"/>
+      <category term="笔记" scheme="http://blog.programer.group/tags/%E7%AC%94%E8%AE%B0/"/>
     
-      <category term="JVM" scheme="https://zhongyp.me/tags/JVM/"/>
+      <category term="JVM" scheme="http://blog.programer.group/tags/JVM/"/>
     
   </entry>
   
   <entry>
     <title>Java Performance Companion</title>
-    <link href="https://zhongyp.me/jvm/2020-05-20-g1/"/>
-    <id>https://zhongyp.me/jvm/2020-05-20-g1/</id>
+    <link href="http://blog.programer.group/jvm/2020-05-20-g1/"/>
+    <id>http://blog.programer.group/jvm/2020-05-20-g1/</id>
     <published>2020-05-19T16:00:00.000Z</published>
     <updated>2020-11-14T09:06:18.031Z</updated>
     
@@ -108,16 +108,16 @@
     </summary>
     
     
-      <category term="JVM" scheme="https://zhongyp.me/tags/JVM/"/>
+      <category term="JVM" scheme="http://blog.programer.group/tags/JVM/"/>
     
-      <category term="翻译" scheme="https://zhongyp.me/tags/%E7%BF%BB%E8%AF%91/"/>
+      <category term="翻译" scheme="http://blog.programer.group/tags/%E7%BF%BB%E8%AF%91/"/>
     
   </entry>
   
   <entry>
     <title>RabbitMQ 学习随笔</title>
-    <link href="https://zhongyp.me/middleware/2020-02-21-rabbitmq/"/>
-    <id>https://zhongyp.me/middleware/2020-02-21-rabbitmq/</id>
+    <link href="http://blog.programer.group/middleware/2020-02-21-rabbitmq/"/>
+    <id>http://blog.programer.group/middleware/2020-02-21-rabbitmq/</id>
     <published>2020-02-20T16:00:00.000Z</published>
     <updated>2020-05-21T14:33:44.399Z</updated>
     
@@ -133,18 +133,18 @@
     </summary>
     
     
-      <category term="笔记" scheme="https://zhongyp.me/tags/%E7%AC%94%E8%AE%B0/"/>
+      <category term="笔记" scheme="http://blog.programer.group/tags/%E7%AC%94%E8%AE%B0/"/>
     
-      <category term="中间件" scheme="https://zhongyp.me/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+      <category term="中间件" scheme="http://blog.programer.group/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
     
-      <category term="RabbitMQ" scheme="https://zhongyp.me/tags/RabbitMQ/"/>
+      <category term="RabbitMQ" scheme="http://blog.programer.group/tags/RabbitMQ/"/>
     
   </entry>
   
   <entry>
     <title>Spring AMQP</title>
-    <link href="https://zhongyp.me/spring/2020-02-13-spring-amqp/"/>
-    <id>https://zhongyp.me/spring/2020-02-13-spring-amqp/</id>
+    <link href="http://blog.programer.group/spring/2020-02-13-spring-amqp/"/>
+    <id>http://blog.programer.group/spring/2020-02-13-spring-amqp/</id>
     <published>2020-02-12T16:00:00.000Z</published>
     <updated>2021-05-19T07:57:28.743Z</updated>
     
@@ -160,18 +160,18 @@
     </summary>
     
     
-      <category term="笔记" scheme="https://zhongyp.me/tags/%E7%AC%94%E8%AE%B0/"/>
+      <category term="笔记" scheme="http://blog.programer.group/tags/%E7%AC%94%E8%AE%B0/"/>
     
-      <category term="RabbitMQ" scheme="https://zhongyp.me/tags/RabbitMQ/"/>
+      <category term="RabbitMQ" scheme="http://blog.programer.group/tags/RabbitMQ/"/>
     
-      <category term="Spring AMQP" scheme="https://zhongyp.me/tags/Spring-AMQP/"/>
+      <category term="Spring AMQP" scheme="http://blog.programer.group/tags/Spring-AMQP/"/>
     
   </entry>
   
   <entry>
     <title>Java 8 Stream</title>
-    <link href="https://zhongyp.me/java/2019-12-25-java8-stream/"/>
-    <id>https://zhongyp.me/java/2019-12-25-java8-stream/</id>
+    <link href="http://blog.programer.group/java/2019-12-25-java8-stream/"/>
+    <id>http://blog.programer.group/java/2019-12-25-java8-stream/</id>
     <published>2019-12-24T16:00:00.000Z</published>
     <updated>2020-01-07T13:18:10.152Z</updated>
     
@@ -187,16 +187,16 @@
     </summary>
     
     
-      <category term="Java" scheme="https://zhongyp.me/tags/Java/"/>
+      <category term="Java" scheme="http://blog.programer.group/tags/Java/"/>
     
-      <category term="笔记" scheme="https://zhongyp.me/tags/%E7%AC%94%E8%AE%B0/"/>
+      <category term="笔记" scheme="http://blog.programer.group/tags/%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
   <entry>
     <title>数据库系统概念</title>
-    <link href="https://zhongyp.me/mysql/2019-12-05-database/"/>
-    <id>https://zhongyp.me/mysql/2019-12-05-database/</id>
+    <link href="http://blog.programer.group/mysql/2019-12-05-database/"/>
+    <id>http://blog.programer.group/mysql/2019-12-05-database/</id>
     <published>2019-12-04T16:00:00.000Z</published>
     <updated>2020-05-21T14:33:43.392Z</updated>
     
@@ -212,16 +212,16 @@
     </summary>
     
     
-      <category term="笔记" scheme="https://zhongyp.me/tags/%E7%AC%94%E8%AE%B0/"/>
+      <category term="笔记" scheme="http://blog.programer.group/tags/%E7%AC%94%E8%AE%B0/"/>
     
-      <category term="数据库" scheme="https://zhongyp.me/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+      <category term="数据库" scheme="http://blog.programer.group/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
   <entry>
     <title>Redis空间优化</title>
-    <link href="https://zhongyp.me/redis/2019-11-13-redis-space-optimization/"/>
-    <id>https://zhongyp.me/redis/2019-11-13-redis-space-optimization/</id>
+    <link href="http://blog.programer.group/redis/2019-11-13-redis-space-optimization/"/>
+    <id>http://blog.programer.group/redis/2019-11-13-redis-space-optimization/</id>
     <published>2019-11-12T16:00:00.000Z</published>
     <updated>2019-11-15T10:57:00.167Z</updated>
     
@@ -238,14 +238,14 @@
     </summary>
     
     
-      <category term="Redis" scheme="https://zhongyp.me/tags/Redis/"/>
+      <category term="Redis" scheme="http://blog.programer.group/tags/Redis/"/>
     
   </entry>
   
   <entry>
     <title>线程池</title>
-    <link href="https://zhongyp.me/concurrency/2019-11-07-threadpool/"/>
-    <id>https://zhongyp.me/concurrency/2019-11-07-threadpool/</id>
+    <link href="http://blog.programer.group/concurrency/2019-11-07-threadpool/"/>
+    <id>http://blog.programer.group/concurrency/2019-11-07-threadpool/</id>
     <published>2019-11-06T16:00:00.000Z</published>
     <updated>2020-05-21T14:33:54.550Z</updated>
     
@@ -264,14 +264,37 @@
     </summary>
     
     
-      <category term="并发" scheme="https://zhongyp.me/tags/%E5%B9%B6%E5%8F%91/"/>
+      <category term="并发" scheme="http://blog.programer.group/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java反射</title>
+    <link href="http://blog.programer.group/java/2019-10-04-reflection/"/>
+    <id>http://blog.programer.group/java/2019-10-04-reflection/</id>
+    <published>2019-10-03T16:00:00.000Z</published>
+    <updated>2020-06-03T12:58:23.335Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h2><p>在Java中的反射机制是指在运行状态中，对于任意一个类都能够知道这个类所有的属性和方法;并且对于任意一个对象，都能够调用它的任意一个方法;这种动态获取信息以及动态创建/调用对象方法的功能称为Java语言的反射机制。</p><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><p>可以在运行时动态的确定类型并创建实例，可以调用实例中的任意方法即是方法时private的。</p><h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul><li>相比于编译时确定类型的方式，运行时确定类型创建实例会带来一定的性能消耗。</li><li>反射需要运行时的权限，这种权限可能在安全管理器下运行时可能不存在。对于必须在受限的安全上下文（例如Applet）中运行的代码，这是一个重要的考虑因素。</li><li>由于反射允许代码执行非反射代码中非法的操作（例如访问私有字段和方法），因此使用反射可能会导致意外的副作用，这可能会使代码无法正常工作并可能破坏可移植性。反射代码破坏了抽象，因此可能会随着平台的升级而改变行为。</li></ul><h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><blockquote><p>反射调用慢在哪里？</p></blockquote><p>相对于在编译时确定对象类型，反射是在运行时动态创建对象并确定对象类型，所以会比编译时确定对象类型多一些性能消耗即慢。<br>例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">long start = System.currentTimeMillis();</span><br><span class="line">for(int i=0; i&lt;10000; i++)</span><br><span class="line">&#123;</span><br><span class="line">  User user = new User();</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(System.currentTimeMillis() - start);</span><br><span class="line">// 耗时基本在4.5ms左右</span><br></pre></td></tr></table></figure></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">long start = System.currentTimeMillis();</span><br><span class="line">for(int i=0; i&lt;10000; i++)</span><br><span class="line">&#123;</span><br><span class="line">  Class&lt;?&gt; clazz =  Class.forName(&quot;com.zhongyp.advanced.refect.User&quot;, true, ReflectDemo.class.getClassLoader());</span><br><span class="line">            User user = (User) clazz.newInstance();</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(System.currentTimeMillis() - start);</span><br><span class="line">// 耗时基本在20ms左右</span><br></pre></td></tr></table></figure><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://docs.oracle.com/javase/tutorial/reflect/index.html" target="_blank" rel="noopener">Java Reflection API</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;反射&quot;&gt;&lt;a href=&quot;#反射&quot; class=&quot;headerlink&quot; title=&quot;反射&quot;&gt;&lt;/a&gt;反射&lt;/h2&gt;&lt;p&gt;在Java中的反射机制是指在运行状态中，对于任意一个类都能够知道这个类所有的属性和方法;并且对于任意一个对象，都能够调用它的任意一个方法;这
+      
+    
+    </summary>
+    
+    
+      <category term="Java" scheme="http://blog.programer.group/tags/Java/"/>
     
   </entry>
   
   <entry>
     <title>JDK动态代理浅析</title>
-    <link href="https://zhongyp.me/java/2019-10-04-jdk-proxy/"/>
-    <id>https://zhongyp.me/java/2019-10-04-jdk-proxy/</id>
+    <link href="http://blog.programer.group/java/2019-10-04-jdk-proxy/"/>
+    <id>http://blog.programer.group/java/2019-10-04-jdk-proxy/</id>
     <published>2019-10-03T16:00:00.000Z</published>
     <updated>2020-05-21T14:33:49.165Z</updated>
     
@@ -288,61 +311,14 @@
     </summary>
     
     
-      <category term="Java" scheme="https://zhongyp.me/tags/Java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>AspectJ</title>
-    <link href="https://zhongyp.me/java/2019-10-04-aspectj/"/>
-    <id>https://zhongyp.me/java/2019-10-04-aspectj/</id>
-    <published>2019-10-03T16:00:00.000Z</published>
-    <updated>2019-10-22T17:16:13.270Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p>本文引用自<a href="https://www.iteye.com/blog/log-cd-562056" target="_blank" rel="noopener">AspectJ LTW(Load Time Weaving)</a></p></blockquote><h2 id="AspectJ"><a href="#AspectJ" class="headerlink" title="AspectJ"></a>AspectJ</h2><blockquote><p>AspectJ是目前实现AOP框架中最成熟，功能最丰富的语言。当然，AspectJ需要使用额外的编译器。</p></blockquote><blockquote><p>AspectJ可以通过多种方式实现，包括源码织入或字节码织入，并且可以直接在虚拟机（VM）中实现。在所有情况下，AspectJ程序都将成为在Java VM中运行的有效Java程序。受切面影响的类与不受影响的类具有二进制兼容性（以保持与不受影响的原始文件编译的类兼容）。支持多种实现方式使该语言可以随着技术的变化而发展，并且与Java兼容可确保平台可用性。<br>AspectJ采用编译期织入和类加载期织入的方式织入切面，是语言级的AOP实现，提供了完备的AOP支持。它用AspectJ语言定义切面，在编译期或类加载期将切面织入到Java类中。<br>AspectJ提供了两种切面织入方式，第一种通过特殊编译器，在编译期，将AspectJ语言编写的切面类织入到Java类中，可以通过一个Ant或Maven任务来完成这个操作；第二种方式是类加载期织入，也简称为LTW（Load Time Weaving）。<br>使用AspectJ LTW有两个主要步骤，第一，通过JVM的-javaagent参数设置LTW的织入器类包，以代理JVM默认的类加载器；第二，LTW织入器需要一个aop.xml文件，在该文件中指定切面类和需要进行切面织入的目标类。</p></blockquote><blockquote><p>设置-javaagent JVM参数的方法:<br>(1)在Eclipse下的设置:<br>运行类-&gt;右键单击-&gt;Run As-&gt;Run…，可以在弹出的Run设置窗口设置该类的各项运行属性，切换到Arguments Tab页，在VM arguments中通过-javaagent指定AspectJ 织入器类包。<br>-javaagent:E:\workspace\lib\spring2.5\aspectjweaver.jar<br>(2)在Tomcat下的设置<br>打开&lt;Tomcat_Home&gt;\bin\catalina.bat，在该批处理文件头部添加以下的设置：<br>set JAVA_OPTS=-javaagent:E:\workspace\lib\spring2.5\aspectjweaver.jar</p></blockquote><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://www.eclipse.org/aspectj/doc/released/progguide/index.html" target="_blank" rel="noopener">The AspectJTM Programming Guide</a><br><a href="https://www.iteye.com/blog/log-cd-562056" target="_blank" rel="noopener">AspectJ LTW(Load Time Weaving)</a></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;blockquote&gt;
-&lt;p&gt;本文引用自&lt;a href=&quot;https://www.iteye.com/blog/log-cd-562056&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;AspectJ LTW(Load Time Weaving)&lt;/a&gt;&lt;/p
-      
-    
-    </summary>
-    
-    
-      <category term="Java" scheme="https://zhongyp.me/tags/Java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java反射</title>
-    <link href="https://zhongyp.me/java/2019-10-04-reflection/"/>
-    <id>https://zhongyp.me/java/2019-10-04-reflection/</id>
-    <published>2019-10-03T16:00:00.000Z</published>
-    <updated>2020-06-03T12:58:23.335Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h2><p>在Java中的反射机制是指在运行状态中，对于任意一个类都能够知道这个类所有的属性和方法;并且对于任意一个对象，都能够调用它的任意一个方法;这种动态获取信息以及动态创建/调用对象方法的功能称为Java语言的反射机制。</p><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><p>可以在运行时动态的确定类型并创建实例，可以调用实例中的任意方法即是方法时private的。</p><h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul><li>相比于编译时确定类型的方式，运行时确定类型创建实例会带来一定的性能消耗。</li><li>反射需要运行时的权限，这种权限可能在安全管理器下运行时可能不存在。对于必须在受限的安全上下文（例如Applet）中运行的代码，这是一个重要的考虑因素。</li><li>由于反射允许代码执行非反射代码中非法的操作（例如访问私有字段和方法），因此使用反射可能会导致意外的副作用，这可能会使代码无法正常工作并可能破坏可移植性。反射代码破坏了抽象，因此可能会随着平台的升级而改变行为。</li></ul><h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><blockquote><p>反射调用慢在哪里？</p></blockquote><p>相对于在编译时确定对象类型，反射是在运行时动态创建对象并确定对象类型，所以会比编译时确定对象类型多一些性能消耗即慢。<br>例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">long start = System.currentTimeMillis();</span><br><span class="line">for(int i=0; i&lt;10000; i++)</span><br><span class="line">&#123;</span><br><span class="line">  User user = new User();</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(System.currentTimeMillis() - start);</span><br><span class="line">// 耗时基本在4.5ms左右</span><br></pre></td></tr></table></figure></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">long start = System.currentTimeMillis();</span><br><span class="line">for(int i=0; i&lt;10000; i++)</span><br><span class="line">&#123;</span><br><span class="line">  Class&lt;?&gt; clazz =  Class.forName(&quot;com.zhongyp.advanced.refect.User&quot;, true, ReflectDemo.class.getClassLoader());</span><br><span class="line">            User user = (User) clazz.newInstance();</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(System.currentTimeMillis() - start);</span><br><span class="line">// 耗时基本在20ms左右</span><br></pre></td></tr></table></figure><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://docs.oracle.com/javase/tutorial/reflect/index.html" target="_blank" rel="noopener">Java Reflection API</a></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;反射&quot;&gt;&lt;a href=&quot;#反射&quot; class=&quot;headerlink&quot; title=&quot;反射&quot;&gt;&lt;/a&gt;反射&lt;/h2&gt;&lt;p&gt;在Java中的反射机制是指在运行状态中，对于任意一个类都能够知道这个类所有的属性和方法;并且对于任意一个对象，都能够调用它的任意一个方法;这
-      
-    
-    </summary>
-    
-    
-      <category term="Java" scheme="https://zhongyp.me/tags/Java/"/>
+      <category term="Java" scheme="http://blog.programer.group/tags/Java/"/>
     
   </entry>
   
   <entry>
     <title>CGLIB浅析</title>
-    <link href="https://zhongyp.me/java/2019-10-04-cglib/"/>
-    <id>https://zhongyp.me/java/2019-10-04-cglib/</id>
+    <link href="http://blog.programer.group/java/2019-10-04-cglib/"/>
+    <id>http://blog.programer.group/java/2019-10-04-cglib/</id>
     <published>2019-10-03T16:00:00.000Z</published>
     <updated>2020-05-21T14:33:49.684Z</updated>
     
@@ -361,14 +337,38 @@
     </summary>
     
     
-      <category term="Java" scheme="https://zhongyp.me/tags/Java/"/>
+      <category term="Java" scheme="http://blog.programer.group/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>AspectJ</title>
+    <link href="http://blog.programer.group/java/2019-10-04-aspectj/"/>
+    <id>http://blog.programer.group/java/2019-10-04-aspectj/</id>
+    <published>2019-10-03T16:00:00.000Z</published>
+    <updated>2019-10-22T17:16:13.270Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文引用自<a href="https://www.iteye.com/blog/log-cd-562056" target="_blank" rel="noopener">AspectJ LTW(Load Time Weaving)</a></p></blockquote><h2 id="AspectJ"><a href="#AspectJ" class="headerlink" title="AspectJ"></a>AspectJ</h2><blockquote><p>AspectJ是目前实现AOP框架中最成熟，功能最丰富的语言。当然，AspectJ需要使用额外的编译器。</p></blockquote><blockquote><p>AspectJ可以通过多种方式实现，包括源码织入或字节码织入，并且可以直接在虚拟机（VM）中实现。在所有情况下，AspectJ程序都将成为在Java VM中运行的有效Java程序。受切面影响的类与不受影响的类具有二进制兼容性（以保持与不受影响的原始文件编译的类兼容）。支持多种实现方式使该语言可以随着技术的变化而发展，并且与Java兼容可确保平台可用性。<br>AspectJ采用编译期织入和类加载期织入的方式织入切面，是语言级的AOP实现，提供了完备的AOP支持。它用AspectJ语言定义切面，在编译期或类加载期将切面织入到Java类中。<br>AspectJ提供了两种切面织入方式，第一种通过特殊编译器，在编译期，将AspectJ语言编写的切面类织入到Java类中，可以通过一个Ant或Maven任务来完成这个操作；第二种方式是类加载期织入，也简称为LTW（Load Time Weaving）。<br>使用AspectJ LTW有两个主要步骤，第一，通过JVM的-javaagent参数设置LTW的织入器类包，以代理JVM默认的类加载器；第二，LTW织入器需要一个aop.xml文件，在该文件中指定切面类和需要进行切面织入的目标类。</p></blockquote><blockquote><p>设置-javaagent JVM参数的方法:<br>(1)在Eclipse下的设置:<br>运行类-&gt;右键单击-&gt;Run As-&gt;Run…，可以在弹出的Run设置窗口设置该类的各项运行属性，切换到Arguments Tab页，在VM arguments中通过-javaagent指定AspectJ 织入器类包。<br>-javaagent:E:\workspace\lib\spring2.5\aspectjweaver.jar<br>(2)在Tomcat下的设置<br>打开&lt;Tomcat_Home&gt;\bin\catalina.bat，在该批处理文件头部添加以下的设置：<br>set JAVA_OPTS=-javaagent:E:\workspace\lib\spring2.5\aspectjweaver.jar</p></blockquote><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://www.eclipse.org/aspectj/doc/released/progguide/index.html" target="_blank" rel="noopener">The AspectJTM Programming Guide</a><br><a href="https://www.iteye.com/blog/log-cd-562056" target="_blank" rel="noopener">AspectJ LTW(Load Time Weaving)</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;本文引用自&lt;a href=&quot;https://www.iteye.com/blog/log-cd-562056&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;AspectJ LTW(Load Time Weaving)&lt;/a&gt;&lt;/p
+      
+    
+    </summary>
+    
+    
+      <category term="Java" scheme="http://blog.programer.group/tags/Java/"/>
     
   </entry>
   
   <entry>
     <title>知识结构图</title>
-    <link href="https://zhongyp.me/java/2019-09-29-knowledge-structure/"/>
-    <id>https://zhongyp.me/java/2019-09-29-knowledge-structure/</id>
+    <link href="http://blog.programer.group/java/2019-09-29-knowledge-structure/"/>
+    <id>http://blog.programer.group/java/2019-09-29-knowledge-structure/</id>
     <published>2019-09-28T16:00:00.000Z</published>
     <updated>2020-05-21T14:33:50.114Z</updated>
     
@@ -385,14 +385,14 @@
     </summary>
     
     
-      <category term="Java" scheme="https://zhongyp.me/tags/Java/"/>
+      <category term="Java" scheme="http://blog.programer.group/tags/Java/"/>
     
   </entry>
   
   <entry>
     <title>闲谈Java引用</title>
-    <link href="https://zhongyp.me/java/2019-09-15-reference/"/>
-    <id>https://zhongyp.me/java/2019-09-15-reference/</id>
+    <link href="http://blog.programer.group/java/2019-09-15-reference/"/>
+    <id>http://blog.programer.group/java/2019-09-15-reference/</id>
     <published>2019-09-14T16:00:00.000Z</published>
     <updated>2019-09-23T11:33:10.812Z</updated>
     
@@ -409,14 +409,14 @@
     </summary>
     
     
-      <category term="Java" scheme="https://zhongyp.me/tags/Java/"/>
+      <category term="Java" scheme="http://blog.programer.group/tags/Java/"/>
     
   </entry>
   
   <entry>
     <title>Java虚拟机知识点架构图</title>
-    <link href="https://zhongyp.me/jvm/2019-09-08-jvm-structure/"/>
-    <id>https://zhongyp.me/jvm/2019-09-08-jvm-structure/</id>
+    <link href="http://blog.programer.group/jvm/2019-09-08-jvm-structure/"/>
+    <id>http://blog.programer.group/jvm/2019-09-08-jvm-structure/</id>
     <published>2019-09-07T16:00:00.000Z</published>
     <updated>2020-11-14T09:13:32.184Z</updated>
     
@@ -433,14 +433,14 @@
     </summary>
     
     
-      <category term="JVM" scheme="https://zhongyp.me/tags/JVM/"/>
+      <category term="JVM" scheme="http://blog.programer.group/tags/JVM/"/>
     
   </entry>
   
   <entry>
     <title>动态代理浅析</title>
-    <link href="https://zhongyp.me/java/2019-09-09-java-proxy/"/>
-    <id>https://zhongyp.me/java/2019-09-09-java-proxy/</id>
+    <link href="http://blog.programer.group/java/2019-09-09-java-proxy/"/>
+    <id>http://blog.programer.group/java/2019-09-09-java-proxy/</id>
     <published>2019-09-06T16:00:00.000Z</published>
     <updated>2020-05-21T14:33:50.633Z</updated>
     
@@ -456,14 +456,14 @@
     </summary>
     
     
-      <category term="Java" scheme="https://zhongyp.me/tags/Java/"/>
+      <category term="Java" scheme="http://blog.programer.group/tags/Java/"/>
     
   </entry>
   
   <entry>
     <title>了解ASM</title>
-    <link href="https://zhongyp.me/java/2019-10-06-asm/"/>
-    <id>https://zhongyp.me/java/2019-10-06-asm/</id>
+    <link href="http://blog.programer.group/java/2019-10-06-asm/"/>
+    <id>http://blog.programer.group/java/2019-10-06-asm/</id>
     <published>2019-09-05T16:00:00.000Z</published>
     <updated>2019-10-21T11:34:13.411Z</updated>
     
@@ -480,14 +480,14 @@
     </summary>
     
     
-      <category term="Java" scheme="https://zhongyp.me/tags/Java/"/>
+      <category term="Java" scheme="http://blog.programer.group/tags/Java/"/>
     
   </entry>
   
   <entry>
     <title>Java虚拟机类加载机制</title>
-    <link href="https://zhongyp.me/jvm/2019-08-18-jvm-classloading/"/>
-    <id>https://zhongyp.me/jvm/2019-08-18-jvm-classloading/</id>
+    <link href="http://blog.programer.group/jvm/2019-08-18-jvm-classloading/"/>
+    <id>http://blog.programer.group/jvm/2019-08-18-jvm-classloading/</id>
     <published>2019-08-17T16:00:00.000Z</published>
     <updated>2020-11-14T09:07:18.399Z</updated>
     
@@ -504,9 +504,9 @@
     </summary>
     
     
-      <category term="JVM" scheme="https://zhongyp.me/tags/JVM/"/>
+      <category term="JVM" scheme="http://blog.programer.group/tags/JVM/"/>
     
-      <category term="翻译" scheme="https://zhongyp.me/tags/%E7%BF%BB%E8%AF%91/"/>
+      <category term="翻译" scheme="http://blog.programer.group/tags/%E7%BF%BB%E8%AF%91/"/>
     
   </entry>
   
